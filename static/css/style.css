@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+nav a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+}
+.event-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+.event-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+}
+form {
+    margin: 20px;
+}
+form input, form select, form textarea {
+    margin: 10px 0;
+    padding: 5px;
+    width: 100%;
+    max-width: 300px;
+    display: block;
+}
+.pagination {
+    text-align: center;
+    margin: 20px;
+}
+.step-links a {
+    margin: 0 5px;
+}

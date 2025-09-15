@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Event List{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Events</h2>
+    </div>
+
+    <!-- Filter Form -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ request.GET.q }}">
+        </div>
+        <div class="col-md-12 mb-3">
+            <div class="btn-group" role="group" aria-label="Category filter">
+                <!-- All Categories tugmasi -->
+                <a href="?{% for key, value in request.GET.items %}{% if key != 'category' %}{{ key }}={{ value }}&{% endif %}{% endfor %}" 
+                class="btn btn-outline-primary {% if not request.GET.category %}active{% endif %}">
+                    All
+                </a>
+
+                <!-- Dinamik kategoriyalar -->
+                {% for category in categories %}
+                    <a href="?{% for key, value in request.GET.items %}{% if key != 'category' %}{{ key }}={{ value }}&{% endif %}{% endfor %}category={{ category.id }}" 
+                    class="btn btn-outline-primary {% if request.GET.category == category.id|stringformat:"s" %}active{% endif %}">
+                        {{ category.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <input type="text" name="location" class="form-control" placeholder="Location" value="{{ request.GET.location }}">
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="min_price" class="form-control" placeholder="Min Price" value="{{ request.GET.min_price }}">
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="max_price" class="form-control" placeholder="Max Price" value="{{ request.GET.max_price }}">
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="min_rating" class="form-control" placeholder="Min Rating" min="1" max="5" value="{{ request.GET.min_rating }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
+    <!-- Event Cards -->
+    <div class="row g-4">
+        {% for event in page_obj %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0">
+                    {% if event.image %}
+                        <img src="{{ event.image.url }}" class="card-img-top" alt="{{ event.title }}">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            <a href="{% url 'event_detail' event.id %}" class="text-decoration-none text-dark">{{ event.title }}</a>
+                        </h5>
+                        <p class="card-text text-muted">{{ event.description|truncatewords:25 }}</p>
+                        <div class="mb-2">
+                            <span class="badge bg-success me-1">Price: {{ event.price|default:"N/A" }}</span>
+                            <span class="badge bg-info text-dark">Rating: {{ event.average_rating }}</span>
+                        </div>
+                        <ul class="list-unstyled mb-3 text-muted small">
+                            <li>Location: {{ event.location }}</li>
+                            <li>Category: {{ event.category.name }}</li>
+                            <li>Budget: {{ event.budget|default:"N/A" }}</li>
+                        </ul>
+                        <a href="{% url 'event_detail' event.id %}" class="btn btn-primary mt-auto">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No events found.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page=1">&laquo; First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% endif %}
+                
+                <li class="page-item disabled">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}
