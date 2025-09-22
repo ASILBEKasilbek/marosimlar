@@ -100,7 +100,7 @@ class Service(models.Model):
     image4 = models.ImageField(upload_to="services/", null=True, blank=True)
     image5 = models.ImageField(upload_to="services/", null=True, blank=True)
 
-    # 🔥 Joylashuv (latitude/longitude)
+    # Joylashuv
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
 
@@ -111,6 +111,18 @@ class Service(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:  # faqat bo‘sh bo‘lsa
+            base_slug = slugify(self.title)
+            slug = base_slug
+            counter = 1
+            # unikalligini tekshirish
+            while Service.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.title} ({self.provider.username if self.provider else 'No Provider'})"
