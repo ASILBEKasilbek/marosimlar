@@ -167,7 +167,7 @@ class ServiceCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('profile_detail', kwargs={'user_id': self.request.user.id})
+        return reverse_lazy('profile_detail', kwargs={'pk': self.request.user.id})
 
 
 # ============================================

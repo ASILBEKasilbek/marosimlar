@@ -71,7 +71,7 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'event_list' %}">🏠 Bosh sahifa</a></li>
                     
                     {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'event_create' %}">➕ E’lon berish</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'service_create' %}">➕ E’lon berish</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'notifications' %}">🔔 Xabarlar</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'xaritada' %}">🗺️ Xaritada</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'profile_detail' pk=request.user.profile.pk %}">👤 Profil</a></li>
