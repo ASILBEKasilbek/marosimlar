@@ -286,7 +286,7 @@ class NearestServiceAPI(View):
         except (TypeError, ValueError):
             return JsonResponse({"error": "latitude va longitude yuborilishi kerak!"}, status=400)
 
-        services = Service.objects.exclude(latitude=None).exclude(longitude=None)
+        services = Service.objects.exclude(latitude=None).exclude(longitude=None)        
         if not services.exists():
             return JsonResponse({"error": "Bazadan xizmat topilmadi"}, status=404)
 

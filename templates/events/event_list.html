@@ -24,32 +24,67 @@
             </div>
         </div>
 
-        <!-- ================= SIDEBAR ================= -->
-        <div class="col-12 col-md-3 mb-4">
-            <div class="border rounded-3 shadow-sm p-3 bg-white sticky-top" style="top: 16px;">
-                <h6 class="fw-bold text-primary mb-3">🔎 Filtrlash</h6>
-                <form method="get" id="filter-form" class="d-flex flex-column gap-3">
-                    <input type="hidden" name="event_type" id="event-type-input" value="{{ request.GET.event_type }}">
-                    <div class="form-floating">
-                        <input type="text" name="q" class="form-control" placeholder="Qidirish..." value="{{ request.GET.q }}">
-                        <label>🔍 Qidirish</label>
-                    </div>
-                    <div class="form-floating">
-                        <input type="number" name="min_price" class="form-control" placeholder="Minimal narx" value="{{ request.GET.min_price }}">
-                        <label>💵 Minimal narx</label>
-                    </div>
-                    <div class="form-floating">
-                        <input type="number" name="max_price" class="form-control" placeholder="Maksimal narx" value="{{ request.GET.max_price }}">
-                        <label>💵 Maksimal narx</label>
-                    </div>
-                    <div class="form-floating">
-                        <input type="number" name="min_rating" class="form-control" min="1" max="5" value="{{ request.GET.min_rating }}">
-                        <label>⭐ Minimal baho</label>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-2 w-100 shadow-sm">Filtrlash</button>
-                </form>
+<!-- ================= SIDEBAR ================= -->
+<div class="col-12 col-md-3 mb-4">
+    <div class="border rounded-4 shadow-sm p-4 bg-white sticky-top" style="top: 16px;">
+        
+        <!-- Title -->
+        <h5 class="fw-semibold text-dark mb-3">🔎 Filtrlash</h5>
+
+        <!-- Form -->
+        <form method="get" id="filter-form" class="d-flex flex-column gap-3">
+
+            <input type="hidden" name="event_type" id="event-type-input" value="{{ request.GET.event_type }}">
+
+            <!-- Search -->
+            <div>
+                <label class="form-label small text-muted mb-1">Qidirish</label>
+                <input type="text" name="q" 
+                       class="form-control rounded-3 px-3 py-2" 
+                       placeholder="Masalan: to‘y xizmatlari" 
+                       value="{{ request.GET.q }}">
             </div>
-        </div>
+
+            <!-- Min Price -->
+            <div>
+                <label class="form-label small text-muted mb-1">Minimal narx</label>
+                <input type="number" name="min_price" 
+                       class="form-control rounded-3 px-3 py-2"
+                       placeholder="0" 
+                       value="{{ request.GET.min_price }}">
+            </div>
+
+            <!-- Max Price -->
+            <div>
+                <label class="form-label small text-muted mb-1">Maksimal narx</label>
+                <input type="number" name="max_price" 
+                       class="form-control rounded-3 px-3 py-2"
+                       placeholder="1000000" 
+                       value="{{ request.GET.max_price }}">
+            </div>
+
+            <!-- Rating -->
+            <div>
+                <label class="form-label small text-muted mb-1">Minimal baho</label>
+                <input type="number" name="min_rating" 
+                       class="form-control rounded-3 px-3 py-2"
+                       min="1" max="5" 
+                       placeholder="1 - 5" 
+                       value="{{ request.GET.min_rating }}">
+            </div>
+
+            <!-- Buttons -->
+            <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 shadow-sm fw-semibold">
+                Filtrlash
+            </button>
+            <a href="?" class="btn btn-outline-secondary w-100 py-2 rounded-3">
+                Tozalash
+            </a>
+        </form>
+    </div>
+</div>
+
+
 
         <!-- ================= MAIN CONTENT ================= -->
         <div class="col-12 col-md-9">
