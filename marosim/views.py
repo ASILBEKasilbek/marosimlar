@@ -181,7 +181,6 @@ class ServiceCategoryCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy('event_list')
 
-
 # ============================================
 # Service SubCategory Create View
 # ============================================
@@ -196,6 +195,7 @@ class ServiceSubCategoryCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy('event_list')
+
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = "accounts/profile_detail.html"
@@ -203,6 +203,12 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
     def get_object(self):
         return get_object_or_404(Profile, user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Provider sifatida shu userning yaratgan servicelari
+        context["services"] = Service.objects.filter(provider=self.request.user)
+        return context
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
