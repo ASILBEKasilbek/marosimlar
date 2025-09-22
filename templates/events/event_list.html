@@ -73,8 +73,8 @@
                 {% for service in services %}
                 <div class="col">
                     <div class="card h-100 shadow-sm hover-shadow">
-                        {% if service.provider.profile.image %}
-                        <img src="{{ service.provider.profile.image.url }}" class="card-img-top" alt="{{ service.title }}" loading="lazy">
+                        {% if service.image1 %}
+                        <img src="{{ service.image1.url }}" class="card-img-top" alt="{{ service.title }}" loading="lazy">
                         {% endif %}
                         <div class="card-body">
                             <h6 class="card-title fw-bold mb-2">{{ service.title }}</h6>
