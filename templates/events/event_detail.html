@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="row">
-    <!-- Event Info -->
+    <!-- Tadbir ma'lumotlari -->
     <div class="col-md-8">
         <div class="card mb-4 shadow-sm">
             {% if event.image %}
@@ -14,11 +14,11 @@
                 <h2 class="card-title">{{ event.title }}</h2>
                 <p class="card-text">{{ event.description }}</p>
                 <ul class="list-unstyled">
-                    <li><strong>Price:</strong> {{ event.price|default:"N/A" }}</li>
-                    <li><strong>Budget:</strong> {{ event.budget|default:"N/A" }}</li>
-                    <li><strong>Location:</strong> {{ event.location }}</li>
-                    <li><strong>Category:</strong> {{ event.category.name }}</li>
-                    <li><strong>Avg Rating:</strong> {{ event.average_rating }}</li>
+                    <li><strong>Narx:</strong> {{ event.price|default:"N/A" }}</li>
+                    <li><strong>Byudjet:</strong> {{ event.budget|default:"N/A" }}</li>
+                    <li><strong>Joylashuv:</strong> {{ event.location }}</li>
+                    <li><strong>Kategoriya:</strong> {{ event.category.name }}</li>
+                    <li><strong>O‘rtacha baho:</strong> {{ event.average_rating }}</li>
                 </ul>
 
                 {% if event.video %}
@@ -31,10 +31,10 @@
             </div>
         </div>
 
-        <!-- Reviews -->
+        <!-- Sharhlar -->
         <div class="card mb-4 shadow-sm">
             <div class="card-header bg-secondary text-white">
-                <h4 class="mb-0">Reviews</h4>
+                <h4 class="mb-0">Sharhlar</h4>
             </div>
             <div class="card-body">
                 {% for review in reviews %}
@@ -44,16 +44,16 @@
                         <p class="mb-0">{{ review.comment }}</p>
                     </div>
                 {% empty %}
-                    <p class="text-muted">No reviews yet.</p>
+                    <p class="text-muted">Hozircha sharhlar mavjud emas.</p>
                 {% endfor %}
             </div>
         </div>
 
-        <!-- Add Review / Favorite / RSVP -->
+        <!-- Sharh qo‘shish / Sevimlilarga qo‘shish / RSVP -->
         {% if user.is_authenticated %}
             <div class="card mb-4 shadow-sm">
                 <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">Add Review</h5>
+                    <h5 class="mb-0">Sharh qo‘shish</h5>
                 </div>
                 <div class="card-body">
                     <form method="post">
@@ -67,7 +67,7 @@
                                 {{ field|add_class:"form-control" }}
                             </div>
                         {% endfor %}
-                        <button type="submit" name="review" class="btn btn-success w-100">Submit Review</button>
+                        <button type="submit" name="review" class="btn btn-success w-100">Sharh yuborish</button>
                     </form>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                 <form method="post">
                     {% csrf_token %}
                     <button type="submit" name="favorite" class="btn {% if is_favorited %}btn-danger{% else %}btn-outline-danger{% endif %} w-100">
-                        {% if is_favorited %}Remove from Favorites{% else %}Add to Favorites{% endif %}
+                        {% if is_favorited %}Sevimlilardan o‘chirish{% else %}Sevimlilarga qo‘shish{% endif %}
                     </button>
                 </form>
 
@@ -84,16 +84,16 @@
                     {% csrf_token %}
                     <input type="number" name="guests" value="1" min="1" class="form-control" style="max-width: 100px;">
                     <button type="submit" name="rsvp" class="btn btn-primary">
-                        {% if has_rsvped %}Update RSVP{% else %}RSVP{% endif %}
+                        {% if has_rsvped %}RSVP yangilash{% else %}RSVP{% endif %}
                     </button>
                 </form>
             </div>
         {% endif %}
     </div>
 
-    <!-- Sidebar (optional: related events, ads, etc.) -->
+    <!-- Yon panel (ixtiyoriy: tegishli tadbirlar, reklamalar, va hokazo) -->
     <div class="col-md-4">
-        <!-- You can add related events or additional info here -->
+        <!-- Bu yerga tegishli tadbirlar yoki qo‘shimcha ma'lumot qo‘yishingiz mumkin -->
     </div>
 </div>
 {% endblock %}

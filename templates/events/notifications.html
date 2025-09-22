@@ -1,24 +1,21 @@
 {% extends 'base.html' %}
 
-{% block title %}Notifications{% endblock %}
+{% block title %}Tez orada{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <h2 class="mb-4">Your Notifications</h2>
-
-        {% if notifications %}
-            <ul class="list-group">
-                {% for notification in notifications %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center {% if not notification.read %}fw-bold bg-light{% endif %}">
-                        {{ notification.message }}
-                        <span class="badge bg-secondary rounded-pill">{{ notification.created_at|date:"M d, Y H:i" }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p class="text-muted text-center">No notifications.</p>
-        {% endif %}
+<div class="d-flex justify-content-center align-items-center" style="height: 70vh;">
+    <div class="text-center p-5 bg-white rounded-4 shadow-lg" style="max-width: 500px;">
+        <h1 class="mb-4" style="color: #4a90e2; animation: fadeIn 2s;">Tez orada ishga tushadi!</h1>
+        <p class="mb-4" style="animation: fadeIn 2s 1s;">Biz siz uchun ajoyib sahifa ustida ishlayapmiz. Sabrlik bilan kuting.</p>
+        <a href="#" class="btn btn-primary btn-lg" style="animation: fadeIn 2s 2s;">Yangiliklar uchun bog'laning</a>
     </div>
 </div>
+
+<style>
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
 {% endblock %}
+

@@ -1,73 +1,115 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 from django.contrib.auth import login
-from django.db.models import Q, Avg
-from django.core.paginator import Paginator
-from .models import Category, Event, Review, Favorite, RSVP, Notification, Profile
-from .forms import EventForm, ReviewForm, UserRegisterForm, ProfileForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.db.models import Q, Avg, Prefetch
+from django.views import View
+from django.views.generic import TemplateView
+from django.http import JsonResponse
+from django.shortcuts import render
+from math import radians, cos, sin, asin, sqrt
+from .models import Service
 
-# -----------------------------
-# Event List
-# -----------------------------
-def event_list(request):
-    categories = Category.objects.all()
-    events = Event.objects.all()
-    query = request.GET.get('q')
+from .models import (
+    EventType, ServiceCategory, ServiceSubCategory,
+    Event, Service, Profile, Review, Favorite, RSVP, Notification
+)
+from .forms import (
+    EventForm, ReviewForm, UserRegisterForm,
+    ProfileForm, ServiceForm, ServiceCategoryForm, ServiceSubCategoryForm
+)
 
-    # Search
-    if query:
-        events = events.filter(
-            Q(title__icontains=query) |
-            Q(description__icontains=query) |
-            Q(location__icontains=query)
+# ============================================
+# Event List (Class-Based View)
+# ============================================
+
+class EventListView(ListView):
+    model = Service
+    template_name = 'events/event_list.html'
+    context_object_name = 'services'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = (
+            Service.objects
+            .select_related('event_type', 'service_category', 'provider')
+            .prefetch_related('subcategories')   # subkategoriya bilan ishlash uchun
         )
 
-    # Filters
-    category_id = request.GET.get('category')
-    location = request.GET.get('location')
-    min_price = request.GET.get('min_price')
-    max_price = request.GET.get('max_price')
-    min_rating = request.GET.get('min_rating')
+        # GET parametrlari
+        query = self.request.GET.get('q')
+        event_type_id = self.request.GET.get('event_type')
+        service_category_id = self.request.GET.get('service_category')
+        subcategory_id = self.request.GET.get('subcategory')  # 🆕
+        min_price = self.request.GET.get('min_price')
+        max_price = self.request.GET.get('max_price')
+        sort = self.request.GET.get('sort')
 
-    if category_id:
-        events = events.filter(category_id=category_id)
-    if location:
-        events = events.filter(location__icontains=location)
-    if min_price:
-        events = events.filter(price__gte=min_price)
-    if max_price:
-        events = events.filter(price__lte=max_price)
-    if min_rating:
-        events = events.annotate(avg_rating=Avg('reviews__rating')).filter(avg_rating__gte=min_rating)
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query)
+            )
 
-    # Pagination
-    paginator = Paginator(events, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+        if event_type_id:
+            queryset = queryset.filter(event_type_id=event_type_id)
 
-    context = {
-        'page_obj': page_obj,
-        'categories': categories,
-    }
-    return render(request, 'events/event_list.html', context)
+        if service_category_id:
+            queryset = queryset.filter(service_category_id=service_category_id)
 
+        if subcategory_id:   # 🆕 subkategoriya bo‘yicha filter
+            queryset = queryset.filter(subcategories__id=subcategory_id)
 
-# -----------------------------
-# Event Detail
-# -----------------------------
-def event_detail(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    reviews = event.reviews.all()
-    is_favorited = False
-    has_rsvped = False
+        if min_price:
+            queryset = queryset.filter(price__gte=min_price)
+        if max_price:
+            queryset = queryset.filter(price__lte=max_price)
 
-    if request.user.is_authenticated:
-        is_favorited = Favorite.objects.filter(user=request.user, event=event).exists()
-        has_rsvped = RSVP.objects.filter(user=request.user, event=event).exists()
+        if sort == 'cheap':
+            queryset = queryset.order_by('price')
+        elif sort == 'expensive':
+            queryset = queryset.order_by('-price')
+        elif sort == 'new':
+            queryset = queryset.order_by('-created_at')
 
-    review_form = ReviewForm()
+        return queryset.distinct()
 
-    if request.method == 'POST' and request.user.is_authenticated:
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['event_types'] = EventType.objects.prefetch_related(
+            Prefetch('service_categories', queryset=ServiceCategory.objects.prefetch_related('subcategories'))
+        )
+        context['categories'] = ServiceCategory.objects.all()
+        return context
+
+# ============================================
+# Event Detail View
+# ============================================
+class EventDetailView(DetailView):
+    model = Event
+    template_name = 'events/event_detail.html'
+    context_object_name = 'event'
+    pk_url_kwarg = 'event_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = self.get_object()
+        context.update({
+            'reviews': event.reviews.all(),
+            'review_form': ReviewForm(),
+            'is_favorited': self.request.user.is_authenticated
+                            and Favorite.objects.filter(user=self.request.user, event=event).exists(),
+            'has_rsvped': self.request.user.is_authenticated
+                          and RSVP.objects.filter(user=self.request.user, event=event).exists(),
+        })
+        return context
+
+    def post(self, request, *args, **kwargs):
+        event = self.get_object()
+        if not request.user.is_authenticated:
+            return redirect('login')
+
         # Add Review
         if 'review' in request.POST:
             review_form = ReviewForm(request.POST)
@@ -76,7 +118,7 @@ def event_detail(request, event_id):
                 review.event = event
                 review.user = request.user
                 review.save()
-                return redirect('event_detail', event_id=event.id)
+            return redirect('event_detail', event_id=event.id)
 
         # Toggle Favorite
         elif 'favorite' in request.POST:
@@ -93,46 +135,91 @@ def event_detail(request, event_id):
             rsvp.save()
             return redirect('event_detail', event_id=event.id)
 
-    context = {
-        'event': event,
-        'reviews': reviews,
-        'review_form': review_form,
-        'is_favorited': is_favorited,
-        'has_rsvped': has_rsvped,
-    }
-    return render(request, 'events/event_detail.html', context)
+        return redirect('event_detail', event_id=event.id)
 
 
-# -----------------------------
-# Create Event
-# -----------------------------
-@login_required
-def event_create(request):
-    if request.method == 'POST':
-        form = EventForm(request.POST, request.FILES)
-        if form.is_valid():
-            event = form.save(commit=False)
-            event.user = request.user
-            event.save()
-            return redirect('event_detail', event_id=event.id)
-    else:
-        form = EventForm()
-    return render(request, 'events/event_create.html', {'form': form})
+# ============================================
+# Event Create View
+# ============================================
+class EventCreateView(LoginRequiredMixin, CreateView):
+    model = Event
+    form_class = EventForm
+    template_name = 'events/event_create.html'
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('event_detail', kwargs={'event_id': self.object.id})
 
 
-# -----------------------------
-# Notifications
-# -----------------------------
-@login_required
-def notifications(request):
-    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'events/notifications.html', {'notifications': notifications})
+# ============================================
+# Service Create View
+# ============================================
+class ServiceCreateView(LoginRequiredMixin, CreateView):
+    model = Service
+    form_class = ServiceForm
+    template_name = 'events/service_create.html'
+
+    def form_valid(self, form):
+        form.instance.provider = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('profile_detail', kwargs={'user_id': self.request.user.id})
 
 
-# -----------------------------
+# ============================================
+# Service Category Create View
+# ============================================
+class ServiceCategoryCreateView(LoginRequiredMixin, CreateView):
+    model = ServiceCategory
+    form_class = ServiceCategoryForm
+    template_name = 'events/service_category_create.html'
+
+    def get_success_url(self):
+        return reverse_lazy('event_list')
+
+
+# ============================================
+# Service SubCategory Create View
+# ============================================
+class ServiceSubCategoryCreateView(LoginRequiredMixin, CreateView):
+    model = ServiceSubCategory
+    form_class = ServiceSubCategoryForm
+    template_name = 'events/service_subcategory_create.html'
+
+    def form_valid(self, form):
+        form.instance.service = Service.objects.filter(provider=self.request.user).first()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('event_list')
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = "accounts/profile_detail.html"
+    context_object_name = "profile"
+
+    def get_object(self):
+        return get_object_or_404(Profile, user=self.request.user)
+
+
+class ProfileEditView(LoginRequiredMixin, UpdateView):
+    model = Profile
+    form_class = ProfileForm
+    template_name = "accounts/profile_edit.html"
+
+    def get_object(self):
+        return get_object_or_404(Profile, user=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("profile_detail", kwargs={"pk": self.request.user.profile.id})
+
+# ============================================
 # User Registration
-# -----------------------------
-def register(request):
+# ============================================
+def register_view(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
@@ -144,17 +231,81 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})
 
 
-# -----------------------------
-# Profile Edit
-# -----------------------------
-@login_required
-def profile_edit(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    if request.method == 'POST':
-        form = ProfileForm(request.POST, instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect('event_list')
-    else:
-        form = ProfileForm(instance=profile)
-    return render(request, 'events/profile_edit.html', {'form': form})
+# ============================================
+# Notifications
+# ============================================
+class NotificationsListView(LoginRequiredMixin, ListView):
+    model = Notification
+    template_name = 'events/notifications.html'
+    context_object_name = 'notifications'
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user).order_by('-created_at')
+
+
+class ServiceDetailView(DetailView):
+    model = Service
+    template_name = 'events/service_detail.html'
+    context_object_name = 'service'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        service = self.object
+
+        # O‘xshash xizmatlar (shu kategoriya ichida, o‘zidan tashqari)
+        related = (
+            Service.objects
+            .filter(service_category=service.service_category)
+            .exclude(id=service.id)
+            .select_related('provider')
+            .prefetch_related('subcategories')[:4]  # faqat 4 tasi chiqsin
+        )
+
+        context['related_services'] = related
+        return context
+    
+# 🔹 Haversine formula
+def haversine(lat1, lon1, lat2, lon2):
+    R = 6371  # Yer radiusi (km)
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat/2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+    return R * c
+
+class XaritadaView(TemplateView):
+    template_name = "events/xaritada.html"
+
+class NearestServiceAPI(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            user_lat = float(request.GET.get("lat"))
+            user_lng = float(request.GET.get("lng"))
+        except (TypeError, ValueError):
+            return JsonResponse({"error": "latitude va longitude yuborilishi kerak!"}, status=400)
+
+        services = Service.objects.exclude(latitude=None).exclude(longitude=None)
+        if not services.exists():
+            return JsonResponse({"error": "Bazadan xizmat topilmadi"}, status=404)
+
+        # Masofaga qarab tartiblash
+        services_sorted = sorted(
+            services,
+            key=lambda s: haversine(user_lat, user_lng, s.latitude, s.longitude)
+        )
+        data = []
+        for s in services_sorted:
+            data.append({
+                "id": s.id,
+                "slug": s.slug,
+                "title": s.title,
+                "description": s.description,
+                "price": str(s.price) if s.price else "Noma’lum",
+                "lat": s.latitude,
+                "lng": s.longitude,
+                "image": s.image1.url if s.image1 else None,  # 🔥 faqat birinchi rasmi
+            })
+
+        return JsonResponse({"services": data})

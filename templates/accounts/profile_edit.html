@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Profilni tahrirlash{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Profilni tahrirlash</h2>
+
+    <div class="card shadow-sm p-4 mx-auto" style="max-width: 700px;">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Avatar -->
+            <div class="mb-3 text-center">
+                {% if form.instance.avatar %}
+                    <img src="{{ form.instance.avatar.url }}" alt="Avatar" class="rounded-circle mb-2" width="120" height="120">
+                {% endif %}
+                <div class="input-group">
+                    {{ form.avatar }}
+                </div>
+            </div>
+
+            <!-- Bio -->
+            <div class="mb-3">
+                <label for="{{ form.bio.id_for_label }}" class="form-label">O‘zingiz haqida</label>
+                {{ form.bio|add_class:"form-control" }}
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+                <label for="{{ form.phone.id_for_label }}" class="form-label">Telefon</label>
+                {{ form.phone|add_class:"form-control" }}
+            </div>
+
+            <!-- Location -->
+            <div class="mb-3">
+                <label for="{{ form.location.id_for_label }}" class="form-label">Shahar</label>
+                {{ form.location|add_class:"form-control" }}
+            </div>
+
+            <!-- Service Type -->
+            <div class="mb-3">
+                <label for="{{ form.service_type.id_for_label }}" class="form-label">Xizmat turi</label>
+                {{ form.service_type|add_class:"form-select" }}
+            </div>
+
+            <!-- Experience Years -->
+            <div class="mb-3">
+                <label for="{{ form.experience_years.id_for_label }}" class="form-label">Tajriba yillari</label>
+                {{ form.experience_years|add_class:"form-control" }}
+            </div>
+
+            <!-- Price Range -->
+            <div class="mb-3">
+                <label for="{{ form.price_range.id_for_label }}" class="form-label">Narx oralig‘i</label>
+                {{ form.price_range|add_class:"form-control" }}
+            </div>
+
+            <!-- Toggles for Boolean fields -->
+            <div class="form-check form-switch mb-3">
+                {{ form.is_provider|add_class:"form-check-input" }}
+                <label class="form-check-label" for="{{ form.is_provider.id_for_label }}">Xizmat ko‘rsatadi</label>
+            </div>
+            <div class="form-check form-switch mb-3">
+                {{ form.is_public|add_class:"form-check-input" }}
+                <label class="form-check-label" for="{{ form.is_public.id_for_label }}">Profilni ochiq qilish</label>
+            </div>
+
+            <!-- Social links -->
+            <div class="mb-3">
+                <label for="{{ form.instagram.id_for_label }}" class="form-label">Instagram</label>
+                {{ form.instagram|add_class:"form-control" }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.telegram.id_for_label }}" class="form-label">Telegram</label>
+                {{ form.telegram|add_class:"form-control" }}
+            </div>
+            <div class="mb-3">
+                <label for="{{ form.facebook.id_for_label }}" class="form-label">Facebook</label>
+                {{ form.facebook|add_class:"form-control" }}
+            </div>
+
+            <!-- Submit button -->
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-success btn-lg">Saqlash</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

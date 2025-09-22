@@ -3,10 +3,37 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<h2>Register</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
+<div class="vh-100 d-flex justify-content-center align-items-center" style="background-color: #f8f9fa;">
+    <div class="col-11 col-sm-10 col-md-6 col-lg-4">
+        <div class="card shadow-lg border-0 rounded-4 p-4">
+            <h2 class="text-center mb-4">Register</h2>
+
+            <!-- Register form -->
+            <form method="post" class="d-flex flex-column gap-3">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary w-100 py-2 mt-2 rounded-3">Register</button>
+            </form>
+
+            <!-- Telegram orqali ro‘yxatdan o‘tish -->
+            <div class="text-center mt-4">
+                <p class="mb-2">📲 Telegram orqali ro‘yxatdan o‘tish uchun bizning botga kiring:</p>
+                <a href="https://t.me/Tasdiqlashrobot" class="btn btn-info w-100 py-2 rounded-3">
+                    Telegram Bot
+                </a>
+            </div>
+
+            <!-- Login link -->
+            <div class="text-center mt-3">
+                <p class="mb-2">Already have an account?</p>
+                <a href="{% url 'login' %}" class="btn btn-outline-primary w-100 py-2 rounded-3">
+                    Login here
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 {% endblock %}
