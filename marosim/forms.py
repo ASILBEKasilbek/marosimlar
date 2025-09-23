@@ -101,6 +101,9 @@ class ProfileForm(forms.ModelForm):
             "is_public", "instagram", "telegram", "facebook"
         ]
         widgets = {
+            "avatar": forms.FileInput(attrs={
+                "class": "form-control"
+            }),
             "bio": forms.Textarea(attrs={
                 "class": "form-textarea", "rows": 4,
                 "placeholder": "O‘zingiz haqida yozing..."
@@ -116,6 +119,7 @@ class ProfileForm(forms.ModelForm):
                 "class": "form-input", "placeholder": "Masalan: 100-500 USD"
             }),
         }
+
 
 
 # ======================================
