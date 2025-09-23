@@ -202,12 +202,12 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     context_object_name = "profile"
 
     def get_object(self):
-        return get_object_or_404(Profile, user=self.request.user)
+        return get_object_or_404(Profile, pk=self.kwargs["pk"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Provider sifatida shu userning yaratgan servicelari
-        context["services"] = Service.objects.filter(provider=self.request.user)
+        # Ushbu profil foydalanuvchisi yaratgan servicelarni chiqaramiz
+        context["services"] = Service.objects.filter(provider=self.object.user)
         return context
 
 

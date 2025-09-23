@@ -61,7 +61,17 @@
                         <li><strong>Narx:</strong> {{ service.price|default:"N/A" }}</li>
                         <li><strong>Kategoriya:</strong> {{ service.service_category.name }}</li>
                         <li><strong>Tadbir turi:</strong> {{ service.event_type.name }}</li>
-                        <li><strong>Provider:</strong> {{ service.provider.username|default:"Noma'lum" }}</li>
+                        <li>
+                            <strong>Provider:</strong>
+                            {% if service.provider and service.provider.profile %}
+                                <a href="{% url 'profile_detail' service.provider.profile.pk %}">
+                                    {{ service.provider.username }}
+                                </a>
+                            {% else %}
+                                Noma'lum
+                            {% endif %}
+                        </li>
+
                         <li><strong>Holat:</strong>
                             {% if service.is_verified %}
                                 ✅ Tasdiqlangan
