@@ -46,11 +46,14 @@ class ServiceCategory(models.Model):
 # ========================
 class Profile(models.Model):
     SERVICE_CHOICES = [
-        ("sanatkor", "San’atkor"),
-        ("raqqosa", "Raqqosa"),
-        ("gulchi", "Gulchi"),
-        ("mashina", "Mashina ijarasi"),
-        ("other", "Boshqa"),
+        ("tadbir_joyi", "Tadbir joyi"),
+        ("ovqatlanish", "Ovqatlanish"),
+        ("kiyim_aksessuar", "Kiyim-kechak va aksessuarlar"),
+        ("foto_video", "Foto va video"),
+        ("musiqa", "Musiqa va ko‘ngilochar dastur"),
+        ("dekoratsiya", "Dekoratsiya va gulchambar"),
+        ("transport", "Transport va mehmonlar qulayligi"),
+        ("boshqa", "Boshqa xizmatlar"),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
