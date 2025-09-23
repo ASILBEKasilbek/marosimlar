@@ -260,18 +260,22 @@ class ServiceDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         service = self.object
 
-        # O‘xshash xizmatlar (shu kategoriya ichida, o‘zidan tashqari)
+        # O‘xshash xizmatlar
         related = (
             Service.objects
             .filter(service_category=service.service_category)
             .exclude(id=service.id)
             .select_related('provider')
-            .prefetch_related('subcategories')[:4]  # faqat 4 tasi chiqsin
+            .prefetch_related('subcategories')[:4]
         )
 
         context['related_services'] = related
+
+        # Telefon raqam qo‘shish
+        context['phone_number'] = service.provider.profile.phone if hasattr(service.provider, 'profile') else None
+
         return context
-    
+
 # 🔹 Haversine formula
 def haversine(lat1, lon1, lat2, lon2):
     R = 6371  # Yer radiusi (km)

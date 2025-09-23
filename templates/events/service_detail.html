@@ -112,13 +112,12 @@
                     {% endif %}
                 </div>
             </div>
-
             <!-- SMS va Telefon -->
             <div class="d-grid gap-3 my-4">
-                <a href="sms:{{ service.phone_number|default:'998888648807' }}" class="btn btn-lg btn-outline-success w-100">
+                <a href="sms:{{ phone_number|default:'998888648807' }}" class="btn btn-lg btn-outline-success w-100">
                     📩 SMS yuborish
                 </a>
-                <a href="tel:{{ service.phone_number|default:'998888648807' }}" class="btn btn-lg btn-outline-primary w-100">
+                <a href="tel:{{ phone_number|default:'998888648807' }}" class="btn btn-lg btn-outline-primary w-100">
                     📞 Telefon qilish
                 </a>
             </div>
