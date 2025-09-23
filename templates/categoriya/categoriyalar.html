@@ -1,0 +1,18 @@
+<!-- ================= KATEGORIYA PILL BAR ================= -->
+<div class="col-12 mb-4">
+    <h6 class="mb-2 fw-bold text-primary">Tadbir turlari</h6>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'event_list' %}" 
+            class="btn btn-light border rounded-pill px-3 py-1 shadow-sm fw-semibold {% if not request.GET.event_type %}active{% endif %}">
+            🌐 Barchasi
+        </a>
+        {% for event_type in event_types %}
+            <button type="button" 
+                    class="btn btn-light border rounded-pill px-3 py-1 shadow-sm fw-semibold event-type-btn" 
+                    data-event-type-id="{{ event_type.id }}"
+                    onclick="filterByEventType({{ event_type.id }})">
+                {{ event_type.name }}
+            </button>
+        {% endfor %}
+    </div>
+</div>

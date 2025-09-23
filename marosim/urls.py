@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     EventListView, EventDetailView, EventCreateView, ServiceCreateView,
     ProfileEditView, register_view, NotificationsListView, XaritadaView, ServiceDetailView,
-    NearestServiceAPI, ProfileDetailView
+    NearestServiceAPI, ProfileDetailView, CategoriyaListView
 )
 
 urlpatterns = [
@@ -18,4 +18,5 @@ urlpatterns = [
     path("api/nearest_service/", NearestServiceAPI.as_view(), name="nearest_service_api"),
     path("profile/<int:pk>/", ProfileDetailView.as_view(), name="profile_detail"),
     path("profile/edit/", ProfileEditView.as_view(), name="profile_edit"),
+    path("categoriya/<int:category_id>/", CategoriyaListView.as_view(), name="category_events"),
 ]

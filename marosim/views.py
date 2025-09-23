@@ -319,3 +319,21 @@ class NearestServiceAPI(View):
             })
 
         return JsonResponse({"services": data})
+
+
+class CategoriyaListView(ListView):
+    model = ServiceCategory
+    template_name = "categoriya/categoriyalar.html"
+    context_object_name = "services"
+    paginate_by = 10
+    pk_url_kwarg = "category_id"
+    def get_queryset(self):
+        category_id = self.kwargs.get(self.pk_url_kwarg)
+        return Service.objects.filter(service_category_id=category_id).select_related('provider', 'service_category').prefetch_related('subcategories')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category_id = self.kwargs.get(self.pk_url_kwarg)
+        context["category"] = get_object_or_404(ServiceCategory, pk=category_id)
+        return context
+    
