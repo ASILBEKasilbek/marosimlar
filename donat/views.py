@@ -40,3 +40,9 @@ def click_callback(request):
 
     # Bu joyda to‘lovni DB ga yozib qo‘yasiz
     return JsonResponse({"error": 0, "error_note": "Success"})
+
+def send_money(request):
+    # Foydalanuvchi Click yoki bank sahifasida o'z kartasi va summasini kiritadi
+    click_app_link = "https://my.click.uz/"  # yoki rasmiy universal link: https://my.click.uz/p2p
+    return redirect(click_app_link)
+

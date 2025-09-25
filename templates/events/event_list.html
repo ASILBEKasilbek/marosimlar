@@ -5,30 +5,29 @@
 {% block content %}
 <div class="container py-4">
   <div class="row g-4">
-    
+      
       {% include "event_list_file/categoriyalar.html" %}
-    <!-- Asosiy kontent (75%) -->
-    <div class="col-lg-9 col-md-8 order-1 order-md-1 d-flex">
-      <!-- Filter (chap tomoni) -->
-      <div class="me-3" style="flex: 0 0 25%;">
-        {% include "event_list_file/filtr.html" %}
-      </div>
 
-      <!-- Main content (o‘ng tomoni) -->
-      <div style="flex: 0 0 75%;">
-        {% include "event_list_file/service-cart.html" %}
-      </div>
+      <!-- Asosiy kontent (filter + main) -->
+      <div class="col-12 col-lg-9 order-1 order-md-1">
+        <div class="row g-3">
+          <!-- Filter (chap tomoni) -->
+          <div class="col-12 col-md-4 col-lg-3">
+            {% include "event_list_file/filtr.html" %}
+          </div>
 
-    </div>
+          <!-- Main content (o‘ng tomoni) -->
+          <div class="col-12 col-md-8 col-lg-9">
+            {% include "event_list_file/service-cart.html" %}
+          </div>
+        </div>
+      </div>
 
       {% include "event_list_file/donat.html" %}
-
 
   </div>
 </div>
 
-
-<!-- ================= STYLES ================= -->
 <style>
 /* Base styles */
 body {
@@ -81,6 +80,7 @@ body {
 @media (max-width: 991.98px) { /* planshet va kichikroq */
     .card-img-top { height: 160px; }
 }
+
 @media (max-width: 767.98px) { /* telefon */
     .sticky-lg-top { position: relative !important; top: auto !important; }
     .card-img-top { height: 140px; }
@@ -89,24 +89,18 @@ body {
 }
 </style>
 
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const filterForm = document.getElementById('filter-form');
-    const filterContainer = document.querySelector('#filter-results'); // Natijalarni chiqaradigan joy
+    const filterContainer = document.querySelector('#filter-results');
 
-    // 🔹 Form ichidagi barcha input o'zgarishini kuzatamiz
-    filterForm.addEventListener('change', () => {
-        applyFilters();
-    });
+    filterForm.addEventListener('change', () => applyFilters());
 
-    // 🔹 Event type tugmalari uchun delegation
     document.body.addEventListener('click', e => {
         if (e.target.matches('.event-type-btn')) {
             const eventTypeId = e.target.dataset.eventTypeId;
             document.getElementById('event-type-input').value = eventTypeId;
 
-            // Aktiv class qo‘yish
             document.querySelectorAll('.event-type-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
 
@@ -114,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 🔹 AJAX orqali filterlarni yuborish
     async function applyFilters() {
         const formData = new FormData(filterForm);
         const queryString = new URLSearchParams(formData).toString();
@@ -125,11 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const html = await response.text();
 
-            // Faqat natijalar qismi yangilanadi
             if (filterContainer) {
                 filterContainer.innerHTML = html;
             } else {
-                // Agar alohida container yo‘q bo‘lsa, fallback qilib sahifani reload qilamiz
                 window.location.search = queryString;
             }
         } catch (error) {
@@ -138,5 +129,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
-
 {% endblock %}
