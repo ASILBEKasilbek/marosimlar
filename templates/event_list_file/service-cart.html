@@ -1,0 +1,61 @@
+
+<!-- SORT DROPDOWN -->
+<div class="d-flex justify-content-end mb-3">
+    <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle shadow-sm" type="button" data-bs-toggle="dropdown">
+            Tartiblash
+        </button>
+        <ul class="dropdown-menu shadow">
+            <li><a class="dropdown-item" href="?sort=popular{% if request.GET.event_type %}&event_type={{ request.GET.event_type }}{% endif %}">🔥 Ommabop</a></li>
+            <li><a class="dropdown-item" href="?sort=cheap{% if request.GET.event_type %}&event_type={{ request.GET.event_type }}{% endif %}">💸 Arzon</a></li>
+            <li><a class="dropdown-item" href="?sort=expensive{% if request.GET.event_type %}&event_type={{ request.GET.event_type }}{% endif %}">💎 Qimmat</a></li>
+            <li><a class="dropdown-item" href="?sort=top-rated{% if request.GET.event_type %}&event_type={{ request.GET.event_type }}{% endif %}">⭐ Yuqori baholangan</a></li>
+        </ul>
+    </div>
+</div>
+
+<!-- ================= CARD GRID ================= -->
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+    {% for service in services %}
+    <div class="col">
+        <div class="card h-100 shadow-sm hover-shadow">
+            {% if service.image1 %}
+            <img src="{{ service.image1.url }}" class="card-img-top" alt="{{ service.title }}" loading="lazy">
+            {% endif %}
+            <div class="card-body">
+                <h6 class="card-title fw-bold mb-2">{{ service.title }}</h6>
+                <p class="text-muted small mb-3">{{ service.description|truncatewords:12 }}</p>
+                <a href="{% url 'service_detail' slug=service.slug %}" 
+                    class="btn btn-outline-primary btn-sm w-100">Batafsil →</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center">
+        <p class="text-muted">Hech qanday xizmat topilmadi.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- PAGINATION -->
+{% if services.has_other_pages %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if services.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ services.previous_page_number }}">Oldingi</a>
+        </li>
+        {% endif %}
+        {% for num in services.paginator.page_range %}
+        <li class="page-item {% if services.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+        {% if services.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ services.next_page_number }}">Keyingi</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

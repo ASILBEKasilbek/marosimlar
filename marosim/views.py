@@ -81,7 +81,21 @@ class EventListView(ListView):
             Prefetch('service_categories', queryset=ServiceCategory.objects.prefetch_related('subcategories'))
         )
         context['categories'] = ServiceCategory.objects.all()
+
+        # 🎶 Musiqa janrlari
+        context['genres'] = [
+            "Christian", "Club", "Country", "Electronic", "Hip Hop", "Indie",
+            "International", "Jazz", "Oldies", "Pop", "R&B/Soul", "Rock",
+            "Top 40", "South Asian"
+        ]
+
+        # GET orqali tanlangan qiymatlar
+        context["selected_genres"] = self.request.GET.getlist("genres") 
+        context["selected_diversity"] = self.request.GET.getlist("diversity")  # <-- bu qo‘shildi
+
         return context
+
+
 
 # ============================================
 # Event Detail View

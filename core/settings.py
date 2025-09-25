@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'marosim',
     'accounts',
     'widget_tweaks',
+    'donat',
     # 'django.contrib.sites',
     # 'allauth',
     # 'allauth.account',

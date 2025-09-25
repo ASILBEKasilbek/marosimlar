@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('marosim.urls')),
+    path('', include('donat.urls')),
 ]
 
 if settings.DEBUG:  # faqat developmentda
