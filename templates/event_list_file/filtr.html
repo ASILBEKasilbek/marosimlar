@@ -1,11 +1,10 @@
 {% load custom_filters %}
-<div class="border rounded-4 shadow-sm p-4 bg-white sticky-top" style="top: 16px;">
-    
+
   <!-- Title -->
-  <h5 class="fw-semibold text-dark mb-3">🔎 Filtrlash</h5>
+  <h5 class="fw-bold text-primary mb-4" style="font-size: 1.1rem;">🔎 Filtrlash</h5>
 
   <!-- Form -->
-  <form method="get" id="filter-form" class="d-flex flex-column gap-3">
+  <form method="get" id="filter-form" class="d-flex flex-column gap-4">
 
     <input type="hidden" name="event_type" id="event-type-input" value="{{ request.GET.event_type }}">
 
@@ -13,9 +12,10 @@
     <div>
       <label class="form-label small text-muted mb-1">Qidirish</label>
       <input type="text" name="q" 
-              class="form-control rounded-3 px-3 py-2" 
+              class="form-control rounded-3 px-3 py-2 shadow-sm" 
               placeholder="Masalan: to‘y xizmatlari" 
-              value="{{ request.GET.q }}">
+              value="{{ request.GET.q }}"
+              style="transition: border-color 0.3s;">
     </div>
 
     <!-- Accordion Filters -->
@@ -24,36 +24,36 @@
       <!-- Price -->
       <div class="accordion-item">
         <h6 class="accordion-header">
-          <button class="accordion-button collapsed small fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#priceCollapse">
+          <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#priceCollapse">
             💰 Narx oralig‘i
           </button>
         </h6>
         <div id="priceCollapse" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
-          <div class="accordion-body d-flex flex-column gap-2 small">
+          <div class="accordion-body d-flex flex-column gap-3 small">
 
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="price_range" id="price_under_500" value="under_500" {% if request.GET.price_range == "under_500" %}checked{% endif %}>
-              <label class="form-check-label" for="price_under_500">$500 dan past</label>
+              <input class="form-check-input" type="radio" name="price_range" id="price_under_500" value="under_500" {% if request.GET.price_range == "under_500" %}checked{% endif %} style="width:1.2rem;height:1.2rem;">
+              <label class="form-check-label fw-medium" for="price_under_500">$500 dan past</label>
             </div>
 
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="price_range" id="price_500_999" value="500_999" {% if request.GET.price_range == "500_999" %}checked{% endif %}>
-              <label class="form-check-label" for="price_500_999">$500 - $999</label>
+              <input class="form-check-input" type="radio" name="price_range" id="price_500_999" value="500_999" {% if request.GET.price_range == "500_999" %}checked{% endif %} style="width:1.2rem;height:1.2rem;">
+              <label class="form-check-label fw-medium" for="price_500_999">$500 - $999</label>
             </div>
 
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="price_range" id="price_1000_1499" value="1000_1499" {% if request.GET.price_range == "1000_1499" %}checked{% endif %}>
-              <label class="form-check-label" for="price_1000_1499">$1000 - $1499</label>
+              <input class="form-check-input" type="radio" name="price_range" id="price_1000_1499" value="1000_1499" {% if request.GET.price_range == "1000_1499" %}checked{% endif %} style="width:1.2rem;height:1.2rem;">
+              <label class="form-check-label fw-medium" for="price_1000_1499">$1000 - $1499</label>
             </div>
 
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="price_range" id="price_1500_1999" value="1500_1999" {% if request.GET.price_range == "1500_1999" %}checked{% endif %}>
-              <label class="form-check-label" for="price_1500_1999">$1500 - $1999</label>
+              <input class="form-check-input" type="radio" name="price_range" id="price_1500_1999" value="1500_1999" {% if request.GET.price_range == "1500_1999" %}checked{% endif %} style="width:1.2rem;height:1.2rem;">
+              <label class="form-check-label fw-medium" for="price_1500_1999">$1500 - $1999</label>
             </div>
 
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="price_range" id="price_2000_plus" value="2000_plus" {% if request.GET.price_range == "2000_plus" %}checked{% endif %}>
-              <label class="form-check-label" for="price_2000_plus">$2000+</label>
+              <input class="form-check-input" type="radio" name="price_range" id="price_2000_plus" value="2000_plus" {% if request.GET.price_range == "2000_plus" %}checked{% endif %} style="width:1.2rem;height:1.2rem;">
+              <label class="form-check-label fw-medium" for="price_2000_plus">$2000+</label>
             </div>
 
           </div>
@@ -63,13 +63,13 @@
       <!-- City -->
       <div class="accordion-item">
         <h6 class="accordion-header">
-          <button class="accordion-button collapsed small fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#cityCollapse">
+          <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#cityCollapse">
             📍 Shahar
           </button>
         </h6>
         <div id="cityCollapse" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
           <div class="accordion-body">
-            <select name="city" class="form-select rounded-3 small">
+            <select name="city" class="form-select rounded-3 shadow-sm">
               <option value="">Barchasi</option>
               <option value="tashkent" {% if request.GET.city == "tashkent" %}selected{% endif %}>Toshkent</option>
               <option value="samarkand" {% if request.GET.city == "samarkand" %}selected{% endif %}>Samarqand</option>
@@ -82,16 +82,16 @@
       <!-- Music Genres -->
       <div class="accordion-item">
         <h6 class="accordion-header">
-          <button class="accordion-button collapsed small fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#genreCollapse">
+          <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#genreCollapse">
             🎶 Musiqa janrlari
           </button>
         </h6>
         <div id="genreCollapse" class="accordion-collapse collapse" data-bs-parent="#filterAccordion">
-          <div class="accordion-body d-flex flex-column gap-2 small">
+          <div class="accordion-body d-flex flex-column gap-3 small" style="max-height:300px; overflow-y:auto;">
             {% for genre in genres %}
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" name="genres" id="genre_{{ forloop.counter }}" value="{{ genre }}" {% if genre in selected_genres %}checked{% endif %}>
-              <label class="form-check-label" for="genre_{{ forloop.counter }}">{{ genre }}</label>
+              <input class="form-check-input" type="checkbox" name="genres" id="genre_{{ forloop.counter }}" value="{{ genre }}" {% if genre in selected_genres %}checked{% endif %} style="width:1.2rem;height:1.2rem;">
+              <label class="form-check-label fw-medium" for="genre_{{ forloop.counter }}">{{ genre }}</label>
             </div>
             {% endfor %}
           </div>
@@ -104,18 +104,19 @@
     <div>
       <label class="form-label small text-muted mb-1">⭐ Minimal baho</label>
       <input type="number" name="min_rating" 
-              class="form-control rounded-3 px-3 py-2"
+              class="form-control rounded-3 px-3 py-2 shadow-sm"
               min="1" max="5" 
               placeholder="1 - 5" 
               value="{{ request.GET.min_rating }}">
     </div>
 
     <!-- Buttons -->
-    <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 shadow-sm fw-semibold">
+    <button type="submit" class="btn w-100 py-2 rounded-3 shadow-sm fw-semibold text-white" style="background: linear-gradient(90deg,#4e8ef7,#1a6efb);">
       Filtrlash
     </button>
-    <a href="?" class="btn btn-outline-secondary w-100 py-2 rounded-3">
+    <a href="?" class="btn btn-outline-secondary w-100 py-2 rounded-3 shadow-sm mt-2">
       Tozalash
     </a>
+
   </form>
-</div>
+
