@@ -14,28 +14,155 @@
     </div>
 </div>
 
-<!-- ================= CARD GRID ================= -->
-<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
-    {% for service in services %}
-    <div class="col">
-        <div class="card h-100 shadow-sm hover-shadow">
-            {% if service.image1 %}
-            <img src="{{ service.image1.url }}" class="card-img-top" alt="{{ service.title }}" loading="lazy">
-            {% endif %}
-            <div class="card-body">
-                <h6 class="card-title fw-bold mb-2">{{ service.title }}</h6>
-                <p class="text-muted small mb-3">{{ service.description|truncatewords:12 }}</p>
-                <a href="{% url 'service_detail' slug=service.slug %}" 
-                    class="btn btn-outline-primary btn-sm w-100">Batafsil →</a>
-            </div>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3" role="list">
+  {% for service in services %}
+  <div class="col" role="listitem">
+    <div class="card h-100 border-0 shadow-sm hover-card d-flex flex-column position-relative overflow-hidden" aria-labelledby="service-{{ service.slug }}-title">
+
+      <!-- Image or placeholder -->
+      <div class="position-relative" style="height: 180px; background: #f8f9fa;">
+        {% if service.image1 %}
+        <img src="{{ service.image1.url }}" 
+             class="card-img-top w-100 h-100" 
+             alt="{{ service.title }} rasm" 
+             loading="lazy" 
+             decoding="async" 
+             style="object-fit: cover; transition: transform 0.3s ease;">
+        {% endif %}
+
+        <!-- Verified badge (top-right, rasm ustida) -->
+        {% if service.is_verified %}
+        <div class="verified-star" title="Verified on MyPlatform">
+          ★
         </div>
+        {% endif %}
+
+        <!-- Price badge (top-left) -->
+        {% if service.price %}
+        <span class="badge bg-primary text-white position-absolute top-2 start-2 px-2 py-1 rounded-pill" aria-label="Narx: {{ service.price|floatformat:2 }} so'm">
+          💰 {{ service.price|floatformat:2 }} so'm
+        </span>
+        {% else %}
+        <span class="badge bg-warning text-dark position-absolute top-2 start-2 px-2 py-1 rounded-pill" aria-label="Narx: kelishilgan">
+          Kelishilgan
+        </span>
+        {% endif %}
+      </div>
+
+      <!-- Card body -->
+      <div class="card-body d-flex flex-column p-3">
+        <!-- Title -->
+        <h6 id="service-{{ service.slug }}-title" class="card-title fw-bold mb-2 text-truncate" style="font-size: 1.1rem;">{{ service.title }}</h6>
+
+        <!-- Short description -->
+        {% if service.description %}
+        <p class="text-muted small mb-3 text-truncate-2" style="font-size: 0.9rem;">{{ service.description|truncatewords:15 }}</p>
+        {% endif %}
+
+        <!-- No-image fallback -->
+        {% if not service.image1 %}
+          {% if service.price %}
+          <p class="text-primary fw-bold mb-1" aria-label="Narx: {{ service.price|floatformat:2 }} so'm">💰 {{ service.price|floatformat:2 }} so'm</p>
+          {% else %}
+          <p class="text-warning fw-bold mb-1" aria-label="Narx: kelishilgan">Narx: kelishilgan</p>
+          {% endif %}
+        {% endif %}
+
+        <!-- Created At -->
+        {% if service.created_at %}
+        <p class="text-muted small mb-2" aria-label="Yaratilgan sana: {{ service.created_at|date:'d M Y' }}">📅 {{ service.created_at|date:"d M Y" }}</p>
+        {% endif %}
+
+        <!-- CTA button -->
+        <a href="{% url 'service_detail' slug=service.slug %}" class="btn btn-outline-primary btn-sm w-100 mt-auto rounded-pill" role="button">
+          Batafsil →
+        </a>
+      </div>
     </div>
-    {% empty %}
-    <div class="col-12 text-center">
-        <p class="text-muted">Hech qanday xizmat topilmadi.</p>
-    </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
 </div>
+
+<style>
+/* Verified star on top-right of image */
+.verified-star {
+  font-size: 20px;
+  color: gold;
+  text-shadow: 0 0 2px rgba(0,0,0,0.5);
+  position: absolute;      /* rasm ustiga chiqadi */
+  top: 8px;                /* yuqori chekka */
+  right: 8px;              /* o‘ng chekka */
+  cursor: default;
+  transition: transform 0.2s;
+}
+.verified-star:hover {
+  transform: rotate(20deg) scale(1.2);
+}
+</style>
+
+<style>
+/* CSS Variables for Theming */
+:root {
+  --primary: #007bff;
+  --warning: #ffc107;
+  --shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Minimal hover for performance and accessibility */
+.hover-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-card:hover, .hover-card:focus {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow);
+}
+
+/* Image hover effect */
+.hover-card img {
+  transition: transform 0.3s ease;
+}
+.hover-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Text truncation */
+.text-truncate {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Badge styling */
+.badge {
+  font-size: 0.85rem;
+  padding: 0.3em 0.6em;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease;
+}
+.hover-card:hover .badge {
+  transform: scale(1.05);
+}
+
+/* High contrast for accessibility */
+.badge.bg-primary { background-color: var(--primary) !important; color: #fff; }
+.badge.bg-warning { background-color: var(--warning) !important; color: #212529; }
+
+/* Button hover */
+.btn-outline-primary {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.btn-outline-primary:hover {
+  background-color: var(--primary);
+  color: #fff;
+}
+</style>
 
 <!-- PAGINATION -->
 {% if services.has_other_pages %}
