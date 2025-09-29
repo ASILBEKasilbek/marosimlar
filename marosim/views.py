@@ -92,7 +92,6 @@ class EventListView(ListView):
         # GET orqali tanlangan qiymatlar
         context["selected_genres"] = self.request.GET.getlist("genres") 
         context["selected_diversity"] = self.request.GET.getlist("diversity")  # <-- bu qo‘shildi
-
         return context
 
 

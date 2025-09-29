@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'accounts',
     'widget_tweaks',
     'donat',
+    'django.contrib.humanize',
     # 'django.contrib.sites',
     # 'allauth',
     # 'allauth.account',
