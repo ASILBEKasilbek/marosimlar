@@ -80,7 +80,7 @@ async def on_startup():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 import os
 
 @app.api_route("/invite/{slug}", methods=["GET", "HEAD"], response_class=HTMLResponse)
@@ -108,6 +108,10 @@ from fastapi.staticfiles import StaticFiles
 static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
 os.makedirs(static_dir, exist_ok=True)
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+@app.get("/download")
+async def download_apk():
+    return RedirectResponse(url="/static/TuyBox.apk", status_code=302)
 
 @app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def root():
