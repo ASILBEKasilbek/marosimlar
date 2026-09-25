@@ -67,6 +67,18 @@ const VENUES_3D: Venue3DItem[] = [
     features: ['Milliy Ganchkorlik', 'Jonli Orkestr Maydoni', 'Favvoralar Bog\'i', 'Maxsus Oshpazlik Oshxonasi'],
     description: 'Sharqona nozik naqshlar va zamonaviy yorug\'lik texnologiyasi uyg\'unlashgan muhtasham saroy.',
     decorStyle: 'Sharqona Mumtoz',
+  },
+  {
+    id: 'oftob',
+    name: 'Oftob Shaxona: Ochiq Osmon & Sharshara',
+    city: 'Toshkent, Qibray / Tabiat qo\'ynida',
+    capacity: '700 - 1000 kishi',
+    pricePerDay: "55,000,000 so'm",
+    rating: 4.99,
+    reviews: 420,
+    features: ['Oqib Turuvchi Sharshara', 'Yulduzli Ochiq Osmon', 'Suv ustidagi Sahna', 'Lazer & Chiroq Shousi', '250 Mashina Parking'],
+    description: 'Yashil tabiat bog\'ida, oqshomgi ochiq osmon ostida joylashgan to\'yxona. Tabiiy sharshara, yorug\'lik favvoralari va toza havo.',
+    decorStyle: 'Ochiq Osmon & Sharshara',
   }
 ];
 
@@ -408,6 +420,54 @@ export const Venue3DScreen: React.FC = () => {
           }
           scene.add(chandelierGroup);
 
+          // 5. OUTDOOR WATERFALL & STARRY SKY (Oftob Shaxona Scene)
+          const outdoorGroup = new THREE.Group();
+          outdoorGroup.visible = false;
+
+          // Twinkling Star Field (300 Stars)
+          const starGeo = new THREE.BufferGeometry();
+          const starCount = 300;
+          const starPos = new Float32Array(starCount * 3);
+          for(let i=0; i<starCount*3; i+=3) {
+            starPos[i] = (Math.random() - 0.5) * 70;
+            starPos[i+1] = Math.random() * 25 + 8;
+            starPos[i+2] = (Math.random() - 0.5) * 70;
+          }
+          starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+          const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.35, transparent: true, opacity: 0.85 });
+          const starField = new THREE.Points(starGeo, starMat);
+          outdoorGroup.add(starField);
+
+          // Waterfall Rock Cliff behind stage
+          const cliffGeo = new THREE.BoxGeometry(18, 14, 3);
+          const cliffMat = new THREE.MeshStandardMaterial({ color: 0x1a2233, roughness: 0.95 });
+          const cliff = new THREE.Mesh(cliffGeo, cliffMat);
+          cliff.position.set(0, 6, -14);
+          outdoorGroup.add(cliff);
+
+          // Flowing Waterfall Stream
+          const waterGeo = new THREE.PlaneGeometry(10, 13, 16, 16);
+          const waterMat = new THREE.MeshStandardMaterial({
+            color: 0x38bdf8,
+            roughness: 0.05,
+            metalness: 0.7,
+            transparent: true,
+            opacity: 0.8,
+          });
+          const waterfall = new THREE.Mesh(waterGeo, waterMat);
+          waterfall.position.set(0, 6, -12.4);
+          outdoorGroup.add(waterfall);
+
+          // Reflective Water Pool around stage
+          const poolGeo = new THREE.RingGeometry(6, 14, 32);
+          const poolMat = new THREE.MeshStandardMaterial({ color: 0x08192e, roughness: 0.05, metalness: 0.9 });
+          const pool = new THREE.Mesh(poolGeo, poolMat);
+          pool.rotation.x = -Math.PI / 2;
+          pool.position.y = 0.03;
+          outdoorGroup.add(pool);
+
+          scene.add(outdoorGroup);
+
           // Animation Loop
           let clock = new THREE.Clock();
           function animate() {
@@ -466,6 +526,20 @@ export const Venue3DScreen: React.FC = () => {
                 gsapFly(0, 3.5, -1, 0, 2.8, -8);
               } else if (payload === 'table') {
                 gsapFly(-5, 2.5, 6, -7, 1.2, 3);
+              }
+            } else if (action === 'setVenue') {
+              if (payload === 'oftob') {
+                chandelierGroup.visible = false;
+                outdoorGroup.visible = true;
+                scene.background.setHex(0x040816);
+                ambientLight.color.setHex(0x93c5fd);
+                stageSpot.color.setHex(0xffffff);
+              } else {
+                chandelierGroup.visible = true;
+                outdoorGroup.visible = false;
+                scene.background.setHex(0x070B14);
+                ambientLight.color.setHex(0xffeedd);
+                stageSpot.color.setHex(0xfff5e6);
               }
             }
           };
@@ -528,7 +602,10 @@ export const Venue3DScreen: React.FC = () => {
               <TouchableOpacity
                 key={item.id}
                 style={[styles.venuePill, isSelected && styles.venuePillActive]}
-                onPress={() => setSelectedVenue(item)}
+                onPress={() => {
+                  setSelectedVenue(item);
+                  sendTo3D('setVenue', item.id);
+                }}
               >
                 <Ionicons
                   name={isSelected ? "business" : "business-outline"}

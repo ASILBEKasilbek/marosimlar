@@ -8,7 +8,7 @@ import { LuxuryCard } from '../components/common/LuxuryCard';
 import { GoldButton } from '../components/common/GoldButton';
 
 export const DigitalInvitationScreen: React.FC = () => {
-  const inviteLink = "https://tuybox.asilbek.tech/invite/asilbek-madina-2026";
+  const inviteLink = "https://tuybox.asilbek.tech/invite/jasurbek-madina-2026";
 
   const handleShare = async () => {
     try {
@@ -32,7 +32,7 @@ export const DigitalInvitationScreen: React.FC = () => {
       {/* RSVP Tracker */}
       <RSVPTrackerCard
         title="To'y Taklifnomasi"
-        groomAndBride="Asilbek & Madina"
+        groomAndBride="Jasurbek & Madina"
         daysRemaining={19}
         attendingCount={240}
         declinedCount={15}

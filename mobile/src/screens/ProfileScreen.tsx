@@ -16,9 +16,15 @@ import { COLORS } from '../theme/colors';
 
 interface ProfileScreenProps {
   onNavigateTab?: (tab: 'home' | 'venue3d' | 'invites') => void;
+  onOpenMap?: () => void;
+  onOpenToyona?: () => void;
 }
 
-export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigateTab }) => {
+export const ProfileScreen: React.FC<ProfileScreenProps> = ({
+  onNavigateTab,
+  onOpenMap,
+  onOpenToyona,
+}) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   const handleShareApp = async () => {
@@ -71,7 +77,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigateTab }) =
 
             <View style={styles.userInfo}>
               <View style={styles.nameRow}>
-                <Text style={styles.userName}>Asilbek & Madina</Text>
+                <Text style={styles.userName}>Jasurbek & Madina</Text>
               </View>
               <Text style={styles.userPhone}>+998 (90) 123-45-67</Text>
               
@@ -182,6 +188,32 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigateTab }) =
             <View>
               <Text style={styles.menuItemTitle}>Raqamli Taklifnomalar Boshqaruvi</Text>
               <Text style={styles.menuItemSubtitle}>Mehmonlar RSVP javoblari va ro'yxat</Text>
+            </View>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color="#64748B" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem} onPress={() => onOpenToyona && onOpenToyona()}>
+          <View style={styles.menuItemLeft}>
+            <View style={styles.menuIconContainer}>
+              <Ionicons name="card-outline" size={18} color={COLORS.gold[400]} />
+            </View>
+            <View>
+              <Text style={styles.menuItemTitle}>To'yona Jamg'armasi & Avans To'lovi</Text>
+              <Text style={styles.menuItemSubtitle}>Click va Payme orqali to'lovlar & hisobot</Text>
+            </View>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color="#64748B" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem} onPress={() => onOpenMap && onOpenMap()}>
+          <View style={styles.menuItemLeft}>
+            <View style={styles.menuIconContainer}>
+              <Ionicons name="map-outline" size={18} color={COLORS.gold[400]} />
+            </View>
+            <View>
+              <Text style={styles.menuItemTitle}>Interaktiv To'yxonalar Xaritasi</Text>
+              <Text style={styles.menuItemSubtitle}>GPS masofa, manzil va marshrut</Text>
             </View>
           </View>
           <Ionicons name="chevron-forward" size={18} color="#64748B" />

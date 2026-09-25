@@ -15,6 +15,8 @@ from app.api.v1.bookings import router as bookings_router
 from app.api.v1.budget import router as budget_router
 from app.api.v1.invitations import router as invitations_router
 from app.api.v1.webhooks import router as webhooks_router
+from app.api.v1.payments import router as payments_router
+from app.api.v1.social import router as social_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -73,6 +75,8 @@ app.include_router(bookings_router, prefix=settings.API_V1_STR)
 app.include_router(budget_router, prefix=settings.API_V1_STR)
 app.include_router(invitations_router, prefix=settings.API_V1_STR)
 app.include_router(webhooks_router, prefix=settings.API_V1_STR)
+app.include_router(payments_router, prefix=settings.API_V1_STR)
+app.include_router(social_router, prefix=settings.API_V1_STR)
 
 @app.on_event("startup")
 async def on_startup():
@@ -94,7 +98,7 @@ async def view_public_invitation(slug: str):
             html = f.read()
         
         # O'zbek to'ylari uchun namuna ma'lumotlar bilan to'ldirish
-        html = html.replace("{{ groom_name }}", "Asilbek")
+        html = html.replace("{{ groom_name }}", "Jasurbek")
         html = html.replace("{{ bride_name }}", "Madina")
         html = html.replace("{{ venue_name }}", "Versal Grand Palace")
         html = html.replace("{{ venue_address }}", "Toshkent sh., Shota Rustaveli ko'chasi 45")

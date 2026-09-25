@@ -12,9 +12,17 @@ interface HomeScreenProps {
   onSelectService: (serviceId: number) => void;
   onOpenBudget: () => void;
   onOpen3D?: () => void;
+  onOpenMap?: () => void;
+  onOpenToyona?: () => void;
 }
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenBudget, onOpen3D }) => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({
+  onSelectService,
+  onOpenBudget,
+  onOpen3D,
+  onOpenMap,
+  onOpenToyona,
+}) => {
   const [selectedCat, setSelectedCat] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -86,10 +94,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenB
           </View>
         </View>
 
-        <TouchableOpacity style={styles.citySelector}>
-          <Ionicons name="location-sharp" size={12} color={COLORS.gold[400]} style={{ marginRight: 3 }} />
-          <Text style={styles.cityText}>Toshkent</Text>
-          <Ionicons name="chevron-down" size={11} color={COLORS.gold[400]} style={{ marginLeft: 3 }} />
+        <TouchableOpacity 
+          style={styles.citySelector}
+          onPress={() => onOpenMap && onOpenMap()}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="map-outline" size={13} color={COLORS.gold[400]} style={{ marginRight: 4 }} />
+          <Text style={styles.cityText}>Xaritada</Text>
+          <Ionicons name="chevron-forward" size={11} color={COLORS.gold[400]} style={{ marginLeft: 2 }} />
         </TouchableOpacity>
       </View>
 
@@ -181,6 +193,49 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenB
           </View>
         </LinearGradient>
       </TouchableOpacity>
+
+      {/* 2-Column Luxury Features: Xarita & To'yona (Click/Payme) */}
+      <View style={styles.quickFeaturesRow}>
+        <TouchableOpacity
+          style={styles.quickFeatureCard}
+          activeOpacity={0.88}
+          onPress={() => onOpenMap && onOpenMap()}
+        >
+          <LinearGradient
+            colors={['#172238', '#0C1322']}
+            style={styles.quickFeatureGradient}
+          >
+            <View style={[styles.quickFeatureIconBox, { backgroundColor: 'rgba(56, 189, 248, 0.15)' }]}>
+              <Ionicons name="map" size={20} color="#38BDF8" />
+            </View>
+            <View style={styles.quickFeatureTextCol}>
+              <Text style={styles.quickFeatureTitle}>Zallar Xaritasi</Text>
+              <Text style={styles.quickFeatureSubtitle}>Masofa & Yo'l</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={14} color="#64748B" />
+          </LinearGradient>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.quickFeatureCard}
+          activeOpacity={0.88}
+          onPress={() => onOpenToyona && onOpenToyona()}
+        >
+          <LinearGradient
+            colors={['#172238', '#0C1322']}
+            style={styles.quickFeatureGradient}
+          >
+            <View style={[styles.quickFeatureIconBox, { backgroundColor: 'rgba(212, 175, 55, 0.15)' }]}>
+              <Ionicons name="card" size={20} color={COLORS.gold[400]} />
+            </View>
+            <View style={styles.quickFeatureTextCol}>
+              <Text style={styles.quickFeatureTitle}>To'yona To'lov</Text>
+              <Text style={styles.quickFeatureSubtitle}>Click & Payme</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={14} color="#64748B" />
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
 
       {/* Stories / Real Weddings Carousel */}
       <View style={styles.storiesContainer}>
@@ -670,5 +725,44 @@ const styles = StyleSheet.create({
     color: COLORS.gold[400],
     fontSize: 12,
     fontWeight: '700',
-  }
+  },
+  quickFeaturesRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    gap: 12,
+    marginBottom: 20,
+  },
+  quickFeatureCard: {
+    flex: 1,
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.25)',
+  },
+  quickFeatureGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+  },
+  quickFeatureIconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  quickFeatureTextCol: {
+    flex: 1,
+  },
+  quickFeatureTitle: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  quickFeatureSubtitle: {
+    color: '#94A3B8',
+    fontSize: 10,
+    marginTop: 2,
+  },
 });

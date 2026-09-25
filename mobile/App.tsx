@@ -6,22 +6,60 @@ import { ServiceDetailScreen } from './src/screens/ServiceDetailScreen';
 import { Venue3DScreen } from './src/screens/Venue3DScreen';
 import { DigitalInvitationScreen } from './src/screens/DigitalInvitationScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
+import { VenueMapScreen } from './src/screens/VenueMapScreen';
+import { ToyonaPaymentScreen } from './src/screens/ToyonaPaymentScreen';
 import { ModernTabBar, TabType } from './src/components/navigation/ModernTabBar';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
+  const [activeOverlay, setActiveOverlay] = useState<'none' | 'map' | 'toyona'>('none');
 
   const renderScreen = () => {
+    // 1. Overlay screens (Map / To'yona)
+    if (activeOverlay === 'map') {
+      return (
+        <VenueMapScreen
+          onBack={() => setActiveOverlay('none')}
+          onSelectVenue={(id) => {
+            setActiveOverlay('none');
+            setSelectedServiceId(id);
+          }}
+          onOpen3D={() => {
+            setActiveOverlay('none');
+            setActiveTab('venue3d');
+          }}
+        />
+      );
+    }
+
+    if (activeOverlay === 'toyona') {
+      return (
+        <ToyonaPaymentScreen
+          onBack={() => setActiveOverlay('none')}
+        />
+      );
+    }
+
+    // 2. Service Detail Screen
     if (selectedServiceId !== null) {
       return (
         <ServiceDetailScreen
           serviceId={selectedServiceId}
           onBack={() => setSelectedServiceId(null)}
+          onOpen3D={() => {
+            setSelectedServiceId(null);
+            setActiveTab('venue3d');
+          }}
+          onOpenMap={() => {
+            setSelectedServiceId(null);
+            setActiveOverlay('map');
+          }}
         />
       );
     }
 
+    // 3. Tab Screens (4 Main Tabs)
     switch (activeTab) {
       case 'home':
         return (
@@ -29,6 +67,8 @@ export default function App() {
             onSelectService={(id) => setSelectedServiceId(id)}
             onOpenBudget={() => setActiveTab('invites')}
             onOpen3D={() => setActiveTab('venue3d')}
+            onOpenMap={() => setActiveOverlay('map')}
+            onOpenToyona={() => setActiveOverlay('toyona')}
           />
         );
       case 'venue3d':
@@ -36,11 +76,19 @@ export default function App() {
       case 'invites':
         return <DigitalInvitationScreen />;
       case 'profile':
-        return <ProfileScreen onNavigateTab={(tab) => setActiveTab(tab)} />;
+        return (
+          <ProfileScreen
+            onNavigateTab={(tab) => setActiveTab(tab)}
+            onOpenMap={() => setActiveOverlay('map')}
+            onOpenToyona={() => setActiveOverlay('toyona')}
+          />
+        );
       default:
         return null;
     }
   };
+
+  const isFullscreenView = selectedServiceId !== null || activeOverlay !== 'none';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -52,11 +100,12 @@ export default function App() {
       </View>
 
       {/* Luxury Floating Bottom Navigation Bar (4 Buttons) */}
-      {selectedServiceId === null && (
+      {!isFullscreenView && (
         <ModernTabBar
           activeTab={activeTab}
           onTabChange={(tab) => {
             setSelectedServiceId(null);
+            setActiveOverlay('none');
             setActiveTab(tab);
           }}
         />
