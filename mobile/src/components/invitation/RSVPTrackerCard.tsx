@@ -19,7 +19,7 @@ export const RSVPTrackerCard: React.FC<RSVPTrackerCardProps> = ({
   declinedCount,
 }) => {
   return (
-    <LuxuryCard style={styles.card}>
+    <LuxuryCard style={styles.card} variant="glass">
       <View style={styles.header}>
         <Text style={styles.badge}>💌 RAQAMLI TAKLIFNOMA</Text>
         <Text style={styles.coupleNames}>{groomAndBride}</Text>
@@ -27,18 +27,18 @@ export const RSVPTrackerCard: React.FC<RSVPTrackerCardProps> = ({
       </View>
 
       <View style={styles.statsRow}>
-        <View style={[styles.statBox, { backgroundColor: '#ECFDF5' }]}>
-          <Text style={[styles.statNumber, { color: '#059669' }]}>{attendingCount}</Text>
+        <View style={[styles.statBox, { backgroundColor: 'rgba(16, 185, 129, 0.15)', borderColor: 'rgba(16, 185, 129, 0.3)' }]}>
+          <Text style={[styles.statNumber, { color: '#10B981' }]}>{attendingCount}</Text>
           <Text style={styles.statLabel}>Boradiganlar</Text>
         </View>
 
-        <View style={[styles.statBox, { backgroundColor: '#FEF2F2' }]}>
-          <Text style={[styles.statNumber, { color: '#DC2626' }]}>{declinedCount}</Text>
+        <View style={[styles.statBox, { backgroundColor: 'rgba(239, 68, 68, 0.15)', borderColor: 'rgba(239, 68, 68, 0.3)' }]}>
+          <Text style={[styles.statNumber, { color: '#EF4444' }]}>{declinedCount}</Text>
           <Text style={styles.statLabel}>Borolmaydiganlar</Text>
         </View>
 
-        <View style={[styles.statBox, { backgroundColor: '#F3F4F6' }]}>
-          <Text style={[styles.statNumber, { color: '#111827' }]}>{attendingCount + declinedCount}</Text>
+        <View style={[styles.statBox, { backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(212, 175, 55, 0.2)' }]}>
+          <Text style={[styles.statNumber, { color: COLORS.gold[400] }]}>{attendingCount + declinedCount}</Text>
           <Text style={styles.statLabel}>Jami javoblar</Text>
         </View>
       </View>
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   badge: {
-    color: COLORS.gold[700],
+    color: COLORS.gold[400],
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 1,
@@ -64,11 +64,11 @@ const styles = StyleSheet.create({
   coupleNames: {
     fontSize: 20,
     fontWeight: '800',
-    color: '#111827',
+    color: '#FFFFFF',
   },
   daysText: {
     fontSize: 13,
-    color: '#6B7280',
+    color: '#94A3B8',
     marginTop: 4,
     fontWeight: '500',
   },
@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 14,
     alignItems: 'center',
+    borderWidth: 1,
   },
   statNumber: {
     fontSize: 20,
@@ -88,7 +89,7 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 11,
-    color: '#6B7280',
+    color: '#94A3B8',
     marginTop: 2,
     fontWeight: '600',
   }

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
 import { CategoryPillBar } from '../components/common/CategoryPillBar';
 import { LuxuryCard } from '../components/common/LuxuryCard';
@@ -9,10 +11,12 @@ import { BudgetPlannerWidget } from '../components/budget/BudgetPlannerWidget';
 interface HomeScreenProps {
   onSelectService: (serviceId: number) => void;
   onOpenBudget: () => void;
+  onOpen3D?: () => void;
 }
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenBudget }) => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenBudget, onOpen3D }) => {
   const [selectedCat, setSelectedCat] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
     { id: 'all', name: 'Barchasi', icon: '✨' },
@@ -28,12 +32,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenB
       id: 1,
       title: 'Versal Grand Ballroom (500 kishi)',
       category: "To'yxona",
-      price: 45000000,
+      price: 48000000,
       city: 'Toshkent, Yakkasaroy',
-      rating: 4.95,
-      reviewsCount: 184,
+      rating: 4.96,
+      reviewsCount: 210,
       image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800',
       distanceKm: 2.4,
+      has3D: true,
     },
     {
       id: 2,
@@ -45,27 +50,103 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenB
       reviewsCount: 92,
       image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800',
       distanceKm: 4.1,
+      has3D: false,
+    },
+    {
+      id: 3,
+      title: "Yakkasaroy Palace (800 kishi)",
+      category: "To'yxona",
+      price: 65000000,
+      city: 'Toshkent, Mirzo Ulug\'bek',
+      rating: 4.98,
+      reviewsCount: 340,
+      image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800',
+      distanceKm: 3.8,
+      has3D: true,
     }
   ];
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
       {/* Top Header */}
       <View style={styles.header}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image 
             source={require('../assets/logo.jpg')} 
-            style={{ width: 44, height: 44, borderRadius: 10, borderWidth: 1.5, borderColor: COLORS.gold.gold500, marginRight: 12 }} 
+            style={styles.logoImage} 
           />
           <View>
-            <Text style={styles.welcomeLabel}>Xush kelibsiz 👋</Text>
-            <Text style={styles.appTitle}>TuyBox</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={styles.welcomeLabel}>TuyBox Platformasi</Text>
+              <View style={styles.miniVipTag}>
+                <Text style={styles.miniVipText}>PREMIUM</Text>
+              </View>
+            </View>
+            <Text style={styles.appTitle}>Hashamatli To'ylar</Text>
           </View>
         </View>
+
         <TouchableOpacity style={styles.citySelector}>
-          <Text style={styles.cityText}>📍 Toshkent ▾</Text>
+          <Ionicons name="location-sharp" size={12} color={COLORS.gold[400]} style={{ marginRight: 3 }} />
+          <Text style={styles.cityText}>Toshkent</Text>
+          <Ionicons name="chevron-down" size={11} color={COLORS.gold[400]} style={{ marginLeft: 3 }} />
         </TouchableOpacity>
       </View>
+
+      {/* Modern Search Bar */}
+      <View style={styles.searchWrapper}>
+        <View style={styles.searchBar}>
+          <Ionicons name="search-outline" size={18} color="#94A3B8" style={{ marginRight: 8 }} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="To'yxona, san'atkor yoki fotograf izlash..."
+            placeholderTextColor="#64748B"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <Ionicons name="close-circle" size={16} color="#94A3B8" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+
+      {/* Featured 3D Venue Interactive Banner */}
+      <TouchableOpacity
+        style={styles.banner3DContainer}
+        activeOpacity={0.9}
+        onPress={() => onOpen3D && onOpen3D()}
+      >
+        <LinearGradient
+          colors={['#172036', '#0E1526']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.banner3DGradient}
+        >
+          <View style={styles.banner3DContent}>
+            <View style={styles.badge3DRow}>
+              <View style={styles.badge3DPill}>
+                <Ionicons name="cube" size={12} color="#070B14" style={{ marginRight: 4 }} />
+                <Text style={styles.badge3DText}>YANGILIK • 3D GLB</Text>
+              </View>
+              <Text style={styles.bannerLive}>● 360° AYLANTIRISH</Text>
+            </View>
+
+            <Text style={styles.banner3DTitle}>To'yxona Zallarini 3D Ko'rish</Text>
+            <Text style={styles.banner3DSubtitle}>
+              Telefoningiz orqali zal ichiga kiring, sahna, lyustra va stol joylashuvlarini real vaqtda ko'ring!
+            </Text>
+
+            <View style={styles.banner3DBtn}>
+              <Text style={styles.banner3DBtnText}>3D Zalga Kirish →</Text>
+            </View>
+          </View>
+          <View style={styles.banner3DIconWrapper}>
+            <MaterialCommunityIcons name="cube-scan" size={68} color="rgba(212, 175, 55, 0.35)" />
+          </View>
+        </LinearGradient>
+      </TouchableOpacity>
 
       {/* Stories / Real Weddings Carousel */}
       <View style={styles.storiesContainer}>
@@ -95,7 +176,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenB
 
       {/* Featured Luxury Services */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>👑 VIP & Eng Sara Xizmatlar</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Ionicons name="diamond" size={16} color={COLORS.gold[400]} style={{ marginRight: 6 }} />
+          <Text style={styles.sectionTitle}>VIP & Eng Sara Xizmatlar</Text>
+        </View>
         <TouchableOpacity>
           <Text style={styles.seeAllText}>Barchasi →</Text>
         </TouchableOpacity>
@@ -109,7 +193,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenB
             activeOpacity={0.9}
           >
             <LuxuryCard style={styles.serviceCard}>
-              <Image source={{ uri: service.image }} style={styles.cardImage} />
+              <View style={styles.cardImageContainer}>
+                <Image source={{ uri: service.image }} style={styles.cardImage} />
+                {service.has3D && (
+                  <TouchableOpacity
+                    style={styles.card3DBadge}
+                    onPress={() => onOpen3D && onOpen3D()}
+                  >
+                    <Ionicons name="cube" size={13} color="#070B14" style={{ marginRight: 4 }} />
+                    <Text style={styles.card3DText}>3D Ko'rish</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+
               <View style={styles.cardContent}>
                 <View style={styles.tagRow}>
                   <Text style={styles.categoryBadge}>{service.category}</Text>
@@ -144,38 +240,160 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenB
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: COLORS.obsidian.base,
+  },
+  scrollContent: {
+    paddingBottom: 110, // Avoid bottom floating tab bar
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 16,
     paddingBottom: 12,
   },
+  logoImage: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: COLORS.gold[400],
+    marginRight: 12,
+  },
   welcomeLabel: {
-    fontSize: 13,
-    color: '#6B7280',
-    fontWeight: '500',
+    fontSize: 11,
+    color: '#94A3B8',
+    fontWeight: '600',
+    letterSpacing: 0.5,
+  },
+  miniVipTag: {
+    backgroundColor: 'rgba(212, 175, 55, 0.18)',
+    borderWidth: 0.5,
+    borderColor: 'rgba(212, 175, 55, 0.4)',
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderRadius: 6,
+    marginLeft: 6,
+  },
+  miniVipText: {
+    color: COLORS.gold[400],
+    fontSize: 8,
+    fontWeight: '800',
   },
   appTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '800',
-    color: '#111827',
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
   },
   citySelector: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(15, 22, 38, 0.85)',
+    paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 20,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: 'rgba(212, 175, 55, 0.3)',
   },
   cityText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#E2E8F0',
+  },
+  searchWrapper: {
+    paddingHorizontal: 16,
+    marginBottom: 14,
+  },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(15, 22, 38, 0.9)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  searchInput: {
+    flex: 1,
+    color: '#FFFFFF',
     fontSize: 13,
-    fontWeight: '600',
-    color: '#374151',
+  },
+  banner3DContainer: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 20,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.35)',
+  },
+  banner3DGradient: {
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  banner3DContent: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  badge3DRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  badge3DPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.gold[400],
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+    marginRight: 8,
+  },
+  badge3DText: {
+    color: '#070B14',
+    fontSize: 9,
+    fontWeight: '900',
+  },
+  bannerLive: {
+    color: '#10B981',
+    fontSize: 9,
+    fontWeight: '700',
+  },
+  banner3DTitle: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '800',
+    marginBottom: 4,
+  },
+  banner3DSubtitle: {
+    color: '#94A3B8',
+    fontSize: 12,
+    lineHeight: 17,
+    marginBottom: 10,
+  },
+  banner3DBtn: {
+    alignSelf: 'flex-start',
+    backgroundColor: 'rgba(212, 175, 55, 0.18)',
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.4)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  banner3DBtnText: {
+    color: COLORS.gold[400],
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  banner3DIconWrapper: {
+    width: 70,
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   storiesContainer: {
     flexDirection: 'row',
@@ -192,7 +410,7 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     borderWidth: 2,
-    borderColor: '#D4AF37', // Oltin nishonli aylana
+    borderColor: COLORS.gold[400],
     padding: 2,
     alignItems: 'center',
     justifyContent: 'center',
@@ -201,7 +419,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: 28,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: 'rgba(15, 22, 38, 0.9)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -210,7 +428,7 @@ const styles = StyleSheet.create({
   },
   storyText: {
     fontSize: 11,
-    color: '#4B5563',
+    color: '#94A3B8',
     fontWeight: '600',
     marginTop: 4,
     textAlign: 'center',
@@ -224,30 +442,55 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     marginTop: 16,
-    marginBottom: 8,
+    marginBottom: 10,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '800',
-    color: '#111827',
+    color: '#FFFFFF',
   },
   seeAllText: {
     fontSize: 13,
-    color: COLORS.gold[700],
+    color: COLORS.gold[400],
     fontWeight: '700',
   },
   cardsList: {
     paddingHorizontal: 16,
-    paddingBottom: 40,
+    paddingBottom: 20,
     gap: 16,
   },
   serviceCard: {
     padding: 0,
     overflow: 'hidden',
   },
-  cardImage: {
+  cardImageContainer: {
+    position: 'relative',
     width: '100%',
     height: 180,
+  },
+  cardImage: {
+    width: '100%',
+    height: '100%',
+  },
+  card3DBadge: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.gold[400],
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  card3DText: {
+    color: '#070B14',
+    fontSize: 11,
+    fontWeight: '800',
   },
   cardContent: {
     padding: 16,
@@ -259,15 +502,16 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   categoryBadge: {
-    fontSize: 12,
-    color: '#6B7280',
-    fontWeight: '600',
+    fontSize: 11,
+    color: COLORS.gold[400],
+    fontWeight: '700',
     textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   serviceTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#111827',
+    color: '#FFFFFF',
     marginBottom: 6,
   },
   metaRow: {
@@ -278,33 +522,35 @@ const styles = StyleSheet.create({
   },
   distanceText: {
     fontSize: 12,
-    color: '#6B7280',
+    color: '#94A3B8',
   },
   priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
+    borderTopColor: 'rgba(255, 255, 255, 0.08)',
     paddingTop: 10,
   },
   priceLabel: {
     fontSize: 11,
-    color: '#9CA3AF',
+    color: '#64748B',
   },
   priceValue: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#111827',
+    color: COLORS.gold[400],
   },
   viewBtn: {
-    backgroundColor: COLORS.obsidian[900],
+    backgroundColor: 'rgba(212, 175, 55, 0.18)',
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.4)',
     paddingHorizontal: 14,
     paddingVertical: 8,
-    borderRadius: 10,
+    borderRadius: 12,
   },
   viewBtnText: {
-    color: COLORS.gold[300],
+    color: COLORS.gold[400],
     fontSize: 12,
     fontWeight: '700',
   }

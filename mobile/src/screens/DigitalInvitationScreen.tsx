@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Share } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
 import { RSVPTrackerCard } from '../components/invitation/RSVPTrackerCard';
 import { LuxuryCard } from '../components/common/LuxuryCard';
@@ -19,7 +21,7 @@ export const DigitalInvitationScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         <Text style={styles.pageTitle}>💌 Raqamli Taklifnoma & QR</Text>
         <Text style={styles.pageSubtitle}>
@@ -37,8 +39,8 @@ export const DigitalInvitationScreen: React.FC = () => {
       />
 
       {/* Havola va Ulashish */}
-      <LuxuryCard style={styles.linkCard}>
-        <Text style={styles.linkCardTitle}>Shaxsiy to'y havolangiz:</Text>
+      <LuxuryCard style={styles.linkCard} variant="glass">
+        <Text style={styles.linkCardTitle}>Shaxsiy to'y taklifnomasi havolasi:</Text>
         <View style={styles.linkBox}>
           <Text style={styles.linkText} numberOfLines={1}>{inviteLink}</Text>
         </View>
@@ -57,7 +59,7 @@ export const DigitalInvitationScreen: React.FC = () => {
           { name: "Dilshod Akramov", status: "Boraman (+1 kishi)", text: "Qo'sha qaringlar, umringlar uzoq bo'lsin!" },
           { name: "Jamshid Qodirov", status: "Bora olmayman", text: "Afsuski xizmat safaridaman, chin dildan tabriklayman!" },
         ].map((item, idx) => (
-          <LuxuryCard key={idx} style={styles.rsvpItem}>
+          <LuxuryCard key={idx} style={styles.rsvpItem} variant="glass">
             <View style={styles.rsvpItemHeader}>
               <Text style={styles.guestName}>{item.name}</Text>
               <Text style={[styles.guestStatus, item.status.includes('Boramiz') || item.status.includes('Boraman') ? styles.statusGreen : styles.statusRed]}>
@@ -75,9 +77,12 @@ export const DigitalInvitationScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F9FA',
+    backgroundColor: COLORS.obsidian.base,
     paddingHorizontal: 16,
-    paddingTop: 50,
+  },
+  scrollContent: {
+    paddingTop: 16,
+    paddingBottom: 110, // Avoid bottom floating tab bar
   },
   header: {
     marginBottom: 16,
@@ -85,11 +90,11 @@ const styles = StyleSheet.create({
   pageTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#111827',
+    color: '#FFFFFF',
   },
   pageSubtitle: {
     fontSize: 13,
-    color: '#6B7280',
+    color: '#94A3B8',
     marginTop: 4,
   },
   linkCard: {
@@ -97,28 +102,29 @@ const styles = StyleSheet.create({
   },
   linkCardTitle: {
     fontSize: 13,
-    color: '#6B7280',
+    color: '#94A3B8',
     fontWeight: '600',
-    marginBottom: 6,
+    marginBottom: 8,
   },
   linkBox: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: 'rgba(7, 11, 20, 0.7)',
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.25)',
     padding: 12,
-    borderRadius: 10,
+    borderRadius: 12,
   },
   linkText: {
-    color: COLORS.gold[700],
-    fontSize: 14,
+    color: COLORS.gold[400],
+    fontSize: 13,
     fontWeight: '700',
   },
   recentSection: {
     marginTop: 16,
-    marginBottom: 60,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#111827',
+    color: '#FFFFFF',
     marginBottom: 10,
   },
   rsvpItem: {
@@ -133,21 +139,21 @@ const styles = StyleSheet.create({
   guestName: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#111827',
+    color: '#FFFFFF',
   },
   guestStatus: {
     fontSize: 12,
     fontWeight: '700',
   },
   statusGreen: {
-    color: '#059669',
+    color: '#10B981',
   },
   statusRed: {
-    color: '#DC2626',
+    color: '#EF4444',
   },
   guestMessage: {
     fontSize: 13,
-    color: '#4B5563',
+    color: '#94A3B8',
     fontStyle: 'italic',
   }
 });

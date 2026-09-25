@@ -24,19 +24,21 @@ const styles = StyleSheet.create({
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0284C7',
+    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.4)',
     paddingHorizontal: 7,
     paddingVertical: 3,
     borderRadius: 6,
     gap: 4,
   },
   icon: {
-    color: '#FFFFFF',
+    color: '#10B981',
     fontSize: 10,
     fontWeight: '900',
   },
   text: {
-    color: '#FFFFFF',
+    color: '#10B981',
     fontSize: 9,
     fontWeight: '800',
     letterSpacing: 0.5,
@@ -47,16 +49,16 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   star: {
-    color: '#F59E0B',
+    color: '#FFD700',
     fontSize: 14,
   },
   ratingValue: {
-    color: '#111827',
+    color: '#FFFFFF',
     fontSize: 13,
     fontWeight: '700',
   },
   countText: {
-    color: '#6B7280',
+    color: '#94A3B8',
     fontSize: 12,
   }
 });

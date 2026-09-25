@@ -10,7 +10,12 @@ interface LuxuryCardProps {
 
 export const LuxuryCard: React.FC<LuxuryCardProps> = ({ children, style, variant = 'elevated' }) => {
   return (
-    <View style={[styles.card, variant === 'glass' && styles.glassCard, style]}>
+    <View style={[
+      styles.card,
+      variant === 'glass' && styles.glassCard,
+      variant === 'outlined' && styles.outlinedCard,
+      style
+    ]}>
       {children}
     </View>
   );
@@ -18,19 +23,23 @@ export const LuxuryCard: React.FC<LuxuryCardProps> = ({ children, style, variant
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: COLORS.porcelain.card,
-    borderRadius: 20,
+    backgroundColor: COLORS.obsidian.card,
+    borderRadius: 22,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.15)', // Oltin tusli nozik chegara
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.06,
-    shadowRadius: 16,
-    elevation: 4,
+    borderColor: 'rgba(212, 175, 55, 0.2)', // Oltin tusli nozik chegara
+    shadowColor: COLORS.gold[500],
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 14,
+    elevation: 6,
   },
   glassCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+    backgroundColor: 'rgba(15, 22, 38, 0.85)',
+    borderColor: 'rgba(212, 175, 55, 0.35)',
+  },
+  outlinedCard: {
+    backgroundColor: 'transparent',
     borderColor: 'rgba(212, 175, 55, 0.3)',
-  }
+  },
 });

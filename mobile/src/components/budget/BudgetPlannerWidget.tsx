@@ -11,14 +11,14 @@ export const BudgetPlannerWidget: React.FC = () => {
   const allocations = [
     { name: "To'yxona va Dasturxon", percent: 48, amount: total * 0.48, color: '#D4AF37' },
     { name: "San'atkor va Boshlovchi", percent: 20, amount: total * 0.20, color: '#10B981' },
-    { name: "Foto & Video Montaj", percent: 12, amount: total * 0.12, color: '#3B82F6' },
-    { name: "Kelin Libosi va Sarpo", percent: 10, amount: total * 0.10, color: '#EC4899' },
+    { name: "Foto & Video Montaj", percent: 12, amount: total * 0.12, color: '#38BDF8' },
+    { name: "Kelin Libosi va Sarpo", percent: 10, amount: total * 0.10, color: '#F43F5E' },
     { name: "Kortej va Avtomobillar", percent: 5, amount: total * 0.05, color: '#F59E0B' },
-    { name: "Dekor va Taklifnomalar", percent: 5, amount: total * 0.05, color: '#8B5CF6' },
+    { name: "Dekor va Taklifnomalar", percent: 5, amount: total * 0.05, color: '#A855F7' },
   ];
 
   return (
-    <LuxuryCard style={styles.card}>
+    <LuxuryCard style={styles.card} variant="glass">
       <View style={styles.header}>
         <Text style={styles.badge}>💡 AI PLANNING</Text>
         <Text style={styles.title}>To'y Byudjeti Kalkulyatori</Text>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   badge: {
-    color: COLORS.gold[700],
+    color: COLORS.gold[400],
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 1,
@@ -93,18 +93,20 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#111827',
+    color: '#FFFFFF',
   },
   subtitle: {
     fontSize: 13,
-    color: '#6B7280',
+    color: '#94A3B8',
     marginTop: 2,
   },
   budgetDisplayRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'rgba(7, 11, 20, 0.65)',
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.25)',
     borderRadius: 16,
     padding: 12,
     marginVertical: 12,
@@ -112,17 +114,17 @@ const styles = StyleSheet.create({
   adjustBtn: {
     width: 44,
     height: 44,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: 'rgba(212, 175, 55, 0.3)',
   },
   adjustBtnText: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#111827',
+    color: COLORS.gold[400],
   },
   amountCenter: {
     alignItems: 'center',
@@ -130,11 +132,11 @@ const styles = StyleSheet.create({
   budgetAmountText: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#111827',
+    color: '#FFFFFF',
   },
   currencyText: {
     fontSize: 12,
-    color: '#6B7280',
+    color: '#94A3B8',
     fontWeight: '500',
   },
   progressBarWrapper: {
@@ -170,16 +172,16 @@ const styles = StyleSheet.create({
   categoryName: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#374151',
+    color: '#E2E8F0',
   },
   percentText: {
     fontSize: 11,
-    color: '#9CA3AF',
+    color: '#94A3B8',
     fontWeight: '600',
   },
   amountText: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#111827',
+    color: COLORS.gold[400],
   }
 });

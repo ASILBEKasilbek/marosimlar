@@ -1,43 +1,65 @@
 export const COLORS = {
-  // Hashamatli Oltin (Gold Glamour)
+  // Hashamatli Oltin (Champagne & Imperial Gold)
   gold: {
-    50: '#FDFBF7',
-    100: '#F9F3E5',
-    300: '#E6CE94',
-    500: '#D4AF37', // Asosiy oltin
+    50: '#FDFCF7',
+    100: '#FBF5E6',
+    200: '#F7E7BE',
+    300: '#F0D48B',
+    400: '#FFDF73', // Yorqin aksent oltin
+    500: '#D4AF37', // Asosiy qirollik oltini
     600: '#B89726',
     700: '#8C6D1F',
-    gradient: ['#F3E5AB', '#D4AF37', '#AA7C11'] as const,
+    800: '#684E14',
+    900: '#42300B',
+    gradient: ['#FFDF73', '#D4AF37', '#A17A16'] as const,
+    gradientSubtle: ['rgba(212, 175, 55, 0.25)', 'rgba(212, 175, 55, 0.05)'] as const,
+    gold500: '#D4AF37',
   },
 
-  // Tungi Obsidian (Midnight Dark)
+  // Tungi Obsidian & Midnight (Dark Luxury Surface)
   obsidian: {
-    900: '#0B0E14', // Chuqur tungi fon
-    800: '#121721', // Qora kartochka foni
-    700: '#1D2432', // Chegara va ajratgichlar
-    600: '#2D3748',
+    base: '#070B14',      // Asosiy ilova foni
+    card: '#0F1626',      // Ko'tarilgan kartochkalar
+    cardElevated: '#172036',
+    border: 'rgba(212, 175, 55, 0.18)',
+    borderLight: 'rgba(255, 255, 255, 0.08)',
+    glass: 'rgba(15, 22, 38, 0.85)',
+    glassActive: 'rgba(212, 175, 55, 0.12)',
+    // Backward compatibility
+    900: '#070B14',
+    800: '#0F1626',
+    700: '#172036',
   },
 
   // Ipak Chini (Silk Porcelain)
   porcelain: {
-    bg: '#F8F9FA',
-    card: '#FFFFFF',
-    border: 'rgba(212, 175, 55, 0.25)', // Oltin tusli hoshiya
+    bg: '#070B14',
+    card: '#0F1626',
+    border: 'rgba(212, 175, 55, 0.25)',
   },
 
   // Emotsional & Status Ranglar
-  rose: '#E11D48',         // Sevimlilar, yurak
-  emerald: '#10B981',      // Bo'sh kun (work)
-  crimson: '#EF4444',      // Band kun (booked)
-  sapphire: '#2563EB',     // O'tgan to'y (done)
-  graySlot: '#9CA3AF',     // Dam olish kuni (off)
+  rose: '#F43F5E',
+  emerald: '#10B981',
+  crimson: '#EF4444',
+  sapphire: '#38BDF8',
+  graySlot: '#64748B',
 
-  // Matnlar
+  // Matn ranglari (High-contrast typography)
   text: {
-    primary: '#111827',
-    secondary: '#4B5563',
-    muted: '#9CA3AF',
-    inverse: '#FFFFFF',
-    gold: '#D4AF37',
+    primary: '#FFFFFF',
+    secondary: '#94A3B8',
+    muted: '#64748B',
+    gold: '#FFDF73',
+    inverse: '#070B14',
+  },
+
+  // Status va kategoriya ranglari
+  status: {
+    verified: '#10B981',  // Tasdiqlangan / Erkin
+    booked: '#EF4444',    // Band qilingan
+    favorite: '#F43F5E',  // Yurak / Sevimli
+    info: '#38BDF8',      // 3D / Info
+    warning: '#F59E0B',   // AI Byudjet ogohlantirish
   }
 };
