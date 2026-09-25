@@ -29,3 +29,13 @@ staticfiles/
 # OS
 .DS_Store
 Thumbs.db
+
+# Node / React Native
+node_modules/
+mobile/node_modules/
+mobile/android/
+mobile/ios/
+mobile/.expo/
+mobile/dist/
+*.apk
+*.aab
