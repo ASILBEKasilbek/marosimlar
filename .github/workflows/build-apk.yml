@@ -43,8 +43,36 @@ jobs:
         working-directory: mobile
         run: npx expo prebuild --platform android --clean --no-install
         env:
-          # Token kerak emas - offline mode
           EXPO_NO_DOTENV: 1
+
+      - name: 🔑 Release Keystore va Gradle Sozlash
+        run: |
+          mkdir -p mobile/android/app
+          cp mobile/tuybox-release.keystore mobile/android/app/tuybox-release.keystore
+          python3 -c "
+          path = 'mobile/android/app/build.gradle'
+          with open(path, 'r') as f:
+              content = f.read()
+
+          release_signing = '''
+          release {
+              storeFile file('tuybox-release.keystore')
+              storePassword 'tuybox123'
+              keyAlias 'tuybox'
+              keyPassword 'tuybox123'
+              v1SigningEnabled true
+              v2SigningEnabled true
+          }
+          '''
+          if 'signingConfigs {' in content:
+              content = content.replace('signingConfigs {', 'signingConfigs {\n' + release_signing)
+              content = content.replace('signingConfig signingConfigs.debug', 'signingConfig signingConfigs.release')
+              with open(path, 'w') as f:
+                  f.write(content)
+              print('✅ Release signing muvaffaqiyatli ulandi!')
+          else:
+              print('⚠️ signingConfigs bloki topilmadi!')
+          "
 
       - name: 🏗️ Android APK build (Gradle)
         working-directory: mobile/android
@@ -54,19 +82,42 @@ jobs:
             -Pandroid.useAndroidX=true \
             -Pandroid.enableJetifier=true
 
-      - name: 📂 APK fayl topish
+      - name: 🔐 Zipalign va apksigner bilan imzolash & tekshirish
         run: |
-          find mobile/android -name "*.apk" -type f
-          APK_PATH=$(find mobile/android -name "*.apk" -type f | head -1)
-          echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
-          echo "APK topildi: $APK_PATH"
-          ls -lh "$APK_PATH"
+          RAW_APK=$(find mobile/android/app/build/outputs/apk -name "*.apk" -type f | head -1)
+          echo "Topilgan xom APK: $RAW_APK"
+          ls -lh "$RAW_APK"
+
+          BUILD_TOOLS=$(ls -d $ANDROID_SDK_ROOT/build-tools/* | sort -V | tail -1)
+          echo "Ishlatilayotgan Build Tools: $BUILD_TOOLS"
+
+          # 1. Zipalign (4-bayt va 4096-bayt page alignment)
+          $BUILD_TOOLS/zipalign -p -f 4 "$RAW_APK" TuyBox-aligned.apk
+
+          # 2. SHA-256 bilan v1, v2, v3 sxemalarida rasmiy imzolash
+          $BUILD_TOOLS/apksigner sign \
+            --ks mobile/tuybox-release.keystore \
+            --ks-pass pass:tuybox123 \
+            --ks-key-alias tuybox \
+            --key-pass pass:tuybox123 \
+            --v1-signing-enabled true \
+            --v2-signing-enabled true \
+            --v3-signing-enabled true \
+            --out TuyBox.apk TuyBox-aligned.apk
+
+          # 3. Sertifikat va imzo haqiqiyligini tekshirish
+          echo "=== APK Signer Rasmiy Tekshiruvi ==="
+          $BUILD_TOOLS/apksigner verify --verbose TuyBox.apk
+
+          echo "APK_PATH=TuyBox.apk" >> $GITHUB_ENV
+          echo "✅ Tayyor TuyBox.apk hajmi:"
+          ls -lh TuyBox.apk
 
       - name: 📤 APK ni Artifact sifatida saqlash
         uses: actions/upload-artifact@v4
         with:
           name: TuyBox-APK
-          path: ${{ env.APK_PATH }}
+          path: TuyBox.apk
           retention-days: 30
 
   # ─────────────────────────────────────────────────────────────

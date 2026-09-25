@@ -117,8 +117,21 @@ static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
 os.makedirs(static_dir, exist_ok=True)
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+
 @app.api_route("/download", methods=["GET", "HEAD"])
 async def download_apk():
+    apk_path = os.path.join(static_dir, "TuyBox.apk")
+    if os.path.exists(apk_path):
+        return FileResponse(
+            path=apk_path,
+            media_type="application/vnd.android.package-archive",
+            filename="TuyBox.apk",
+            headers={
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+                "Content-Disposition": "attachment; filename=\"TuyBox.apk\"",
+            }
+        )
     return RedirectResponse(url="/static/TuyBox.apk", status_code=302)
 
 @app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
