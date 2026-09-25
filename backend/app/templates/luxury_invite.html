@@ -311,6 +311,23 @@
             </a>
         </div>
 
+        <!-- Seating Finder Widget -->
+        <div style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 18px; padding: 18px; margin-bottom: 24px; text-align: left;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-size: 11px; font-weight: 800; color: #D4AF37; text-transform: uppercase; letter-spacing: 1px;">🍽️ STOLINGIZNI BILIB OLING</span>
+                <span style="font-size: 10px; background: rgba(212, 175, 55, 0.2); color: #FFDF73; padding: 2px 8px; border-radius: 10px;">SMART SEATING</span>
+            </div>
+            <p style="font-size: 12px; color: #94A3B8; margin-bottom: 12px;">To'yxonaga kelganda adashmaslik uchun ismingizni kiriting va o'tiradigan stolingizni ko'ring:</p>
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="findGuestName" placeholder="Ismingizni kiriting..." style="flex: 1; background: rgba(0,0,0,0.4); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 13px; outline: none;">
+                <button type="button" onclick="checkGuestTable()" style="background: #D4AF37; color: #070B14; font-weight: 800; font-size: 12px; border: none; border-radius: 10px; padding: 0 14px; cursor: pointer;">Ko'rish</button>
+            </div>
+            <div id="tableResultBox" style="display: none; margin-top: 12px; padding: 12px; background: rgba(0, 0, 0, 0.5); border-radius: 10px; border-left: 3px solid #D4AF37;">
+                <div style="font-size: 13px; font-weight: 700; color: #FFDF73;" id="tableResultTitle"></div>
+                <div style="font-size: 11px; color: #CBD5E1; margin-top: 2px;" id="tableResultSub"></div>
+            </div>
+        </div>
+
         <!-- RSVP Form -->
         <div class="rsvp-section">
             <h2 class="rsvp-title">Tashrifingizni Tasdiqlang (RSVP)</h2>
@@ -403,6 +420,31 @@
         function toggleMusic() {
             isPlaying = !isPlaying;
             document.getElementById('musicBtn').textContent = isPlaying ? "⏸ To'xtatish" : "🎵 Musiqa";
+        }
+
+        async function checkGuestTable() {
+            const name = document.getElementById('findGuestName').value.trim();
+            if (!name) return;
+            const resBox = document.getElementById('tableResultBox');
+            const title = document.getElementById('tableResultTitle');
+            const sub = document.getElementById('tableResultSub');
+            
+            try {
+                const res = await fetch(`/api/v1/seating/find-table?guest_name=${encodeURIComponent(name)}`);
+                const data = await res.json();
+                resBox.style.display = 'block';
+                if (data.found) {
+                    title.innerHTML = `✅ Sizning joyingiz: ${data.table_name}`;
+                    sub.innerHTML = `Hurmatli <b>${data.guest_name}</b>, siz ${data.table_number}-raqamli stolda aziz mehmonimizsiz!`;
+                } else {
+                    title.innerHTML = `ℹ️ Umumiy zal qismi`;
+                    sub.innerHTML = `${name}, siz uchun to'yxonamizning markaziy qulay stollaridan joy hozirlangan!`;
+                }
+            } catch (e) {
+                resBox.style.display = 'block';
+                title.innerHTML = `✅ Joyingiz belgilangan`;
+                sub.innerHTML = `${name}, siz uchun to'y zalida shohona stol tayyorlab qo'yilgan!`;
+            }
         }
     </script>
 </body>

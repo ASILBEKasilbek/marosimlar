@@ -8,15 +8,16 @@ import { DigitalInvitationScreen } from './src/screens/DigitalInvitationScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { VenueMapScreen } from './src/screens/VenueMapScreen';
 import { ToyonaPaymentScreen } from './src/screens/ToyonaPaymentScreen';
+import { TablePlannerScreen } from './src/screens/TablePlannerScreen';
 import { ModernTabBar, TabType } from './src/components/navigation/ModernTabBar';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
-  const [activeOverlay, setActiveOverlay] = useState<'none' | 'map' | 'toyona'>('none');
+  const [activeOverlay, setActiveOverlay] = useState<'none' | 'map' | 'toyona' | 'seating'>('none');
 
   const renderScreen = () => {
-    // 1. Overlay screens (Map / To'yona)
+    // 1. Overlay screens (Map / To'yona / Seating)
     if (activeOverlay === 'map') {
       return (
         <VenueMapScreen
@@ -37,6 +38,18 @@ export default function App() {
       return (
         <ToyonaPaymentScreen
           onBack={() => setActiveOverlay('none')}
+        />
+      );
+    }
+
+    if (activeOverlay === 'seating') {
+      return (
+        <TablePlannerScreen
+          onBack={() => setActiveOverlay('none')}
+          onOpen3D={() => {
+            setActiveOverlay('none');
+            setActiveTab('venue3d');
+          }}
         />
       );
     }
@@ -69,6 +82,7 @@ export default function App() {
             onOpen3D={() => setActiveTab('venue3d')}
             onOpenMap={() => setActiveOverlay('map')}
             onOpenToyona={() => setActiveOverlay('toyona')}
+            onOpenSeating={() => setActiveOverlay('seating')}
           />
         );
       case 'venue3d':
@@ -81,6 +95,7 @@ export default function App() {
             onNavigateTab={(tab) => setActiveTab(tab)}
             onOpenMap={() => setActiveOverlay('map')}
             onOpenToyona={() => setActiveOverlay('toyona')}
+            onOpenSeating={() => setActiveOverlay('seating')}
           />
         );
       default:

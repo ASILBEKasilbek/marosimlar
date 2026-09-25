@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput, Modal, Dimensions, Alert } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
@@ -8,12 +8,15 @@ import { LuxuryCard } from '../components/common/LuxuryCard';
 import { BadgeVerified, LuxuryRating } from '../components/common/BadgeVerified';
 import { BudgetPlannerWidget } from '../components/budget/BudgetPlannerWidget';
 
+const { width, height } = Dimensions.get('window');
+
 interface HomeScreenProps {
   onSelectService: (serviceId: number) => void;
   onOpenBudget: () => void;
   onOpen3D?: () => void;
   onOpenMap?: () => void;
   onOpenToyona?: () => void;
+  onOpenSeating?: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -22,9 +25,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onOpen3D,
   onOpenMap,
   onOpenToyona,
+  onOpenSeating,
 }) => {
   const [selectedCat, setSelectedCat] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeStory, setActiveStory] = useState<any | null>(null);
 
   const categories = [
     { id: 'all', name: 'Barchasi', icon: '✨' },
@@ -75,7 +80,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   ];
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+    <View style={styles.container}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
       {/* Top Header */}
       <View style={styles.header}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -194,7 +200,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </LinearGradient>
       </TouchableOpacity>
 
-      {/* 2-Column Luxury Features: Xarita & To'yona (Click/Payme) */}
+      {/* 3-Column Luxury Features: Xarita, Stollar Rejasi, To'yona (Click/Payme) */}
       <View style={styles.quickFeaturesRow}>
         <TouchableOpacity
           style={styles.quickFeatureCard}
@@ -206,13 +212,31 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             style={styles.quickFeatureGradient}
           >
             <View style={[styles.quickFeatureIconBox, { backgroundColor: 'rgba(56, 189, 248, 0.15)' }]}>
-              <Ionicons name="map" size={20} color="#38BDF8" />
+              <Ionicons name="map" size={17} color="#38BDF8" />
             </View>
             <View style={styles.quickFeatureTextCol}>
-              <Text style={styles.quickFeatureTitle}>Zallar Xaritasi</Text>
+              <Text style={styles.quickFeatureTitle}>Xarita</Text>
               <Text style={styles.quickFeatureSubtitle}>Masofa & Yo'l</Text>
             </View>
-            <Ionicons name="chevron-forward" size={14} color="#64748B" />
+          </LinearGradient>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.quickFeatureCard}
+          activeOpacity={0.88}
+          onPress={() => onOpenSeating && onOpenSeating()}
+        >
+          <LinearGradient
+            colors={['#1F1D38', '#100E26']}
+            style={styles.quickFeatureGradient}
+          >
+            <View style={[styles.quickFeatureIconBox, { backgroundColor: 'rgba(168, 85, 247, 0.15)' }]}>
+              <MaterialCommunityIcons name="table-chair" size={17} color="#C084FC" />
+            </View>
+            <View style={styles.quickFeatureTextCol}>
+              <Text style={styles.quickFeatureTitle}>Stollar</Text>
+              <Text style={styles.quickFeatureSubtitle}>Mehmon rejasi</Text>
+            </View>
           </LinearGradient>
         </TouchableOpacity>
 
@@ -226,29 +250,85 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             style={styles.quickFeatureGradient}
           >
             <View style={[styles.quickFeatureIconBox, { backgroundColor: 'rgba(212, 175, 55, 0.15)' }]}>
-              <Ionicons name="card" size={20} color={COLORS.gold[400]} />
+              <Ionicons name="card" size={17} color={COLORS.gold[400]} />
             </View>
             <View style={styles.quickFeatureTextCol}>
-              <Text style={styles.quickFeatureTitle}>To'yona To'lov</Text>
+              <Text style={styles.quickFeatureTitle}>To'yona</Text>
               <Text style={styles.quickFeatureSubtitle}>Click & Payme</Text>
             </View>
-            <Ionicons name="chevron-forward" size={14} color="#64748B" />
           </LinearGradient>
         </TouchableOpacity>
       </View>
 
-      {/* Stories / Real Weddings Carousel */}
-      <View style={styles.storiesContainer}>
-        {['Sardor & Madina', 'Bobur & Dildora', 'Javohir & Shahzoda', 'Sherzod & Kamola'].map((story, i) => (
-          <View key={i} style={styles.storyItem}>
-            <View style={styles.storyRing}>
-              <View style={styles.storyAvatar}>
-                <Text style={styles.storyAvatarText}>💍</Text>
-              </View>
-            </View>
-            <Text style={styles.storyText} numberOfLines={1}>{story}</Text>
-          </View>
-        ))}
+      {/* Stories / Real Wedding Reels (Horizontal Scroll) */}
+      <View style={styles.storiesWrapper}>
+        <View style={styles.storiesHeaderRow}>
+          <Text style={styles.storiesSectionTitle}>TO'YLARDAN JONLI LAVHALAR (REELS)</Text>
+          <Text style={styles.storiesLiveBadge}>● LIVE</Text>
+        </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.storiesContainer}>
+          {[
+            {
+              id: 1,
+              title: 'Versal Grand',
+              couple: 'Jasurbek & Madina',
+              tag: 'Lyustra Shousi',
+              image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800',
+              description: "600 nafar mehmon bilan o'tgan ertaknamo qirollik to'yi. Kristal qandillar va og'ir tutun shousi.",
+              serviceId: 1,
+              likes: '1.4k',
+            },
+            {
+              id: 2,
+              title: 'Jonli Ijro Guruhi',
+              couple: 'Sardor & Kamola',
+              tag: 'Jonli Ansambl',
+              image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800',
+              description: "Xalq sevgan san'atkorlar va jonli musiqa sadolari ostida unutilmas shodiyona raqslar!",
+              serviceId: 2,
+              likes: '980',
+            },
+            {
+              id: 3,
+              title: 'Oftob Sharshara',
+              couple: 'Bobur & Dildora',
+              tag: 'Ochiq Osmon',
+              image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800',
+              description: "Ochiq osmon ostida, sharshara shovqini va 300 ta yulduz jilosida o'tgan nikoh oqshomi.",
+              serviceId: 1,
+              likes: '2.1k',
+            },
+            {
+              id: 4,
+              title: 'Qirollik Gulkori',
+              couple: 'Javohir & Shahzoda',
+              tag: 'VIP Prezidium',
+              image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800',
+              description: "10,000 dona tabiiy golland atirgullari bilan bezatilgan muhtasham prezidium va fotosessiya maydoni.",
+              serviceId: 3,
+              likes: '840',
+            },
+          ].map((story) => (
+            <TouchableOpacity
+              key={story.id}
+              style={styles.storyItem}
+              onPress={() => setActiveStory(story)}
+              activeOpacity={0.85}
+            >
+              <LinearGradient
+                colors={['#FFDF73', '#D4AF37', '#996515']}
+                style={styles.storyRing}
+              >
+                <Image source={{ uri: story.image }} style={styles.storyAvatarImage} />
+                <View style={styles.storyPlayIconBadge}>
+                  <Ionicons name="play" size={8} color="#070B14" />
+                </View>
+              </LinearGradient>
+              <Text style={styles.storyTitleText} numberOfLines={1}>{story.title}</Text>
+              <Text style={styles.storyCoupleText} numberOfLines={1}>{story.couple}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
 
       {/* Categories */}
@@ -322,7 +402,86 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </TouchableOpacity>
         ))}
       </View>
-    </ScrollView>
+      </ScrollView>
+
+      {/* Instagram/TikTok Style Luxury Wedding Story / Reel Modal */}
+      <Modal visible={activeStory !== null} transparent animationType="fade">
+        {activeStory && (
+          <View style={styles.storyModalContainer}>
+            <Image source={{ uri: activeStory.image }} style={styles.storyModalImage} resizeMode="cover" />
+            <LinearGradient
+              colors={['rgba(7, 11, 20, 0.75)', 'transparent', 'rgba(7, 11, 20, 0.95)']}
+              style={styles.storyModalGradient}
+            >
+              {/* Progress Bar */}
+              <View style={styles.storyProgressBar}>
+                <View style={styles.storyProgressFill} />
+              </View>
+
+              {/* Story Top Bar */}
+              <View style={styles.storyTopBar}>
+                <View style={styles.storyUserRow}>
+                  <Image source={{ uri: activeStory.image }} style={styles.storyAvatarSmall} />
+                  <View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Text style={styles.storyUserTitle}>{activeStory.title}</Text>
+                      <View style={styles.storyTagBadge}>
+                        <Text style={styles.storyTagText}>{activeStory.tag}</Text>
+                      </View>
+                    </View>
+                    <Text style={styles.storyUserSub}>{activeStory.couple}</Text>
+                  </View>
+                </View>
+
+                <TouchableOpacity
+                  style={styles.storyCloseBtn}
+                  onPress={() => setActiveStory(null)}
+                >
+                  <Ionicons name="close" size={24} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Center Sound/Video badge */}
+              <View style={styles.soundIndicatorBox}>
+                <Ionicons name="volume-high" size={15} color={COLORS.gold[400]} style={{ marginRight: 6 }} />
+                <Text style={styles.soundIndicatorText}>Jonli To'y Sadolari • 4K HD</Text>
+              </View>
+
+              {/* Bottom Card */}
+              <View style={styles.storyBottomCard}>
+                <Text style={styles.storyDescText}>{activeStory.description}</Text>
+
+                <View style={styles.storyActionsRow}>
+                  <TouchableOpacity
+                    style={styles.storyActionPrimary}
+                    onPress={() => {
+                      const sId = activeStory.serviceId;
+                      setActiveStory(null);
+                      if (onOpen3D && activeStory.id === 1) {
+                        onOpen3D();
+                      } else {
+                        onSelectService(sId);
+                      }
+                    }}
+                  >
+                    <Ionicons name="sparkles" size={16} color="#070B14" style={{ marginRight: 6 }} />
+                    <Text style={styles.storyActionPrimaryText}>3D da Ko'rish & Bron</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.storyLikeBtn}
+                    onPress={() => Alert.alert('Rahmat!', `${activeStory.couple} juftligiga qutlov yuborildi ❤️`)}
+                  >
+                    <Ionicons name="heart" size={20} color="#F43F5E" />
+                    <Text style={styles.storyLikeText}>{activeStory.likes}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </LinearGradient>
+          </View>
+        )}
+      </Modal>
+    </View>
   );
 };
 
@@ -567,44 +726,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  storiesContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    gap: 14,
-  },
-  storyItem: {
-    alignItems: 'center',
-    width: 72,
-  },
-  storyRing: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    borderWidth: 2,
-    borderColor: COLORS.gold[400],
-    padding: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  storyAvatar: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 28,
-    backgroundColor: 'rgba(15, 22, 38, 0.9)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  storyAvatarText: {
-    fontSize: 22,
-  },
-  storyText: {
-    fontSize: 11,
-    color: '#94A3B8',
-    fontWeight: '600',
-    marginTop: 4,
-    textAlign: 'center',
-  },
   widgetWrapper: {
     paddingHorizontal: 16,
   },
@@ -764,5 +885,216 @@ const styles = StyleSheet.create({
     color: '#94A3B8',
     fontSize: 10,
     marginTop: 2,
+  },
+  storiesWrapper: {
+    marginBottom: 20,
+  },
+  storiesHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  storiesSectionTitle: {
+    color: '#94A3B8',
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+  },
+  storiesLiveBadge: {
+    color: '#EF4444',
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  storiesContainer: {
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  storyItem: {
+    alignItems: 'center',
+    width: 76,
+  },
+  storyRing: {
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+    padding: 2.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
+    position: 'relative',
+  },
+  storyAvatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 31,
+  },
+  storyPlayIconBadge: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    backgroundColor: COLORS.gold[400],
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#070B14',
+  },
+  storyTitleText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  storyCoupleText: {
+    color: '#94A3B8',
+    fontSize: 9,
+    textAlign: 'center',
+    marginTop: 1,
+  },
+  storyModalContainer: {
+    flex: 1,
+    backgroundColor: '#070B14',
+    position: 'relative',
+  },
+  storyModalImage: {
+    width: width,
+    height: height,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  storyModalGradient: {
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 50,
+    paddingBottom: 40,
+  },
+  storyProgressBar: {
+    height: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    borderRadius: 2,
+    overflow: 'hidden',
+    marginBottom: 16,
+  },
+  storyProgressFill: {
+    width: '75%',
+    height: '100%',
+    backgroundColor: COLORS.gold[400],
+  },
+  storyTopBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  storyUserRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  storyAvatarSmall: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    borderWidth: 1.5,
+    borderColor: COLORS.gold[400],
+    marginRight: 10,
+  },
+  storyUserTitle: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  storyTagBadge: {
+    backgroundColor: 'rgba(212, 175, 55, 0.25)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    marginLeft: 6,
+  },
+  storyTagText: {
+    color: COLORS.gold[400],
+    fontSize: 9,
+    fontWeight: '700',
+  },
+  storyUserSub: {
+    color: '#E2E8F0',
+    fontSize: 11,
+    marginTop: 1,
+  },
+  storyCloseBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  soundIndicatorBox: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(7, 11, 20, 0.65)',
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.3)',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  soundIndicatorText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  storyBottomCard: {
+    backgroundColor: 'rgba(15, 22, 38, 0.88)',
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.35)',
+    borderRadius: 20,
+    padding: 16,
+  },
+  storyDescText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 14,
+  },
+  storyActionsRow: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+  },
+  storyActionPrimary: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: COLORS.gold[400],
+    borderRadius: 12,
+    paddingVertical: 12,
+  },
+  storyActionPrimaryText: {
+    color: '#070B14',
+    fontSize: 13,
+    fontWeight: '800',
+  },
+  storyLikeBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(244, 63, 94, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(244, 63, 94, 0.4)',
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  storyLikeText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+    marginLeft: 6,
   },
 });

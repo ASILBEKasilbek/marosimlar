@@ -18,12 +18,14 @@ interface ProfileScreenProps {
   onNavigateTab?: (tab: 'home' | 'venue3d' | 'invites') => void;
   onOpenMap?: () => void;
   onOpenToyona?: () => void;
+  onOpenSeating?: () => void;
 }
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   onNavigateTab,
   onOpenMap,
   onOpenToyona,
+  onOpenSeating,
 }) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
@@ -128,6 +130,52 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         </LinearGradient>
       </View>
 
+      {/* Wedding Day Timeline (Kun Tartibi) */}
+      <View style={styles.timelineSection}>
+        <View style={styles.timelineHeader}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="time-outline" size={16} color={COLORS.gold[400]} style={{ marginRight: 6 }} />
+            <Text style={styles.timelineTitle}>TO'Y KUNI TAYM-LAYNI • 15-NOYABR</Text>
+          </View>
+          <View style={styles.timelineBadge}>
+            <Text style={styles.timelineBadgeText}>5 BOSQICH</Text>
+          </View>
+        </View>
+
+        <View style={styles.timelineCard}>
+          {[
+            { time: '06:00', title: 'Nahor Oshi', place: "Versal Oshi Zali (600 kishi)", status: 'done' },
+            { time: '10:00', title: 'Kuyov Navkar / Kelin Salom', place: "Kelin xonadoni & Sarpolar", status: 'done' },
+            { time: '13:00', title: 'FHDYo (ZAGS) & Fotosessiya', place: "City Park & Markaziy ZAGS", status: 'current' },
+            { time: '18:00', title: 'Hashamatli To\'yxona Bazmi', place: "Versal Grand Ballroom (VIP)", status: 'upcoming' },
+            { time: '23:00', title: 'Mushakbozlik & To\'y Yakuni', place: "Sharqona Olov Shousi", status: 'upcoming' },
+          ].map((item, idx) => (
+            <View key={idx} style={styles.timelineRow}>
+              <View style={styles.timelineTimeBox}>
+                <Text style={styles.timelineTimeText}>{item.time}</Text>
+              </View>
+              <View style={styles.timelineDotLine}>
+                <View style={[
+                  styles.timelineDot,
+                  item.status === 'done' ? styles.timelineDotDone :
+                  item.status === 'current' ? styles.timelineDotCurrent : styles.timelineDotUpcoming
+                ]} />
+                {idx < 4 && <View style={styles.timelineLine} />}
+              </View>
+              <View style={styles.timelineContent}>
+                <Text style={[
+                  styles.timelineItemTitle,
+                  item.status === 'current' && { color: COLORS.gold[400] }
+                ]}>
+                  {item.title}
+                </Text>
+                <Text style={styles.timelineItemPlace}>{item.place}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+      </View>
+
       {/* Quick Stats Grid */}
       <View style={styles.statsGrid}>
         <TouchableOpacity style={styles.statCard} onPress={() => onNavigateTab && onNavigateTab('home')}>
@@ -188,6 +236,19 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <View>
               <Text style={styles.menuItemTitle}>Raqamli Taklifnomalar Boshqaruvi</Text>
               <Text style={styles.menuItemSubtitle}>Mehmonlar RSVP javoblari va ro'yxat</Text>
+            </View>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color="#64748B" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem} onPress={() => onOpenSeating && onOpenSeating()}>
+          <View style={styles.menuItemLeft}>
+            <View style={styles.menuIconContainer}>
+              <MaterialCommunityIcons name="table-chair" size={18} color={COLORS.gold[400]} />
+            </View>
+            <View>
+              <Text style={styles.menuItemTitle}>Stollar & Mehmonlar Joylashuvi</Text>
+              <Text style={styles.menuItemSubtitle}>Smart Seating Chart • Stollarga taqsimlash</Text>
             </View>
           </View>
           <Ionicons name="chevron-forward" size={18} color="#64748B" />
@@ -584,5 +645,94 @@ const styles = StyleSheet.create({
     color: 'rgba(212, 175, 55, 0.5)',
     fontSize: 11,
     marginTop: 2,
+  },
+  timelineSection: {
+    marginHorizontal: 16,
+    marginBottom: 20,
+  },
+  timelineHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  timelineTitle: {
+    color: '#94A3B8',
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+  },
+  timelineBadge: {
+    backgroundColor: 'rgba(212, 175, 55, 0.2)',
+    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  timelineBadgeText: {
+    color: COLORS.gold[400],
+    fontSize: 9,
+    fontWeight: '800',
+  },
+  timelineCard: {
+    backgroundColor: '#0F1626',
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.2)',
+    borderRadius: 16,
+    padding: 16,
+  },
+  timelineRow: {
+    flexDirection: 'row',
+    minHeight: 52,
+  },
+  timelineTimeBox: {
+    width: 48,
+    alignItems: 'flex-start',
+  },
+  timelineTimeText: {
+    color: COLORS.gold[400],
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  timelineDotLine: {
+    width: 20,
+    alignItems: 'center',
+  },
+  timelineDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginTop: 3,
+  },
+  timelineDotDone: {
+    backgroundColor: '#34D399',
+  },
+  timelineDotCurrent: {
+    backgroundColor: COLORS.gold[400],
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  timelineDotUpcoming: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  timelineLine: {
+    width: 2,
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    marginVertical: 4,
+  },
+  timelineContent: {
+    flex: 1,
+    paddingLeft: 8,
+    paddingBottom: 14,
+  },
+  timelineItemTitle: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '700',
+    marginBottom: 2,
+  },
+  timelineItemPlace: {
+    color: '#94A3B8',
+    fontSize: 11,
   },
 });
