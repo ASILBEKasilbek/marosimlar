@@ -109,7 +109,7 @@ static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
 os.makedirs(static_dir, exist_ok=True)
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
-@app.get("/download")
+@app.api_route("/download", methods=["GET", "HEAD"])
 async def download_apk():
     return RedirectResponse(url="/static/TuyBox.apk", status_code=302)
 
