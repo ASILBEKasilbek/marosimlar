@@ -112,6 +112,40 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onSelectService, onOpenB
         </View>
       </View>
 
+      {/* TuyBox 3D Brand Hero Showcase */}
+      <View style={styles.heroBrandCard}>
+        <LinearGradient
+          colors={['rgba(212, 175, 55, 0.22)', 'rgba(15, 22, 38, 0.95)', '#070B14']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.heroBrandGradient}
+        >
+          <View style={styles.heroBrandLeft}>
+            <View style={styles.exclusiveBadge}>
+              <Ionicons name="sparkles" size={11} color="#070B14" style={{ marginRight: 4 }} />
+              <Text style={styles.exclusiveText}>RASMIY PLATFORMA</Text>
+            </View>
+            <Text style={styles.heroBrandTitle}>TuyBox</Text>
+            <Text style={styles.heroBrandSubtitle}>
+              Orzuingizdagi Qirollik To'yi & Hashamatli Marosimlar
+            </Text>
+            <View style={styles.heroFeaturesRow}>
+              <Text style={styles.heroFeatureItem}>✦ 3D Zallar</Text>
+              <Text style={styles.heroFeatureItem}>✦ VIP Bron</Text>
+              <Text style={styles.heroFeatureItem}>✦ Smart RSVP</Text>
+            </View>
+          </View>
+
+          <View style={styles.heroLogoGlowContainer}>
+            <View style={styles.heroLogoGlow} />
+            <Image
+              source={require('../assets/logo.jpg')}
+              style={styles.hero3DLogoImage}
+            />
+          </View>
+        </LinearGradient>
+      </View>
+
       {/* Featured 3D Venue Interactive Banner */}
       <TouchableOpacity
         style={styles.banner3DContainer}
@@ -320,6 +354,89 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#FFFFFF',
     fontSize: 13,
+  },
+  heroBrandCard: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    borderRadius: 22,
+    overflow: 'hidden',
+    borderWidth: 1.5,
+    borderColor: 'rgba(212, 175, 55, 0.4)',
+    shadowColor: COLORS.gold[500],
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 14,
+    elevation: 8,
+  },
+  heroBrandGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+  },
+  heroBrandLeft: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  exclusiveBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: COLORS.gold[400],
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 10,
+    marginBottom: 8,
+  },
+  exclusiveText: {
+    color: '#070B14',
+    fontSize: 9,
+    fontWeight: '900',
+    letterSpacing: 0.5,
+  },
+  heroBrandTitle: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: '900',
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  heroBrandSubtitle: {
+    color: '#94A3B8',
+    fontSize: 12,
+    lineHeight: 16,
+    marginBottom: 8,
+  },
+  heroFeaturesRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  heroFeatureItem: {
+    color: COLORS.gold[400],
+    fontSize: 10,
+    fontWeight: '700',
+  },
+  heroLogoGlowContainer: {
+    position: 'relative',
+    width: 90,
+    height: 90,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  heroLogoGlow: {
+    position: 'absolute',
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: 'rgba(212, 175, 55, 0.25)',
+    transform: [{ scale: 1.15 }],
+  },
+  hero3DLogoImage: {
+    width: 86,
+    height: 86,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderColor: 'rgba(212, 175, 55, 0.6)',
   },
   banner3DContainer: {
     marginHorizontal: 16,
