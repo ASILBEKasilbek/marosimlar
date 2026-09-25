@@ -11,52 +11,69 @@ on:
 
 jobs:
   # ─────────────────────────────────────────────────────────────
-  # JOB 1: EAS orqali Android APK Build
+  # JOB 1: Expo Prebuild + Gradle = APK (token kerak emas!)
   # ─────────────────────────────────────────────────────────────
   build-android-apk:
-    name: 📦 Build Android APK (EAS)
+    name: 📦 Build Android APK (Gradle - token kerak emas)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: mobile
 
     steps:
       - name: ⬇️ Kodni yuklab olish
         uses: actions/checkout@v4
 
-      - name: 🟢 Node.js sozlash
+      - name: ☕ Java 17 sozlash (Android uchun)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: 🟢 Node.js 20 sozlash
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          # package-lock.json yo'q bo'lsa cache ishlatmaymiz
-          cache: 'npm'
-          cache-dependency-path: mobile/package.json
 
-      - name: 📦 Kutubxonalarni o'rnatish
+      - name: 📦 Mobile kutubxonalar o'rnatish
+        working-directory: mobile
         run: npm install --legacy-peer-deps
 
-      - name: 🔧 EAS CLI o'rnatish
-        run: npm install -g eas-cli@latest
+      - name: 🔧 Expo CLI o'rnatish
+        run: npm install -g @expo/cli
 
-      - name: 🏗️ Android APK Build (EAS Preview)
-        run: |
-          mkdir -p ../dist
-          eas build --platform android --profile preview --non-interactive --output ../dist/TuyBox.apk
+      - name: 📱 Android native kod generatsiya (expo prebuild)
+        working-directory: mobile
+        run: npx expo prebuild --platform android --clean --no-install
         env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          # Token kerak emas - offline mode
+          EXPO_NO_DOTENV: 1
+
+      - name: 🏗️ Android APK build (Gradle)
+        working-directory: mobile/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon -x lint \
+            -Pandroid.useAndroidX=true \
+            -Pandroid.enableJetifier=true
+
+      - name: 📂 APK fayl topish
+        run: |
+          find mobile/android -name "*.apk" -type f
+          APK_PATH=$(find mobile/android -name "*.apk" -type f | head -1)
+          echo "APK_PATH=$APK_PATH" >> $GITHUB_ENV
+          echo "APK topildi: $APK_PATH"
+          ls -lh "$APK_PATH"
 
       - name: 📤 APK ni Artifact sifatida saqlash
         uses: actions/upload-artifact@v4
         with:
           name: TuyBox-APK
-          path: dist/TuyBox.apk
+          path: ${{ env.APK_PATH }}
           retention-days: 30
 
   # ─────────────────────────────────────────────────────────────
-  # JOB 2: Serverni yangilash + APK deploy
+  # JOB 2: APK + Backend serverga deploy
   # ─────────────────────────────────────────────────────────────
   deploy-to-server:
-    name: 🌐 Serverni Yangilash va APK Deploy
+    name: 🌐 Serverga Deploy
     needs: build-android-apk
     runs-on: ubuntu-latest
 
@@ -64,7 +81,7 @@ jobs:
       - name: ⬇️ Kodni yuklab olish
         uses: actions/checkout@v4
 
-      - name: 📥 APK Artifact yuklab olish
+      - name: 📥 APK yuklab olish
         uses: actions/download-artifact@v4
         with:
           name: TuyBox-APK
@@ -75,34 +92,32 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
 
-      - name: 🚚 APK ni serverga yuklash
+      - name: 🚚 APK serverga yuklash
         run: |
-          scp -o StrictHostKeyChecking=no dist/TuyBox.apk root@82.26.198.220:/var/www/tuyxona/backend/static/TuyBox.apk
+          APK_FILE=$(find dist/ -name "*.apk" | head -1)
+          echo "APK: $APK_FILE"
+          scp -o StrictHostKeyChecking=no "$APK_FILE" \
+            root@82.26.198.220:/var/www/tuyxona/backend/static/TuyBox.apk
           echo "✅ APK serverga yuklandi!"
 
-      - name: 🌐 Backend kodni serverga yuklash (rsync)
+      - name: 🌐 Backend kodni serverga yuklash
         run: |
           rsync -avz \
             -e "ssh -o StrictHostKeyChecking=no" \
-            --exclude='.git' \
-            --exclude='venv' \
-            --exclude='mobile/' \
-            --exclude='*.db' \
-            --exclude='__pycache__' \
-            --exclude='.DS_Store' \
-            --exclude='.env' \
-            --exclude='node_modules' \
+            --exclude='.git' --exclude='venv' --exclude='mobile/' \
+            --exclude='*.db' --exclude='__pycache__' \
+            --exclude='.DS_Store' --exclude='.env' \
             ./backend/ root@82.26.198.220:/var/www/tuyxona/backend/
 
-      - name: 🔁 Serverni restart va tekshiruv
+      - name: 🔁 Serverni restart
         run: |
           ssh -o StrictHostKeyChecking=no root@82.26.198.220 \
             "systemctl restart tuyxona-backend tuyxona-bot && sleep 3 && \
-             curl -s https://tuybox.asilbek.tech/api/health && \
-             echo '' && ls -lh /var/www/tuyxona/backend/static/TuyBox.apk"
+             curl -s https://tuybox.asilbek.tech/api/health && echo && \
+             ls -lh /var/www/tuyxona/backend/static/TuyBox.apk"
 
-      - name: ✅ Deploy muvaffaqiyatli xabari
+      - name: ✅ Tayyor!
         run: |
-          echo "🎉 TuyBox muvaffaqiyatli deploy bo'ldi!"
-          echo "🌐 https://tuybox.asilbek.tech"
+          echo "🎉 TuyBox APK deploy muvaffaqiyatli!"
           echo "📲 https://tuybox.asilbek.tech/static/TuyBox.apk"
+          echo "🌐 https://tuybox.asilbek.tech"

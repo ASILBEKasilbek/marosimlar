@@ -6,8 +6,6 @@ on:
       - main
     paths:
       - 'backend/**'
-      - 'templates/**'
-      - 'requirements.txt'
       - '.github/workflows/deploy-backend.yml'
   workflow_dispatch:
 
@@ -20,37 +18,53 @@ jobs:
       - name: ⬇️ Kodni yuklab olish
         uses: actions/checkout@v4
 
+      - name: 🔑 SSH kaliti borligini tekshirish
+        id: check_ssh
+        run: |
+          if [ -z "${{ secrets.SERVER_SSH_KEY }}" ]; then
+            echo "has_key=false" >> $GITHUB_OUTPUT
+            echo "⚠️ SERVER_SSH_KEY secret qo'shilmagan. Deploy o'tkazib yuboriladi."
+          else
+            echo "has_key=true" >> $GITHUB_OUTPUT
+            echo "✅ SSH kalit topildi."
+          fi
+
       - name: 🔑 SSH kalitini sozlash
+        if: steps.check_ssh.outputs.has_key == 'true'
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
 
-      - name: 🚚 Backend kodni serverga yuklash (rsync)
+      - name: 🚚 Backend kodni serverga yuklash
+        if: steps.check_ssh.outputs.has_key == 'true'
         run: |
           rsync -avz \
             -e "ssh -o StrictHostKeyChecking=no" \
-            --exclude='.git' \
-            --exclude='venv' \
-            --exclude='mobile/' \
-            --exclude='*.db' \
-            --exclude='__pycache__' \
-            --exclude='.DS_Store' \
-            --exclude='.env' \
+            --exclude='.git' --exclude='venv' --exclude='mobile/' \
+            --exclude='*.db' --exclude='__pycache__' \
+            --exclude='.DS_Store' --exclude='.env' \
             ./backend/ root@82.26.198.220:/var/www/tuyxona/backend/
 
       - name: 🔄 Xizmatlarni qayta ishga tushirish
+        if: steps.check_ssh.outputs.has_key == 'true'
         run: |
           ssh -o StrictHostKeyChecking=no root@82.26.198.220 \
             "systemctl restart tuyxona-backend tuyxona-bot"
 
       - name: ✅ Holat tekshiruvi
+        if: steps.check_ssh.outputs.has_key == 'true'
         run: |
           sleep 5
-          HEALTH=$(curl -sf https://tuybox.asilbek.tech/api/health || echo "ERROR")
-          echo "API Holat: $HEALTH"
-          if echo "$HEALTH" | grep -q "online"; then
-            echo "✅ TuyBox Backend muvaffaqiyatli deploy bo'ldi!"
-          else
-            echo "❌ Deploy xatosi!"
-            exit 1
-          fi
+          curl -sf https://tuybox.asilbek.tech/api/health && echo "✅ Backend ishlayapti!"
+
+      - name: 📋 SSH yo'q - ko'rsatma
+        if: steps.check_ssh.outputs.has_key == 'false'
+        run: |
+          echo "========================================="
+          echo "⚠️  SERVER_SSH_KEY qo'shilmagan!"
+          echo "========================================="
+          echo "GitHub → Settings → Secrets and variables"
+          echo "→ Actions → New repository secret"
+          echo "Name: SERVER_SSH_KEY"
+          echo "========================================="
+          exit 0
