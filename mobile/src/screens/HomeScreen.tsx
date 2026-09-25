@@ -17,6 +17,7 @@ interface HomeScreenProps {
   onOpenMap?: () => void;
   onOpenToyona?: () => void;
   onOpenSeating?: () => void;
+  onOpenChecklist?: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -26,6 +27,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onOpenMap,
   onOpenToyona,
   onOpenSeating,
+  onOpenChecklist,
 }) => {
   const [selectedCat, setSelectedCat] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -342,6 +344,33 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <View style={styles.widgetWrapper}>
         <BudgetPlannerWidget />
       </View>
+
+      {/* Wedding Checklist Banner */}
+      <TouchableOpacity
+        style={styles.checklistBanner}
+        activeOpacity={0.88}
+        onPress={() => onOpenChecklist && onOpenChecklist()}
+      >
+        <LinearGradient
+          colors={['#172238', '#0C1322']}
+          style={styles.checklistBannerGradient}
+        >
+          <View style={styles.checklistLeftIconBox}>
+            <Ionicons name="checkbox" size={20} color="#34D399" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Text style={styles.checklistBannerTitle}>To'y Rejasi & Cheklist</Text>
+              <Text style={styles.checklistBannerPct}>59% tayyor</Text>
+            </View>
+            <Text style={styles.checklistBannerSub}>10 ta bajarildi • 7 ta muhim vazifa qoldi</Text>
+            <View style={styles.checklistTrack}>
+              <View style={[styles.checklistFill, { width: '59%' }]} />
+            </View>
+          </View>
+          <Ionicons name="chevron-forward" size={16} color={COLORS.gold[400]} style={{ marginLeft: 8 }} />
+        </LinearGradient>
+      </TouchableOpacity>
 
       {/* Featured Luxury Services */}
       <View style={styles.sectionHeader}>
@@ -1096,5 +1125,54 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     marginLeft: 6,
+  },
+  checklistBanner: {
+    marginHorizontal: 16,
+    marginBottom: 20,
+    borderRadius: 16,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(52, 211, 153, 0.3)',
+  },
+  checklistBannerGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+  },
+  checklistLeftIconBox: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: 'rgba(52, 211, 153, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  checklistBannerTitle: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  checklistBannerPct: {
+    color: '#34D399',
+    fontSize: 12,
+    fontWeight: '800',
+  },
+  checklistBannerSub: {
+    color: '#94A3B8',
+    fontSize: 11,
+    marginTop: 2,
+    marginBottom: 6,
+  },
+  checklistTrack: {
+    height: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 2,
+    overflow: 'hidden',
+  },
+  checklistFill: {
+    height: '100%',
+    backgroundColor: '#34D399',
+    borderRadius: 2,
   },
 });

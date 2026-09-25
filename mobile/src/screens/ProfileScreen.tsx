@@ -9,6 +9,8 @@ import {
   Switch,
   Alert,
   Share,
+  Vibration,
+  Platform,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -19,6 +21,7 @@ interface ProfileScreenProps {
   onOpenMap?: () => void;
   onOpenToyona?: () => void;
   onOpenSeating?: () => void;
+  onOpenChecklist?: () => void;
 }
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({
@@ -26,8 +29,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   onOpenMap,
   onOpenToyona,
   onOpenSeating,
+  onOpenChecklist,
 }) => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [isBrideMode, setIsBrideMode] = useState(false);
 
   const handleShareApp = async () => {
     try {
@@ -84,10 +89,41 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               <Text style={styles.userPhone}>+998 (90) 123-45-67</Text>
               
               <View style={styles.vipBadge}>
-                <Ionicons name="diamond" size={12} color={COLORS.gold[400]} style={{ marginRight: 4 }} />
-                <Text style={styles.vipBadgeText}>TuyBox VIP Gold Member</Text>
+                <Ionicons name="diamond" size={12} color={isBrideMode ? '#F472B6' : COLORS.gold[400]} style={{ marginRight: 4 }} />
+                <Text style={[styles.vipBadgeText, isBrideMode && { color: '#F472B6' }]}>
+                  {isBrideMode ? 'TuyBox Kelin VIP Member' : 'TuyBox VIP Gold Member'}
+                </Text>
               </View>
             </View>
+          </View>
+
+          {/* Dual Luxury Mode Switcher: Kuyov vs Kelin */}
+          <View style={styles.themeModeToggleRow}>
+            <TouchableOpacity
+              style={[styles.themeModeBtn, !isBrideMode && styles.themeModeBtnActive]}
+              onPress={() => {
+                setIsBrideMode(false);
+                if (Platform.OS !== 'web') Vibration.vibrate(15);
+              }}
+            >
+              <Text style={styles.themeModeEmoji}>👑</Text>
+              <Text style={[styles.themeModeBtnText, !isBrideMode && styles.themeModeBtnTextActive]}>
+                Kuyov Rejimi (Gold)
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.themeModeBtn, isBrideMode && styles.themeModeBrideActive]}
+              onPress={() => {
+                setIsBrideMode(true);
+                if (Platform.OS !== 'web') Vibration.vibrate(15);
+              }}
+            >
+              <Text style={styles.themeModeEmoji}>🌸</Text>
+              <Text style={[styles.themeModeBtnText, isBrideMode && { color: '#F472B6', fontWeight: '800' }]}>
+                Kelin Rejimi (Rose)
+              </Text>
+            </TouchableOpacity>
           </View>
         </LinearGradient>
       </View>
@@ -236,6 +272,19 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <View>
               <Text style={styles.menuItemTitle}>Raqamli Taklifnomalar Boshqaruvi</Text>
               <Text style={styles.menuItemSubtitle}>Mehmonlar RSVP javoblari va ro'yxat</Text>
+            </View>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color="#64748B" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuItem} onPress={() => onOpenChecklist && onOpenChecklist()}>
+          <View style={styles.menuItemLeft}>
+            <View style={[styles.menuIconContainer, { borderColor: 'rgba(52, 211, 153, 0.3)' }]}>
+              <Ionicons name="checkbox-outline" size={18} color="#34D399" />
+            </View>
+            <View>
+              <Text style={styles.menuItemTitle}>To'y Rejasi & Sarpolar Cheklisti</Text>
+              <Text style={styles.menuItemSubtitle}>50 ta asosiy vazifa, muddatlar va xarajatlar</Text>
             </View>
           </View>
           <Ionicons name="chevron-forward" size={18} color="#64748B" />
@@ -734,5 +783,46 @@ const styles = StyleSheet.create({
   timelineItemPlace: {
     color: '#94A3B8',
     fontSize: 11,
+  },
+  themeModeToggleRow: {
+    flexDirection: 'row',
+    marginTop: 14,
+    gap: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.08)',
+    paddingTop: 12,
+  },
+  themeModeBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+  },
+  themeModeBtnActive: {
+    backgroundColor: 'rgba(212, 175, 55, 0.18)',
+    borderColor: COLORS.gold[400],
+  },
+  themeModeBrideActive: {
+    backgroundColor: 'rgba(244, 114, 182, 0.18)',
+    borderColor: '#F472B6',
+  },
+  themeModeEmoji: {
+    fontSize: 14,
+    marginRight: 6,
+  },
+  themeModeBtnText: {
+    color: '#94A3B8',
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  themeModeBtnTextActive: {
+    color: COLORS.gold[400],
+    fontWeight: '800',
   },
 });

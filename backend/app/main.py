@@ -18,6 +18,7 @@ from app.api.v1.webhooks import router as webhooks_router
 from app.api.v1.payments import router as payments_router
 from app.api.v1.social import router as social_router
 from app.api.v1.seating import router as seating_router
+from app.api.v1.checklist import router as checklist_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -79,6 +80,7 @@ app.include_router(webhooks_router, prefix=settings.API_V1_STR)
 app.include_router(payments_router, prefix=settings.API_V1_STR)
 app.include_router(social_router, prefix=settings.API_V1_STR)
 app.include_router(seating_router, prefix=settings.API_V1_STR)
+app.include_router(checklist_router, prefix=settings.API_V1_STR)
 
 @app.on_event("startup")
 async def on_startup():

@@ -9,15 +9,16 @@ import { ProfileScreen } from './src/screens/ProfileScreen';
 import { VenueMapScreen } from './src/screens/VenueMapScreen';
 import { ToyonaPaymentScreen } from './src/screens/ToyonaPaymentScreen';
 import { TablePlannerScreen } from './src/screens/TablePlannerScreen';
+import { WeddingChecklistScreen } from './src/screens/WeddingChecklistScreen';
 import { ModernTabBar, TabType } from './src/components/navigation/ModernTabBar';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
-  const [activeOverlay, setActiveOverlay] = useState<'none' | 'map' | 'toyona' | 'seating'>('none');
+  const [activeOverlay, setActiveOverlay] = useState<'none' | 'map' | 'toyona' | 'seating' | 'checklist'>('none');
 
   const renderScreen = () => {
-    // 1. Overlay screens (Map / To'yona / Seating)
+    // 1. Overlay screens (Map / To'yona / Seating / Checklist)
     if (activeOverlay === 'map') {
       return (
         <VenueMapScreen
@@ -54,6 +55,18 @@ export default function App() {
       );
     }
 
+    if (activeOverlay === 'checklist') {
+      return (
+        <WeddingChecklistScreen
+          onBack={() => setActiveOverlay('none')}
+          onOpenBudget={() => {
+            setActiveOverlay('none');
+            setActiveTab('invites');
+          }}
+        />
+      );
+    }
+
     // 2. Service Detail Screen
     if (selectedServiceId !== null) {
       return (
@@ -83,6 +96,7 @@ export default function App() {
             onOpenMap={() => setActiveOverlay('map')}
             onOpenToyona={() => setActiveOverlay('toyona')}
             onOpenSeating={() => setActiveOverlay('seating')}
+            onOpenChecklist={() => setActiveOverlay('checklist')}
           />
         );
       case 'venue3d':
@@ -96,6 +110,7 @@ export default function App() {
             onOpenMap={() => setActiveOverlay('map')}
             onOpenToyona={() => setActiveOverlay('toyona')}
             onOpenSeating={() => setActiveOverlay('seating')}
+            onOpenChecklist={() => setActiveOverlay('checklist')}
           />
         );
       default:
