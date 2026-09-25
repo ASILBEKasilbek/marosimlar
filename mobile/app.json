@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "TuyBox",
+    "slug": "tuybox",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/logo.jpg",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./src/assets/logo.jpg",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A0A0C"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "tech.asilbek.tuybox"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/logo.jpg",
+        "backgroundColor": "#0A0A0C"
+      },
+      "package": "tech.asilbek.tuybox"
+    },
+    "web": {
+      "favicon": "./src/assets/logo.jpg"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+name: 🚀 TuyBox APK Build & Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/build-apk.yml'
+  workflow_dispatch:   # Qo'lda ham ishga tushirish imkoni
+
+jobs:
+  # ─────────────────────────────────────────────────────────────
+  # JOB 1: EAS orqali Android APK Build
+  # ─────────────────────────────────────────────────────────────
+  build-android-apk:
+    name: 📦 Build Android APK (EAS)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - name: ⬇️ Kodni yuklab olish
+        uses: actions/checkout@v4
+
+      - name: 🟢 Node.js sozlash
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: 📦 Kutubxonalarni o'rnatish
+        run: npm ci || npm install
+
+      - name: 🔧 EAS CLI o'rnatish
+        run: npm install -g eas-cli
+
+      - name: 🏗️ Android APK Build (EAS Preview)
+        run: eas build --platform android --profile preview --non-interactive --output ../dist/TuyBox.apk
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📤 APK ni Artifact sifatida saqlash
+        uses: actions/upload-artifact@v4
+        with:
+          name: TuyBox-APK
+          path: dist/TuyBox.apk
+          retention-days: 30
+
+  # ─────────────────────────────────────────────────────────────
+  # JOB 2: Serverni yangilash + APK deploy
+  # ─────────────────────────────────────────────────────────────
+  deploy-to-server:
+    name: 🌐 Serverni Yangilash va APK Deploy
+    needs: build-android-apk
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Kodni yuklab olish
+        uses: actions/checkout@v4
+
+      - name: 📥 APK Artifact yuklab olish
+        uses: actions/download-artifact@v4
+        with:
+          name: TuyBox-APK
+          path: dist/
+
+      - name: 🔑 SSH kalitini sozlash
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SERVER_SSH_KEY }}
+
+      - name: 🚚 APK ni serverga yuklash
+        run: |
+          scp -o StrictHostKeyChecking=no dist/TuyBox.apk root@82.26.198.220:/var/www/tuyxona/backend/static/TuyBox.apk
+          echo "✅ APK serverga yuklandi!"
+
+      - name: 🔄 Backend + Bot xizmatlarini yangilash
+        run: |
+          ssh -o StrictHostKeyChecking=no root@82.26.198.220 << 'EOF'
+            echo "=== Backend kodni yangilash ==="
+            cd /var/www/tuyxona
+            # Backend fayllarini yangilash
+            rsync -av --exclude='.git' --exclude='venv' --exclude='*.db' \
+              /tmp/deploy/ /var/www/tuyxona/ 2>/dev/null || true
+
+            echo "=== Xizmatlarni qayta ishga tushirish ==="
+            systemctl restart tuyxona-backend
+            systemctl restart tuyxona-bot
+
+            echo "=== Holat tekshiruvi ==="
+            systemctl is-active tuyxona-backend && echo "✅ Backend: ISHLAYAPTI"
+            systemctl is-active tuyxona-bot && echo "✅ Bot: ISHLAYAPTI"
+            ls -lh /var/www/tuyxona/backend/static/TuyBox.apk
+          EOF
+
+      - name: 🌐 Backend ko'chirish (rsync)
+        run: |
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
+            --exclude='.git' \
+            --exclude='venv' \
+            --exclude='mobile/' \
+            --exclude='*.db' \
+            --exclude='__pycache__' \
+            --exclude='.DS_Store' \
+            ./ root@82.26.198.220:/var/www/tuyxona/
+
+      - name: 🔁 Serverni restart
+        run: |
+          ssh -o StrictHostKeyChecking=no root@82.26.198.220 \
+            "systemctl restart tuyxona-backend tuyxona-bot && sleep 3 && \
+             curl -s https://tuybox.asilbek.tech/api/health"
+
+      - name: ✅ Deploy muvaffaqiyatli
+        run: |
+          echo "🎉 TuyBox v$(cat mobile/package.json | python3 -c 'import sys,json;print(json.load(sys.stdin)[\"version\"])') muvaffaqiyatli deploy qilindi!"
+          echo "🌐 Sayt: https://tuybox.asilbek.tech"
+          echo "📲 APK: https://tuybox.asilbek.tech/static/TuyBox.apk"
+          echo "🤖 Bot: https://t.me/tuyboxbot"
