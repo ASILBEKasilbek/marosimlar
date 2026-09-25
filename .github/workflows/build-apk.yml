@@ -7,7 +7,7 @@ on:
     paths:
       - 'mobile/**'
       - '.github/workflows/build-apk.yml'
-  workflow_dispatch:   # Qo'lda ham ishga tushirish imkoni
+  workflow_dispatch:
 
 jobs:
   # ─────────────────────────────────────────────────────────────
@@ -28,17 +28,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          # package-lock.json yo'q bo'lsa cache ishlatmaymiz
           cache: 'npm'
-          cache-dependency-path: mobile/package-lock.json
+          cache-dependency-path: mobile/package.json
 
       - name: 📦 Kutubxonalarni o'rnatish
-        run: npm ci || npm install
+        run: npm install --legacy-peer-deps
 
       - name: 🔧 EAS CLI o'rnatish
-        run: npm install -g eas-cli
+        run: npm install -g eas-cli@latest
 
       - name: 🏗️ Android APK Build (EAS Preview)
-        run: eas build --platform android --profile preview --non-interactive --output ../dist/TuyBox.apk
+        run: |
+          mkdir -p ../dist
+          eas build --platform android --profile preview --non-interactive --output ../dist/TuyBox.apk
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
@@ -77,45 +80,29 @@ jobs:
           scp -o StrictHostKeyChecking=no dist/TuyBox.apk root@82.26.198.220:/var/www/tuyxona/backend/static/TuyBox.apk
           echo "✅ APK serverga yuklandi!"
 
-      - name: 🔄 Backend + Bot xizmatlarini yangilash
+      - name: 🌐 Backend kodni serverga yuklash (rsync)
         run: |
-          ssh -o StrictHostKeyChecking=no root@82.26.198.220 << 'EOF'
-            echo "=== Backend kodni yangilash ==="
-            cd /var/www/tuyxona
-            # Backend fayllarini yangilash
-            rsync -av --exclude='.git' --exclude='venv' --exclude='*.db' \
-              /tmp/deploy/ /var/www/tuyxona/ 2>/dev/null || true
-
-            echo "=== Xizmatlarni qayta ishga tushirish ==="
-            systemctl restart tuyxona-backend
-            systemctl restart tuyxona-bot
-
-            echo "=== Holat tekshiruvi ==="
-            systemctl is-active tuyxona-backend && echo "✅ Backend: ISHLAYAPTI"
-            systemctl is-active tuyxona-bot && echo "✅ Bot: ISHLAYAPTI"
-            ls -lh /var/www/tuyxona/backend/static/TuyBox.apk
-          EOF
-
-      - name: 🌐 Backend ko'chirish (rsync)
-        run: |
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
+          rsync -avz \
+            -e "ssh -o StrictHostKeyChecking=no" \
             --exclude='.git' \
             --exclude='venv' \
             --exclude='mobile/' \
             --exclude='*.db' \
             --exclude='__pycache__' \
             --exclude='.DS_Store' \
-            ./ root@82.26.198.220:/var/www/tuyxona/
+            --exclude='.env' \
+            --exclude='node_modules' \
+            ./backend/ root@82.26.198.220:/var/www/tuyxona/backend/
 
-      - name: 🔁 Serverni restart
+      - name: 🔁 Serverni restart va tekshiruv
         run: |
           ssh -o StrictHostKeyChecking=no root@82.26.198.220 \
             "systemctl restart tuyxona-backend tuyxona-bot && sleep 3 && \
-             curl -s https://tuybox.asilbek.tech/api/health"
+             curl -s https://tuybox.asilbek.tech/api/health && \
+             echo '' && ls -lh /var/www/tuyxona/backend/static/TuyBox.apk"
 
-      - name: ✅ Deploy muvaffaqiyatli
+      - name: ✅ Deploy muvaffaqiyatli xabari
         run: |
-          echo "🎉 TuyBox v$(cat mobile/package.json | python3 -c 'import sys,json;print(json.load(sys.stdin)[\"version\"])') muvaffaqiyatli deploy qilindi!"
-          echo "🌐 Sayt: https://tuybox.asilbek.tech"
-          echo "📲 APK: https://tuybox.asilbek.tech/static/TuyBox.apk"
-          echo "🤖 Bot: https://t.me/tuyboxbot"
+          echo "🎉 TuyBox muvaffaqiyatli deploy bo'ldi!"
+          echo "🌐 https://tuybox.asilbek.tech"
+          echo "📲 https://tuybox.asilbek.tech/static/TuyBox.apk"
