@@ -13,14 +13,21 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "tech.asilbek.tuybox"
+      "bundleIdentifier": "tech.asilbek.tuybox",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Eng yaqin to'yxonalarni xaritada topish va masofani hisoblash uchun joylashuvingiz kerak."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/logo.jpg",
         "backgroundColor": "#0A0A0C"
       },
-      "package": "tech.asilbek.tuybox"
+      "package": "tech.asilbek.tuybox",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./src/assets/logo.jpg"

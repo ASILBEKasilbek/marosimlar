@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,10 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
+import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
@@ -40,7 +42,7 @@ export interface VenueMapItem {
   tag: string;
 }
 
-export const VENUES_MAP_DATA: VenueMapItem[] = [
+export const INITIAL_VENUES_MAP_DATA: VenueMapItem[] = [
   {
     id: 1,
     name: 'Versal Grand Ballroom',
@@ -195,6 +197,21 @@ export const VENUES_MAP_DATA: VenueMapItem[] = [
   }
 ];
 
+// Haversine formula for exact distance in km
+function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371; // Earth radius in km
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return Math.round(R * c * 10) / 10;
+}
+
 interface VenueMapScreenProps {
   onBack?: () => void;
   onOpen3D?: () => void;
@@ -207,20 +224,64 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
   onSelectVenue,
 }) => {
   const { colors, isKelin } = useAppTheme();
-  const [selectedVenue, setSelectedVenue] = useState<VenueMapItem>(VENUES_MAP_DATA[0]);
+  const [venues, setVenues] = useState<VenueMapItem[]>(INITIAL_VENUES_MAP_DATA);
+  const [selectedVenue, setSelectedVenue] = useState<VenueMapItem | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDistrict, setActiveDistrict] = useState('Barchasi');
   const [activeCapacityFilter, setActiveCapacityFilter] = useState<'all' | '500+' | '700+'>('all');
   const [only3D, setOnly3D] = useState(false);
-  const [showFiltersModal, setShowFiltersModal] = useState(false);
+  const [mapLayer, setMapLayer] = useState<'dark' | 'satellite' | 'street'>('dark');
+  const [isLocating, setIsLocating] = useState(false);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const webViewRef = useRef<WebView>(null);
 
   // Districts list
   const districts = ['Barchasi', 'Yakkasaroy', "Mirzo Ulug'bek", 'Chilonzor', 'Qibray', 'Yunusobod', 'Markaz', 'Olmazor', 'Mirobod'];
 
-  // Filtered venues
+  // Real GPS Location Detection using expo-location
+  const handleGetLocation = async () => {
+    try {
+      setIsLocating(true);
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert(
+          'Geolokatsiya ruxsati kerak',
+          'Sizga eng yaqin to‘yxonalarni aniq ko‘rsatishimiz uchun ilovaga GPS joylashuv ruxsatini bering.',
+          [{ text: 'Tushunarli' }]
+        );
+        setIsLocating(false);
+        return;
+      }
+
+      const position = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+
+      const userLat = position.coords.latitude;
+      const userLng = position.coords.longitude;
+      setUserLocation({ lat: userLat, lng: userLng });
+
+      // Calculate real distances to all venues and sort by nearest
+      const updatedVenues = venues.map((v) => ({
+        ...v,
+        distanceKm: calculateDistanceKm(userLat, userLng, v.lat, v.lng),
+      })).sort((a, b) => a.distanceKm - b.distanceKm);
+
+      setVenues(updatedVenues);
+
+      // Send to WebView
+      const js = `window.showUserLocation && window.showUserLocation(${userLat}, ${userLng}); true;`;
+      webViewRef.current?.injectJavaScript(js);
+      setIsLocating(false);
+    } catch (error) {
+      setIsLocating(false);
+      Alert.alert('GPS Xatosi', 'Joylashuvingizni aniqlab bo‘lmadi. Iltimos telefoningizda GPS yoqilganligini tekshiring.');
+    }
+  };
+
+  // Filtered venues based on search & filters
   const filteredVenues = useMemo(() => {
-    return VENUES_MAP_DATA.filter((v) => {
+    return venues.filter((v) => {
       const matchesSearch =
         !searchQuery.trim() ||
         v.name.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
@@ -238,7 +299,20 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
 
       return matchesSearch && matchesDistrict && matchesCapacity && matches3D;
     });
-  }, [searchQuery, activeDistrict, activeCapacityFilter, only3D]);
+  }, [venues, searchQuery, activeDistrict, activeCapacityFilter, only3D]);
+
+  // Push filtered venues update to Leaflet
+  useEffect(() => {
+    const js = `window.updateVenues && window.updateVenues(${JSON.stringify(filteredVenues)}); true;`;
+    webViewRef.current?.injectJavaScript(js);
+  }, [filteredVenues]);
+
+  // Switch map layer (Dark / Satellite / Street)
+  const switchMapLayer = (layer: 'dark' | 'satellite' | 'street') => {
+    setMapLayer(layer);
+    const js = `window.switchBaseLayer && window.switchBaseLayer('${layer}'); true;`;
+    webViewRef.current?.injectJavaScript(js);
+  };
 
   // Open external navigator (Yandex or Google)
   const openNavigator = (venue: VenueMapItem) => {
@@ -268,12 +342,6 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
     webViewRef.current?.injectJavaScript(js);
   };
 
-  // Recenter map to Tashkent center
-  const recenterTashkent = () => {
-    const js = `window.recenterMap && window.recenterMap(); true;`;
-    webViewRef.current?.injectJavaScript(js);
-  };
-
   // Dynamic theme colors for Leaflet pins
   const pinPrimaryColor = isKelin ? '#C084FC' : '#FFDF73';
   const pinDarkColor = isKelin ? '#9333EA' : '#D4AF37';
@@ -289,27 +357,32 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
-          body, html, #map { width: 100%; height: 100%; background: #070B14; }
+          body, html, #map { width: 100%; height: 100%; background: #0B0E14; overflow: hidden; }
+          
+          /* Razor-Sharp Custom Pins */
           .custom-pin {
             background: linear-gradient(135deg, ${pinPrimaryColor}, ${pinDarkColor});
             border: 2px solid #070B14;
             color: ${pinTextColor};
             font-size: 11px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             font-weight: 800;
             padding: 5px 10px;
             border-radius: 14px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.7);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.85);
             white-space: nowrap;
             display: flex;
             align-items: center;
             gap: 4px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            user-select: none;
           }
           .custom-pin:hover, .custom-pin.active {
-            transform: scale(1.18);
-            box-shadow: 0 6px 20px ${pinPrimaryColor};
+            transform: scale(1.22);
+            box-shadow: 0 0 16px ${pinPrimaryColor}, 0 6px 20px rgba(0,0,0,0.9);
             border-color: #FFFFFF;
+            z-index: 9999 !important;
           }
           .custom-pin::after {
             content: '';
@@ -321,27 +394,122 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
             border-style: solid;
             border-color: ${pinDarkColor} transparent transparent;
           }
-          .dark-tiles {
-            filter: brightness(0.65) invert(1) contrast(2.2) hue-rotate(200deg) saturate(0.2) brightness(0.85);
+
+          /* Radar User Location Pin */
+          .user-radar-container {
+            width: 44px;
+            height: 44px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .user-radar-wave {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(56, 189, 248, 0.3);
+            border: 1.5px solid #38BDF8;
+            animation: radarPulse 1.8s infinite ease-out;
+          }
+          .user-radar-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #38BDF8;
+            border: 2.5px solid #FFFFFF;
+            box-shadow: 0 0 10px #38BDF8;
+            z-index: 2;
+          }
+          @keyframes radarPulse {
+            0% { transform: scale(0.3); opacity: 1; }
+            100% { transform: scale(1.6); opacity: 0; }
+          }
+
+          /* Native Leaflet Popup styling */
+          .leaflet-popup-content-wrapper {
+            background: rgba(15, 20, 30, 0.95);
+            color: #FFFFFF;
+            border: 1.5px solid ${pinPrimaryColor};
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            padding: 4px;
+          }
+          .leaflet-popup-tip {
+            background: rgba(15, 20, 30, 0.95);
+            border: 1px solid ${pinPrimaryColor};
+          }
+          .venue-popup-card {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            width: 180px;
+          }
+          .venue-popup-img {
+            width: 100%;
+            height: 85px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-bottom: 6px;
+          }
+          .venue-popup-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 2px;
+          }
+          .venue-popup-price {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: ${pinPrimaryColor};
+            margin-bottom: 4px;
+          }
+          .venue-popup-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: linear-gradient(135deg, ${pinPrimaryColor}, ${pinDarkColor});
+            color: ${pinTextColor};
+            font-size: 11px;
+            font-weight: 800;
+            padding: 6px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            margin-top: 4px;
           }
         </style>
       </head>
       <body>
         <div id="map"></div>
         <script>
-          const map = L.map('map', { zoomControl: false }).setView([41.3050, 69.2650], 12);
+          const map = L.map('map', { 
+            zoomControl: false,
+            attributionControl: false
+          }).setView([41.3050, 69.2650], 12);
 
-          // Fast & Universal OpenStreetMap with Dark Theme Filter
-          L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          // 1. Ultra-Clean CartoDB Dark Matter Retina Tile Layer (Default, zero blur, sharp labels)
+          const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png', {
             maxZoom: 19,
-            className: 'dark-tiles'
+            subdomains: ['a', 'b', 'c', 'd']
           }).addTo(map);
+
+          // 2. High-Res Satellite Layer (ESRI World Imagery)
+          const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19
+          });
+
+          // 3. Crisp Daylight Street Layer (CartoDB Voyager Retina)
+          const streetLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png', {
+            maxZoom: 19,
+            subdomains: ['a', 'b', 'c', 'd']
+          });
 
           let venues = ${JSON.stringify(filteredVenues)};
           let markers = {};
+          let userMarker = null;
 
           function renderMarkers(items) {
-            // Clear existing
             Object.values(markers).forEach(m => map.removeLayer(m));
             markers = {};
 
@@ -356,6 +524,17 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
               const marker = L.marker([v.lat, v.lng], { icon: icon }).addTo(map);
               markers[v.id] = marker;
 
+              const popupHtml = \`
+                <div class="venue-popup-card">
+                  <img src="\${v.image}" class="venue-popup-img" />
+                  <div class="venue-popup-title">\${v.name}</div>
+                  <div class="venue-popup-price">\${v.price}</div>
+                  <div style="font-size: 10px; color: #94A3B8; margin-bottom: 4px;">👥 \${v.capacity}</div>
+                  <div class="venue-popup-btn" onclick="selectVenueFromPopup(\${v.id})">Tafsilotlar & Bron</div>
+                </div>
+              \`;
+              marker.bindPopup(popupHtml, { offset: [0, -18], closeButton: false });
+
               marker.on('click', () => {
                 highlightPin(v.id);
                 if (window.ReactNativeWebView) {
@@ -365,22 +544,68 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
             });
           }
 
+          function selectVenueFromPopup(id) {
+            if (window.ReactNativeWebView) {
+              window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'SELECT_VENUE', id: id }));
+            }
+          }
+
           function highlightPin(id) {
             document.querySelectorAll('.custom-pin').forEach(el => el.classList.remove('active'));
             const el = document.getElementById('pin-' + id);
             if (el) el.classList.add('active');
           }
 
+          // Tap on map closes active selection
+          map.on('click', (e) => {
+            // Check if not clicking a pin
+            if (!e.originalEvent.defaultPrevented) {
+              document.querySelectorAll('.custom-pin').forEach(el => el.classList.remove('active'));
+              if (window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'DESELECT_VENUE' }));
+              }
+            }
+          });
+
           window.focusVenue = function(id) {
             const v = venues.find(item => item.id === id);
             if (v && markers[id]) {
-              map.flyTo([v.lat, v.lng], 14, { duration: 0.8 });
+              map.flyTo([v.lat, v.lng], 15, { duration: 0.9 });
+              markers[id].openPopup();
               highlightPin(id);
             }
           };
 
-          window.recenterMap = function() {
-            map.flyTo([41.3050, 69.2650], 12, { duration: 0.8 });
+          window.showUserLocation = function(lat, lng) {
+            if (userMarker) {
+              map.removeLayer(userMarker);
+            }
+
+            const userIcon = L.divIcon({
+              className: 'user-pin-wrapper',
+              html: '<div class="user-radar-container"><div class="user-radar-wave"></div><div class="user-radar-dot"></div></div>',
+              iconSize: [44, 44],
+              iconAnchor: [22, 22]
+            });
+
+            userMarker = L.marker([lat, lng], { icon: userIcon, zIndexOffset: 10000 }).addTo(map);
+            userMarker.bindPopup('<div style="font-weight: 800; font-size: 12px; color: #38BDF8;">📍 Siz shu yerdasiz</div>', { offset: [0, -14] }).openPopup();
+
+            map.flyTo([lat, lng], 15, { duration: 1.2 });
+          };
+
+          window.switchBaseLayer = function(layerName) {
+            map.removeLayer(darkLayer);
+            map.removeLayer(satelliteLayer);
+            map.removeLayer(streetLayer);
+
+            if (layerName === 'satellite') {
+              satelliteLayer.addTo(map);
+            } else if (layerName === 'street') {
+              streetLayer.addTo(map);
+            } else {
+              darkLayer.addTo(map);
+            }
           };
 
           window.updateVenues = function(newVenues) {
@@ -388,9 +613,7 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
             renderMarkers(venues);
           };
 
-          // Initial Render
           renderMarkers(venues);
-          setTimeout(() => highlightPin(1), 300);
         </script>
       </body>
     </html>
@@ -427,21 +650,26 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
           {/* 3D Filter Quick Toggle */}
           <TouchableOpacity
             style={[
-              styles.filterToggleBtn,
+              styles.iconBtn,
               { borderColor: colors.borderColor },
               only3D && { backgroundColor: colors.primary, borderColor: colors.primary },
             ]}
             onPress={() => setOnly3D(!only3D)}
           >
-            <Ionicons name="cube" size={15} color={only3D ? (isKelin ? '#0F051D' : '#070B14') : colors.textGoldOrPurple} />
+            <Ionicons name="cube" size={16} color={only3D ? (isKelin ? '#0F051D' : '#070B14') : colors.textGoldOrPurple} />
           </TouchableOpacity>
 
-          {/* Recenter GPS */}
+          {/* Real Native GPS Button */}
           <TouchableOpacity
-            style={[styles.gpsBtn, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}
-            onPress={recenterTashkent}
+            style={[styles.iconBtn, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}
+            onPress={handleGetLocation}
+            disabled={isLocating}
           >
-            <Ionicons name="locate" size={18} color={colors.textGoldOrPurple} />
+            {isLocating ? (
+              <ActivityIndicator size="small" color={colors.primary} />
+            ) : (
+              <Ionicons name="navigate" size={17} color={userLocation ? '#38BDF8' : colors.textGoldOrPurple} />
+            )}
           </TouchableOpacity>
         </View>
 
@@ -512,6 +740,36 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
         </View>
       </View>
 
+      {/* Map Layer Switcher (Dark / Satellite / Street) */}
+      <View style={styles.layerSwitcherFloating}>
+        <TouchableOpacity
+          style={[styles.layerBtn, mapLayer === 'dark' && [styles.layerBtnActive, { backgroundColor: colors.primary }]]}
+          onPress={() => switchMapLayer('dark')}
+        >
+          <Text style={[styles.layerBtnText, mapLayer === 'dark' && { color: isKelin ? '#0F051D' : '#070B14', fontWeight: '800' }]}>
+            🌙 Tungi
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.layerBtn, mapLayer === 'satellite' && [styles.layerBtnActive, { backgroundColor: colors.primary }]]}
+          onPress={() => switchMapLayer('satellite')}
+        >
+          <Text style={[styles.layerBtnText, mapLayer === 'satellite' && { color: isKelin ? '#0F051D' : '#070B14', fontWeight: '800' }]}>
+            🛰️ Yo'ldosh
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.layerBtn, mapLayer === 'street' && [styles.layerBtnActive, { backgroundColor: colors.primary }]]}
+          onPress={() => switchMapLayer('street')}
+        >
+          <Text style={[styles.layerBtnText, mapLayer === 'street' && { color: isKelin ? '#0F051D' : '#070B14', fontWeight: '800' }]}>
+            ☀️ Kunduzgi
+          </Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Map WebView */}
       <View style={styles.mapContainer}>
         <WebView
@@ -521,13 +779,14 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
           style={styles.mapWebView}
           javaScriptEnabled={true}
           domStorageEnabled={true}
+          geolocationEnabled={true}
           mixedContentMode="always"
           startInLoadingState={true}
           renderLoading={() => (
             <View style={[styles.mapLoadingBox, { backgroundColor: colors.bgBase }]}>
               <ActivityIndicator size="large" color={colors.primary} />
               <Text style={{ color: colors.textGoldOrPurple, marginTop: 10, fontSize: 13, fontWeight: '700' }}>
-                Interaktiv Xarita ochilmoqda...
+                Ultra-aniq xarita ochilmoqda...
               </Text>
             </View>
           )}
@@ -535,21 +794,24 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
             try {
               const data = JSON.parse(e.nativeEvent.data);
               if (data.type === 'SELECT_VENUE') {
-                const found = VENUES_MAP_DATA.find((v) => v.id === data.id);
+                const found = venues.find((v) => v.id === data.id);
                 if (found) setSelectedVenue(found);
+              } else if (data.type === 'DESELECT_VENUE') {
+                // User clicked outside any pin -> close card
+                setSelectedVenue(null);
               }
             } catch (err) {}
           }}
         />
       </View>
 
-      {/* Bottom Floating Area (Carousel + Active Card) */}
+      {/* Bottom Area: Carousel & Selected Venue Card */}
       <View style={styles.bottomAreaContainer}>
-        {/* Horizontal Venue Cards Carousel */}
+        {/* Horizontal Quick Carousel */}
         <View style={styles.venuesBar}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.venuesScroll}>
             {filteredVenues.map((item) => {
-              const isSelected = item.id === selectedVenue.id;
+              const isSelected = selectedVenue?.id === item.id;
               return (
                 <TouchableOpacity
                   key={item.id}
@@ -575,64 +837,75 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
           </ScrollView>
         </View>
 
-        {/* Selected Venue Bottom Floating Card */}
-        <View style={[styles.venueCard, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
-          <Image source={{ uri: selectedVenue.image }} style={styles.venueImage} />
+        {/* Selected Venue Bottom Floating Card (Bossam chiqsin, bosmasam yopilsin) */}
+        {selectedVenue && (
+          <View style={[styles.venueCard, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
+            {/* Close Button ✕ */}
+            <TouchableOpacity
+              style={styles.closeCardBtn}
+              onPress={() => setSelectedVenue(null)}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="close" size={16} color="#94A3B8" />
+            </TouchableOpacity>
 
-          <View style={styles.venueInfo}>
-            <View style={styles.venueTitleRow}>
-              <Text style={styles.venueName} numberOfLines={1}>{selectedVenue.name}</Text>
-              <View style={[styles.ratingBadge, { backgroundColor: colors.badgeBg }]}>
-                <Ionicons name="star" size={12} color="#FFD700" />
-                <Text style={[styles.ratingText, { color: colors.textGoldOrPurple }]}>{selectedVenue.rating}</Text>
+            <Image source={{ uri: selectedVenue.image }} style={styles.venueImage} />
+
+            <View style={styles.venueInfo}>
+              <View style={styles.venueTitleRow}>
+                <Text style={styles.venueName} numberOfLines={1}>{selectedVenue.name}</Text>
+                <View style={[styles.ratingBadge, { backgroundColor: colors.badgeBg }]}>
+                  <Ionicons name="star" size={12} color="#FFD700" />
+                  <Text style={[styles.ratingText, { color: colors.textGoldOrPurple }]}>{selectedVenue.rating}</Text>
+                </View>
+              </View>
+
+              <Text style={styles.venueCity}>📍 {selectedVenue.district} tumani • {selectedVenue.distanceKm} km yaqin</Text>
+
+              <View style={styles.priceRow}>
+                <Text style={[styles.venuePrice, { color: colors.textGoldOrPurple }]}>{selectedVenue.price}</Text>
+                <Text style={styles.venueCapacity}>👥 {selectedVenue.capacity}</Text>
+              </View>
+
+              {/* Action Buttons */}
+              <View style={styles.actionsRow}>
+                <TouchableOpacity
+                  style={[styles.navBtn, { backgroundColor: colors.primary }]}
+                  onPress={() => openNavigator(selectedVenue)}
+                >
+                  <Ionicons name="navigate-outline" size={14} color={isKelin ? '#0F051D' : '#070B14'} style={{ marginRight: 3 }} />
+                  <Text style={[styles.navBtnText, { color: isKelin ? '#0F051D' : '#070B14' }]}>Marshrut</Text>
+                </TouchableOpacity>
+
+                {selectedVenue.has3D && onOpen3D && (
+                  <TouchableOpacity
+                    style={[styles.btn3D, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}
+                    onPress={onOpen3D}
+                  >
+                    <Ionicons name="cube" size={13} color={colors.textGoldOrPurple} style={{ marginRight: 3 }} />
+                    <Text style={[styles.btn3DText, { color: colors.textGoldOrPurple }]}>3D Zal</Text>
+                  </TouchableOpacity>
+                )}
+
+                {onSelectVenue && (
+                  <TouchableOpacity
+                    style={[styles.btnDetail, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}
+                    onPress={() => onSelectVenue(selectedVenue.id)}
+                  >
+                    <Text style={[styles.btnDetailText, { color: colors.textGoldOrPurple }]}>Batafsil</Text>
+                  </TouchableOpacity>
+                )}
+
+                <TouchableOpacity
+                  style={[styles.callCircleBtn, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}
+                  onPress={() => Linking.openURL('tel:' + selectedVenue.phone)}
+                >
+                  <Ionicons name="call" size={14} color={colors.textGoldOrPurple} />
+                </TouchableOpacity>
               </View>
             </View>
-
-            <Text style={styles.venueCity}>📍 {selectedVenue.district} tumani • {selectedVenue.distanceKm} km yaqin</Text>
-
-            <View style={styles.priceRow}>
-              <Text style={[styles.venuePrice, { color: colors.textGoldOrPurple }]}>{selectedVenue.price}</Text>
-              <Text style={styles.venueCapacity}>👥 {selectedVenue.capacity}</Text>
-            </View>
-
-            {/* Action Buttons */}
-            <View style={styles.actionsRow}>
-              <TouchableOpacity
-                style={[styles.navBtn, { backgroundColor: colors.primary }]}
-                onPress={() => openNavigator(selectedVenue)}
-              >
-                <Ionicons name="navigate-outline" size={15} color={isKelin ? '#0F051D' : '#070B14'} style={{ marginRight: 4 }} />
-                <Text style={[styles.navBtnText, { color: isKelin ? '#0F051D' : '#070B14' }]}>Marshrut</Text>
-              </TouchableOpacity>
-
-              {selectedVenue.has3D && onOpen3D && (
-                <TouchableOpacity
-                  style={[styles.btn3D, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}
-                  onPress={onOpen3D}
-                >
-                  <Ionicons name="cube" size={14} color={colors.textGoldOrPurple} style={{ marginRight: 3 }} />
-                  <Text style={[styles.btn3DText, { color: colors.textGoldOrPurple }]}>3D Zal</Text>
-                </TouchableOpacity>
-              )}
-
-              {onSelectVenue && (
-                <TouchableOpacity
-                  style={[styles.btnDetail, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}
-                  onPress={() => onSelectVenue(selectedVenue.id)}
-                >
-                  <Text style={[styles.btnDetailText, { color: colors.textGoldOrPurple }]}>Batafsil</Text>
-                </TouchableOpacity>
-              )}
-
-              <TouchableOpacity
-                style={[styles.callCircleBtn, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}
-                onPress={() => Linking.openURL('tel:' + selectedVenue.phone)}
-              >
-                <Ionicons name="call" size={15} color={colors.textGoldOrPurple} />
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
+        )}
       </View>
     </View>
   );
@@ -689,19 +962,11 @@ const styles = StyleSheet.create({
     fontSize: 12.5,
     padding: 0,
   },
-  filterToggleBtn: {
+  iconBtn: {
     width: 36,
     height: 36,
     borderRadius: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-  },
-  gpsBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
@@ -728,6 +993,31 @@ const styles = StyleSheet.create({
   districtPillTextActive: {
     fontWeight: '800',
   },
+  layerSwitcherFloating: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 104 : 98,
+    right: 14,
+    zIndex: 10,
+    flexDirection: 'row',
+    backgroundColor: 'rgba(10, 15, 26, 0.88)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    overflow: 'hidden',
+    padding: 2,
+    gap: 2,
+  },
+  layerBtn: {
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+  layerBtnActive: {},
+  layerBtnText: {
+    color: '#94A3B8',
+    fontSize: 10,
+    fontWeight: '600',
+  },
   mapContainer: {
     flex: 1,
     width: '100%',
@@ -748,7 +1038,7 @@ const styles = StyleSheet.create({
   },
   bottomAreaContainer: {
     position: 'absolute',
-    bottom: 100, // Leave room for floating bottom navigation dock
+    bottom: 95, // Leave room for floating bottom navigation dock
     left: 14,
     right: 14,
     zIndex: 10,
@@ -789,6 +1079,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.45,
     shadowRadius: 14,
     elevation: 10,
+    position: 'relative',
+  },
+  closeCardBtn: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 5,
   },
   venueImage: {
     width: 86,
@@ -804,6 +1107,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 2,
+    paddingRight: 20, // space for close button
   },
   venueName: {
     color: '#FFFFFF',
