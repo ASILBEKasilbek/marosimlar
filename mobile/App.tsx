@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, StatusBar, Platform } from 'react-native';
-import { COLORS } from './src/theme/colors';
 import { ThemeProvider, useAppTheme } from './src/theme/ThemeContext';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { ServiceDetailScreen } from './src/screens/ServiceDetailScreen';
-import { Venue3DScreen } from './src/screens/Venue3DScreen';
-import { DigitalInvitationScreen } from './src/screens/DigitalInvitationScreen';
+import { CreateServiceScreen } from './src/screens/CreateServiceScreen';
+import { BudgetScreen } from './src/screens/BudgetScreen';
 import { ProfileScreen } from './src/screens/ProfileScreen';
 import { VenueMapScreen } from './src/screens/VenueMapScreen';
 import { ToyonaPaymentScreen } from './src/screens/ToyonaPaymentScreen';
@@ -29,10 +28,6 @@ function MainApp() {
             setActiveOverlay('none');
             setSelectedServiceId(id);
           }}
-          onOpen3D={() => {
-            setActiveOverlay('none');
-            setActiveTab('venue3d');
-          }}
         />
       );
     }
@@ -49,10 +44,6 @@ function MainApp() {
       return (
         <TablePlannerScreen
           onBack={() => setActiveOverlay('none')}
-          onOpen3D={() => {
-            setActiveOverlay('none');
-            setActiveTab('venue3d');
-          }}
         />
       );
     }
@@ -63,7 +54,7 @@ function MainApp() {
           onBack={() => setActiveOverlay('none')}
           onOpenBudget={() => {
             setActiveOverlay('none');
-            setActiveTab('invites');
+            setActiveTab('budget');
           }}
         />
       );
@@ -75,10 +66,6 @@ function MainApp() {
         <ServiceDetailScreen
           serviceId={selectedServiceId}
           onBack={() => setSelectedServiceId(null)}
-          onOpen3D={() => {
-            setSelectedServiceId(null);
-            setActiveTab('venue3d');
-          }}
           onOpenMap={() => {
             setSelectedServiceId(null);
             setActiveOverlay('map');
@@ -87,14 +74,13 @@ function MainApp() {
       );
     }
 
-    // 3. Tab Screens (5 Main Tabs)
+    // 3. Tab Screens (5 Main Tabs: Home, Map, Create/Joylash, Budget, Profile)
     switch (activeTab) {
       case 'home':
         return (
           <HomeScreen
             onSelectService={(id) => setSelectedServiceId(id)}
-            onOpenBudget={() => setActiveTab('invites')}
-            onOpen3D={() => setActiveTab('venue3d')}
+            onOpenBudget={() => setActiveTab('budget')}
             onOpenMap={() => setActiveTab('map')}
             onOpenToyona={() => setActiveOverlay('toyona')}
             onOpenSeating={() => setActiveOverlay('seating')}
@@ -105,13 +91,16 @@ function MainApp() {
         return (
           <VenueMapScreen
             onSelectVenue={(id) => setSelectedServiceId(id)}
-            onOpen3D={() => setActiveTab('venue3d')}
           />
         );
-      case 'venue3d':
-        return <Venue3DScreen />;
-      case 'invites':
-        return <DigitalInvitationScreen />;
+      case 'create':
+        return (
+          <CreateServiceScreen
+            onSuccess={() => setActiveTab('home')}
+          />
+        );
+      case 'budget':
+        return <BudgetScreen />;
       case 'profile':
         return (
           <ProfileScreen
@@ -141,7 +130,7 @@ function MainApp() {
         {renderScreen()}
       </View>
 
-      {/* Luxury Floating Bottom Navigation Bar (4 Buttons) */}
+      {/* Luxury Floating Bottom Navigation Bar (5 Buttons) */}
       {!isFullscreenView && (
         <ModernTabBar
           activeTab={activeTab}
@@ -173,4 +162,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-

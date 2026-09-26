@@ -23,14 +23,12 @@ import { InteractiveBookingCalendar } from '../components/calendar/InteractiveBo
 interface ServiceDetailScreenProps {
   serviceId: number;
   onBack: () => void;
-  onOpen3D?: () => void;
   onOpenMap?: () => void;
 }
 
 export const ServiceDetailScreen: React.FC<ServiceDetailScreenProps> = ({
   serviceId,
   onBack,
-  onOpen3D,
   onOpenMap,
 }) => {
   const { colors, isKelin } = useAppTheme();
@@ -92,12 +90,7 @@ export const ServiceDetailScreen: React.FC<ServiceDetailScreenProps> = ({
             <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={22} color={isFavorite ? "#F43F5E" : "#FFFFFF"} />
           </TouchableOpacity>
 
-          {service.has3D && onOpen3D && (
-            <TouchableOpacity style={[styles.btnHero3D, { backgroundColor: colors.primaryLight }]} onPress={onOpen3D}>
-              <Ionicons name="cube" size={16} color={isKelin ? '#FFFFFF' : '#070B14'} style={{ marginRight: 4 }} />
-              <Text style={[styles.btnHero3DText, { color: isKelin ? '#FFFFFF' : '#070B14' }]}>3D ZALNI KO'RISH</Text>
-            </TouchableOpacity>
-          )}
+
         </View>
 
         {/* Content */}

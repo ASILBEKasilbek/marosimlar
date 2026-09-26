@@ -18,7 +18,7 @@ import { COLORS } from '../theme/colors';
 import { useAppTheme } from '../theme/ThemeContext';
 
 interface ProfileScreenProps {
-  onNavigateTab?: (tab: 'home' | 'venue3d' | 'invites') => void;
+  onNavigateTab?: (tab: 'home' | 'map' | 'create' | 'budget' | 'profile') => void;
   onOpenMap?: () => void;
   onOpenToyona?: () => void;
   onOpenSeating?: () => void;
@@ -223,7 +223,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <Text style={styles.statLabel}>Bronlarim</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.statCard} onPress={() => onNavigateTab && onNavigateTab('invites')}>
+        <TouchableOpacity style={styles.statCard} onPress={() => onOpenSeating && onOpenSeating()}>
           <View style={[styles.statIconBox, { backgroundColor: 'rgba(56, 189, 248, 0.15)' }]}>
             <Ionicons name="mail-unread-outline" size={20} color="#38BDF8" />
           </View>
@@ -231,12 +231,12 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <Text style={styles.statLabel}>Mehmonlar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.statCard} onPress={() => onNavigateTab && onNavigateTab('venue3d')}>
-          <View style={[styles.statIconBox, { backgroundColor: 'rgba(168, 85, 247, 0.15)' }]}>
-            <Ionicons name="cube-outline" size={20} color="#C084FC" />
+        <TouchableOpacity style={styles.statCard} onPress={() => onNavigateTab && onNavigateTab('budget')}>
+          <View style={[styles.statIconBox, { backgroundColor: 'rgba(212, 175, 55, 0.15)' }]}>
+            <Ionicons name="wallet-outline" size={20} color={COLORS.gold[400]} />
           </View>
-          <Text style={styles.statCount}>3D Zal</Text>
-          <Text style={styles.statLabel}>Zal Ko'rish</Text>
+          <Text style={styles.statCount}>80 mln</Text>
+          <Text style={styles.statLabel}>Byudjetim</Text>
         </TouchableOpacity>
 
         <View style={styles.statCard}>
@@ -265,14 +265,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <Ionicons name="chevron-forward" size={18} color="#64748B" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => onNavigateTab && onNavigateTab('invites')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => onOpenSeating && onOpenSeating()}>
           <View style={styles.menuItemLeft}>
             <View style={styles.menuIconContainer}>
               <Ionicons name="mail-open-outline" size={18} color={COLORS.gold[400]} />
             </View>
             <View>
-              <Text style={styles.menuItemTitle}>Raqamli Taklifnomalar Boshqaruvi</Text>
-              <Text style={styles.menuItemSubtitle}>Mehmonlar RSVP javoblari va ro'yxat</Text>
+              <Text style={styles.menuItemTitle}>Raqamli Taklifnomalar & Mehmonlar</Text>
+              <Text style={styles.menuItemSubtitle}>Mehmonlar RSVP javoblari va stollar rejasi</Text>
             </View>
           </View>
           <Ionicons name="chevron-forward" size={18} color="#64748B" />
@@ -330,14 +330,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <Ionicons name="chevron-forward" size={18} color="#64748B" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuItem} onPress={() => onNavigateTab && onNavigateTab('venue3d')}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => onNavigateTab && onNavigateTab('create')}>
           <View style={styles.menuItemLeft}>
             <View style={styles.menuIconContainer}>
-              <Ionicons name="sparkles-outline" size={18} color={COLORS.gold[400]} />
+              <Ionicons name="add-circle-outline" size={18} color={COLORS.gold[400]} />
             </View>
             <View>
-              <Text style={styles.menuItemTitle}>3D To'yxona Zallarini Ko'rish</Text>
-              <Text style={styles.menuItemSubtitle}>360° interaktiv zallar va stol tanlash</Text>
+              <Text style={styles.menuItemTitle}>Yangi Xizmat Joylashtirish</Text>
+              <Text style={styles.menuItemSubtitle}>Hamkorlar, to'yxona va ijodkorlar uchun</Text>
             </View>
           </View>
           <Ionicons name="chevron-forward" size={18} color="#64748B" />

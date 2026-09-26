@@ -21,14 +21,12 @@ import { WEDDING_SERVICES, WeddingService } from '../data/weddingServices';
 import { CategoryPillBar } from '../components/common/CategoryPillBar';
 import { LuxuryCard } from '../components/common/LuxuryCard';
 import { BadgeVerified, LuxuryRating } from '../components/common/BadgeVerified';
-import { BudgetPlannerWidget } from '../components/budget/BudgetPlannerWidget';
 
 const { width, height } = Dimensions.get('window');
 
 interface HomeScreenProps {
   onSelectService: (serviceId: number) => void;
   onOpenBudget: () => void;
-  onOpen3D?: () => void;
   onOpenMap?: () => void;
   onOpenToyona?: () => void;
   onOpenSeating?: () => void;
@@ -38,7 +36,6 @@ interface HomeScreenProps {
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onSelectService,
   onOpenBudget,
-  onOpen3D,
   onOpenMap,
   onOpenToyona,
   onOpenSeating,
@@ -85,17 +82,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             source={require('../assets/logo.jpg')} 
             style={[styles.logoImage, { borderColor: colors.borderColor }]} 
           />
-          <View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={styles.welcomeLabel}>TuyBox Platformasi</Text>
-              <View style={[styles.miniVipTag, { backgroundColor: colors.badgeBg, borderColor: colors.borderColor }]}>
-                <Text style={[styles.miniVipText, { color: colors.primaryLight }]}>
-                  {isKelin ? '🌸 KELIN VIP' : '👑 KUYOV VIP'}
-                </Text>
-              </View>
-            </View>
-            <Text style={[styles.appTitle, { color: colors.primaryLight }]}>Hashamatli To'ylar</Text>
-          </View>
+          <Text style={[styles.appTitle, { color: colors.primaryLight }]}>Hashamatli To'ylar</Text>
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
@@ -115,15 +102,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <Text style={[styles.modePillText, { color: colors.primaryLight }]}>
               {isKelin ? 'Kelin' : 'Kuyov'}
             </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={[styles.citySelector, { borderColor: colors.borderColor }]}
-            onPress={() => onOpenMap && onOpenMap()}
-            activeOpacity={0.8}
-          >
-            <Ionicons name="map-outline" size={13} color={colors.primaryLight} style={{ marginRight: 4 }} />
-            <Text style={[styles.cityText, { color: colors.primaryLight }]}>Xaritada</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -147,72 +125,58 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </View>
       </View>
 
-      {/* TuyBox 3D Brand Hero Showcase */}
-      <View style={styles.heroBrandCard}>
-        <LinearGradient
-          colors={['rgba(212, 175, 55, 0.22)', 'rgba(15, 22, 38, 0.95)', '#070B14']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.heroBrandGradient}
-        >
-          <View style={styles.heroBrandLeft}>
-            <View style={styles.exclusiveBadge}>
-              <Ionicons name="sparkles" size={11} color="#070B14" style={{ marginRight: 4 }} />
-              <Text style={styles.exclusiveText}>RASMIY PLATFORMA</Text>
-            </View>
-            <Text style={styles.heroBrandTitle}>TuyBox</Text>
-            <Text style={styles.heroBrandSubtitle}>
-              Orzuingizdagi Qirollik To'yi & Hashamatli Marosimlar
-            </Text>
-            <View style={styles.heroFeaturesRow}>
-              <Text style={styles.heroFeatureItem}>✦ 3D Zallar</Text>
-              <Text style={styles.heroFeatureItem}>✦ VIP Bron</Text>
-              <Text style={styles.heroFeatureItem}>✦ Smart RSVP</Text>
-            </View>
-          </View>
-
-          <View style={styles.heroLogoGlowContainer}>
-            <View style={styles.heroLogoGlow} />
-            <Image
-              source={require('../assets/logo.jpg')}
-              style={styles.hero3DLogoImage}
-            />
-          </View>
-        </LinearGradient>
-      </View>
-
-      {/* Featured 3D Venue Interactive Banner */}
+      {/* Featured Luxury Interactive Map Card */}
       <TouchableOpacity
-        style={styles.banner3DContainer}
-        activeOpacity={0.9}
-        onPress={() => onOpen3D && onOpen3D()}
+        style={styles.homeMapCard}
+        activeOpacity={0.88}
+        onPress={() => onOpenMap && onOpenMap()}
       >
         <LinearGradient
-          colors={['#172036', '#0E1526']}
+          colors={['#141D30', '#0A0F1D']}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={styles.banner3DGradient}
+          style={[styles.homeMapGradient, { borderColor: colors.borderColor }]}
         >
-          <View style={styles.banner3DContent}>
-            <View style={styles.badge3DRow}>
-              <View style={styles.badge3DPill}>
-                <Ionicons name="cube" size={12} color="#070B14" style={{ marginRight: 4 }} />
-                <Text style={styles.badge3DText}>YANGILIK • 3D GLB</Text>
-              </View>
-              <Text style={styles.bannerLive}>● 360° AYLANTIRISH</Text>
+          {/* Subtle Map Graphic Background with Pins */}
+          <View style={styles.mapGraphicOverlay}>
+            <View style={styles.mapGridLineH} />
+            <View style={styles.mapGridLineV} />
+            
+            {/* Visual Mini Map Pins */}
+            <View style={[styles.miniMapPin, { top: 14, right: 24 }]}>
+              <View style={[styles.miniPinDot, { backgroundColor: COLORS.gold[400] }]} />
+              <Text style={styles.miniPinLabel}>Versal Grand</Text>
             </View>
-
-            <Text style={styles.banner3DTitle}>To'yxona Zallarini 3D Ko'rish</Text>
-            <Text style={styles.banner3DSubtitle}>
-              Telefoningiz orqali zal ichiga kiring, sahna, lyustra va stol joylashuvlarini real vaqtda ko'ring!
-            </Text>
-
-            <View style={styles.banner3DBtn}>
-              <Text style={styles.banner3DBtnText}>3D Zalga Kirish →</Text>
+            <View style={[styles.miniMapPin, { bottom: 18, right: 65 }]}>
+              <View style={[styles.miniPinDot, { backgroundColor: '#38BDF8' }]} />
+              <Text style={styles.miniPinLabel}>Mumtoz</Text>
+            </View>
+            <View style={[styles.miniMapPin, { top: 48, right: 110 }]}>
+              <View style={[styles.miniPinDot, { backgroundColor: '#A855F7' }]} />
+              <Text style={styles.miniPinLabel}>Ezidiyor</Text>
             </View>
           </View>
-          <View style={styles.banner3DIconWrapper}>
-            <MaterialCommunityIcons name="cube-scan" size={68} color="rgba(212, 175, 55, 0.35)" />
+
+          <View style={styles.homeMapContent}>
+            <View style={styles.mapBadgeRow}>
+              <View style={[styles.mapLiveBadge, { backgroundColor: colors.badgeBg, borderColor: colors.borderColor }]}>
+                <Ionicons name="navigate" size={11} color={colors.primaryLight} style={{ marginRight: 4 }} />
+                <Text style={[styles.mapLiveBadgeText, { color: colors.primaryLight }]}>JONLI GPS XARITA</Text>
+              </View>
+              <Text style={styles.mapRadarPulse}>● 14 TA HUDUD</Text>
+            </View>
+
+            <Text style={styles.homeMapTitle}>To'yxonalar Xaritasi</Text>
+            <Text style={styles.homeMapSubtitle}>
+              Sizga eng yaqin to'yxonalarni toping, masofa va marshrutni bir zumda ko'ring!
+            </Text>
+
+            <View style={[styles.homeMapBtn, { backgroundColor: colors.primaryLight }]}>
+              <Ionicons name="map" size={14} color={isKelin ? '#FFFFFF' : '#070B14'} style={{ marginRight: 6 }} />
+              <Text style={[styles.homeMapBtnText, { color: isKelin ? '#FFFFFF' : '#070B14' }]}>
+                Xaritani Ochish (GPS) →
+              </Text>
+            </View>
           </View>
         </LinearGradient>
       </TouchableOpacity>
@@ -355,10 +319,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         onSelect={setSelectedCat}
       />
 
-      {/* AI Budget Widget Banner */}
-      <View style={styles.widgetWrapper}>
-        <BudgetPlannerWidget />
-      </View>
+
 
       {/* Wedding Checklist Banner */}
       <TouchableOpacity
@@ -440,15 +401,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <LuxuryCard style={[styles.serviceCard, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
                 <View style={styles.cardImageContainer}>
                   <Image source={{ uri: service.image }} style={styles.cardImage} />
-                  {service.has3D && (
-                    <TouchableOpacity
-                      style={[styles.card3DBadge, { backgroundColor: colors.primaryLight }]}
-                      onPress={() => onOpen3D && onOpen3D()}
-                    >
-                      <Ionicons name="cube" size={13} color={isKelin ? '#FFFFFF' : '#070B14'} style={{ marginRight: 4 }} />
-                      <Text style={[styles.card3DText, { color: isKelin ? '#FFFFFF' : '#070B14' }]}>3D Ko'rish</Text>
-                    </TouchableOpacity>
-                  )}
                   <View style={[styles.cardDistanceBadge, { backgroundColor: 'rgba(7, 11, 20, 0.78)' }]}>
                     <Ionicons name="location-outline" size={11} color={colors.primaryLight} style={{ marginRight: 2 }} />
                     <Text style={{ color: '#E2E8F0', fontSize: 10, fontWeight: '700' }}>
@@ -547,15 +499,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     onPress={() => {
                       const sId = activeStory.serviceId;
                       setActiveStory(null);
-                      if (onOpen3D && activeStory.id === 1) {
-                        onOpen3D();
-                      } else {
-                        onSelectService(sId);
-                      }
+                      onSelectService(sId);
                     }}
                   >
                     <Ionicons name="sparkles" size={16} color="#070B14" style={{ marginRight: 6 }} />
-                    <Text style={styles.storyActionPrimaryText}>3D da Ko'rish & Bron</Text>
+                    <Text style={styles.storyActionPrimaryText}>Batafsil & Bron Qilish</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
@@ -727,165 +675,123 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 13,
   },
-  heroBrandCard: {
+  homeMapCard: {
     marginHorizontal: 16,
     marginBottom: 16,
     borderRadius: 22,
     overflow: 'hidden',
-    borderWidth: 1.5,
-    borderColor: 'rgba(212, 175, 55, 0.4)',
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.35)',
     shadowColor: COLORS.gold[500],
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.25,
     shadowRadius: 14,
     elevation: 8,
   },
-  heroBrandGradient: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  homeMapGradient: {
     padding: 16,
+    borderRadius: 22,
+    position: 'relative',
+    overflow: 'hidden',
   },
-  heroBrandLeft: {
-    flex: 1,
-    paddingRight: 10,
+  mapGraphicOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    opacity: 0.85,
   },
-  exclusiveBadge: {
+  mapGridLineH: {
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  mapGridLineV: {
+    position: 'absolute',
+    left: '60%',
+    top: 0,
+    bottom: 0,
+    width: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  miniMapPin: {
+    position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'flex-start',
-    backgroundColor: COLORS.gold[400],
+    backgroundColor: 'rgba(7, 11, 20, 0.85)',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 10,
-    marginBottom: 8,
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
-  exclusiveText: {
-    color: '#070B14',
+  miniPinDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginRight: 4,
+  },
+  miniPinLabel: {
+    color: '#E2E8F0',
     fontSize: 9,
-    fontWeight: '900',
-    letterSpacing: 0.5,
-  },
-  heroBrandTitle: {
-    color: '#FFFFFF',
-    fontSize: 24,
-    fontWeight: '900',
-    letterSpacing: 0.5,
-    marginBottom: 2,
-  },
-  heroBrandSubtitle: {
-    color: '#94A3B8',
-    fontSize: 12,
-    lineHeight: 16,
-    marginBottom: 8,
-  },
-  heroFeaturesRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  heroFeatureItem: {
-    color: COLORS.gold[400],
-    fontSize: 10,
     fontWeight: '700',
   },
-  heroLogoGlowContainer: {
-    position: 'relative',
-    width: 90,
-    height: 90,
-    justifyContent: 'center',
-    alignItems: 'center',
+  homeMapContent: {
+    zIndex: 2,
   },
-  heroLogoGlow: {
-    position: 'absolute',
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: 'rgba(212, 175, 55, 0.25)',
-    transform: [{ scale: 1.15 }],
-  },
-  hero3DLogoImage: {
-    width: 86,
-    height: 86,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: 'rgba(212, 175, 55, 0.6)',
-  },
-  banner3DContainer: {
-    marginHorizontal: 16,
-    marginBottom: 16,
-    borderRadius: 20,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.35)',
-  },
-  banner3DGradient: {
-    padding: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  banner3DContent: {
-    flex: 1,
-    paddingRight: 10,
-  },
-  badge3DRow: {
+  mapBadgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 8,
   },
-  badge3DPill: {
+  mapLiveBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.gold[400],
     paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
+    paddingVertical: 3,
+    borderRadius: 8,
+    borderWidth: 0.5,
     marginRight: 8,
   },
-  badge3DText: {
-    color: '#070B14',
+  mapLiveBadgeText: {
     fontSize: 9,
     fontWeight: '900',
+    letterSpacing: 0.5,
   },
-  bannerLive: {
-    color: '#10B981',
+  mapRadarPulse: {
+    color: '#34D399',
     fontSize: 9,
-    fontWeight: '700',
-  },
-  banner3DTitle: {
-    color: '#FFFFFF',
-    fontSize: 17,
     fontWeight: '800',
+  },
+  homeMapTitle: {
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    letterSpacing: 0.3,
     marginBottom: 4,
   },
-  banner3DSubtitle: {
-    color: '#94A3B8',
+  homeMapSubtitle: {
     fontSize: 12,
+    color: '#94A3B8',
     lineHeight: 17,
-    marginBottom: 10,
+    maxWidth: '75%',
+    marginBottom: 12,
   },
-  banner3DBtn: {
+  homeMapBtn: {
     alignSelf: 'flex-start',
-    backgroundColor: 'rgba(212, 175, 55, 0.18)',
-    borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.4)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     borderRadius: 12,
   },
-  banner3DBtnText: {
-    color: COLORS.gold[400],
+  homeMapBtnText: {
     fontSize: 12,
-    fontWeight: '700',
-  },
-  banner3DIconWrapper: {
-    width: 70,
-    height: 70,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  widgetWrapper: {
-    paddingHorizontal: 16,
+    fontWeight: '900',
   },
   sectionHeader: {
     flexDirection: 'row',

@@ -153,10 +153,9 @@ const INITIAL_TABLES: TableItem[] = [
 
 interface TablePlannerScreenProps {
   onBack: () => void;
-  onOpen3D?: () => void;
 }
 
-export const TablePlannerScreen: React.FC<TablePlannerScreenProps> = ({ onBack, onOpen3D }) => {
+export const TablePlannerScreen: React.FC<TablePlannerScreenProps> = ({ onBack }) => {
   const { colors, isKelin } = useAppTheme();
   const [tables, setTables] = useState<TableItem[]>(INITIAL_TABLES);
   const [selectedTableId, setSelectedTableId] = useState<number>(1);
@@ -247,15 +246,7 @@ export const TablePlannerScreen: React.FC<TablePlannerScreenProps> = ({ onBack, 
           <Text style={styles.headerTitle}>Stollar & Mehmonlar Xaritasi</Text>
           <Text style={[styles.headerSubtitle, { color: colors.textGoldOrPurple }]}>Smart Seating Chart • Versal Grand</Text>
         </View>
-        {onOpen3D && (
-          <TouchableOpacity
-            style={[styles.btn3D, { backgroundColor: colors.primary }]}
-            onPress={onOpen3D}
-          >
-            <Ionicons name="cube" size={13} color={isKelin ? '#0F051D' : '#070B14'} style={{ marginRight: 3 }} />
-            <Text style={[styles.btn3DText, isKelin && { color: '#0F051D' }]}>3D Zal</Text>
-          </TouchableOpacity>
-        )}
+
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollBody}>

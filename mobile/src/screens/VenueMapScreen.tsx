@@ -214,13 +214,11 @@ function calculateDistanceKm(lat1: number, lon1: number, lat2: number, lon2: num
 
 interface VenueMapScreenProps {
   onBack?: () => void;
-  onOpen3D?: () => void;
   onSelectVenue?: (id: number) => void;
 }
 
 export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
   onBack,
-  onOpen3D,
   onSelectVenue,
 }) => {
   const { colors, isKelin } = useAppTheme();
@@ -229,7 +227,6 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [activeDistrict, setActiveDistrict] = useState('Barchasi');
   const [activeCapacityFilter, setActiveCapacityFilter] = useState<'all' | '500+' | '700+'>('all');
-  const [only3D, setOnly3D] = useState(false);
   const [mapLayer, setMapLayer] = useState<'dark' | 'satellite' | 'street'>('dark');
   const [isLocating, setIsLocating] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -295,11 +292,9 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
         (activeCapacityFilter === '500+' && v.capacityNum >= 500) ||
         (activeCapacityFilter === '700+' && v.capacityNum >= 700);
 
-      const matches3D = !only3D || v.has3D;
-
-      return matchesSearch && matchesDistrict && matchesCapacity && matches3D;
+      return matchesSearch && matchesDistrict && matchesCapacity;
     });
-  }, [venues, searchQuery, activeDistrict, activeCapacityFilter, only3D]);
+  }, [venues, searchQuery, activeDistrict, activeCapacityFilter]);
 
   // Push filtered venues update to Leaflet
   useEffect(() => {
@@ -647,17 +642,7 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
             )}
           </View>
 
-          {/* 3D Filter Quick Toggle */}
-          <TouchableOpacity
-            style={[
-              styles.iconBtn,
-              { borderColor: colors.borderColor },
-              only3D && { backgroundColor: colors.primary, borderColor: colors.primary },
-            ]}
-            onPress={() => setOnly3D(!only3D)}
-          >
-            <Ionicons name="cube" size={16} color={only3D ? (isKelin ? '#0F051D' : '#070B14') : colors.textGoldOrPurple} />
-          </TouchableOpacity>
+
 
           {/* Real Native GPS Button */}
           <TouchableOpacity
@@ -877,15 +862,7 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
                   <Text style={[styles.navBtnText, { color: isKelin ? '#0F051D' : '#070B14' }]}>Marshrut</Text>
                 </TouchableOpacity>
 
-                {selectedVenue.has3D && onOpen3D && (
-                  <TouchableOpacity
-                    style={[styles.btn3D, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}
-                    onPress={onOpen3D}
-                  >
-                    <Ionicons name="cube" size={13} color={colors.textGoldOrPurple} style={{ marginRight: 3 }} />
-                    <Text style={[styles.btn3DText, { color: colors.textGoldOrPurple }]}>3D Zal</Text>
-                  </TouchableOpacity>
-                )}
+
 
                 {onSelectVenue && (
                   <TouchableOpacity
