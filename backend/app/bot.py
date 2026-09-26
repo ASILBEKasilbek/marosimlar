@@ -101,11 +101,17 @@ async def start_bot_polling():
     """
     Asinxron Telegram Bot Polling (Lightweight, hechnarsa buzilmaydi).
     """
-    await setup_bot_menu()
-    logger.info("Tuyxona Telegram Bot ishga tushdi (@tuyboxbot)...")
-    offset = 0
-
     async with httpx.AsyncClient(timeout=35.0) as client:
+        # Avval eski yoki noto'g'ri webhooklarni tozalaymiz (409 Conflict oldini olish)
+        try:
+            await client.post(f"{TELEGRAM_API_URL}/deleteWebhook", params={"drop_pending_updates": True})
+            logger.info("Webhook tozalandi, getUpdates polling faollashtirildi.")
+        except Exception as e:
+            logger.warning(f"Webhook tozalashda ogohlantirish: {e}")
+
+        await setup_bot_menu()
+        logger.info("Tuyxona Telegram Bot ishga tushdi (@tuyboxbot)...")
+        offset = 0
         while True:
             try:
                 response = await client.get(
