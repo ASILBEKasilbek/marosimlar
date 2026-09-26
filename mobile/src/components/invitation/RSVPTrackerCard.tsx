@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../../theme/colors';
+import { useAppTheme } from '../../theme/ThemeContext';
 import { LuxuryCard } from '../common/LuxuryCard';
 
 interface RSVPTrackerCardProps {
@@ -18,10 +19,12 @@ export const RSVPTrackerCard: React.FC<RSVPTrackerCardProps> = ({
   attendingCount,
   declinedCount,
 }) => {
+  const { colors, isKelin } = useAppTheme();
+
   return (
     <LuxuryCard style={styles.card} variant="glass">
       <View style={styles.header}>
-        <Text style={styles.badge}>💌 RAQAMLI TAKLIFNOMA</Text>
+        <Text style={[styles.badge, { color: colors.accentBadge }]}>💌 RAQAMLI TAKLIFNOMA</Text>
         <Text style={styles.coupleNames}>{groomAndBride}</Text>
         <Text style={styles.daysText}>To'ygacha {daysRemaining} kun qoldi ⏳</Text>
       </View>
@@ -37,8 +40,8 @@ export const RSVPTrackerCard: React.FC<RSVPTrackerCardProps> = ({
           <Text style={styles.statLabel}>Borolmaydiganlar</Text>
         </View>
 
-        <View style={[styles.statBox, { backgroundColor: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(212, 175, 55, 0.2)' }]}>
-          <Text style={[styles.statNumber, { color: COLORS.gold[400] }]}>{attendingCount + declinedCount}</Text>
+        <View style={[styles.statBox, { backgroundColor: isKelin ? 'rgba(192, 132, 252, 0.1)' : 'rgba(255, 255, 255, 0.05)', borderColor: colors.borderColor }]}>
+          <Text style={[styles.statNumber, { color: colors.textGoldOrPurple }]}>{attendingCount + declinedCount}</Text>
           <Text style={styles.statLabel}>Jami javoblar</Text>
         </View>
       </View>

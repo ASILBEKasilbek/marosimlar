@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, SafeAreaView, StatusBar, Platform } from 'react-native';
 import { COLORS } from './src/theme/colors';
+import { ThemeProvider, useAppTheme } from './src/theme/ThemeContext';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { ServiceDetailScreen } from './src/screens/ServiceDetailScreen';
 import { Venue3DScreen } from './src/screens/Venue3DScreen';
@@ -12,7 +13,8 @@ import { TablePlannerScreen } from './src/screens/TablePlannerScreen';
 import { WeddingChecklistScreen } from './src/screens/WeddingChecklistScreen';
 import { ModernTabBar, TabType } from './src/components/navigation/ModernTabBar';
 
-export default function App() {
+function MainApp() {
+  const { colors, isKelin } = useAppTheme();
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(null);
   const [activeOverlay, setActiveOverlay] = useState<'none' | 'map' | 'toyona' | 'seating' | 'checklist'>('none');
@@ -121,8 +123,11 @@ export default function App() {
   const isFullscreenView = selectedServiceId !== null || activeOverlay !== 'none';
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#070B14" />
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.bgBase }]}>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={isKelin ? '#100720' : '#070B14'}
+      />
       
       {/* Screen Body */}
       <View style={styles.body}>
@@ -144,13 +149,21 @@ export default function App() {
   );
 }
 
+export default function App() {
+  return (
+    <ThemeProvider>
+      <MainApp />
+    </ThemeProvider>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.obsidian.base,
     paddingTop: Platform.OS === 'android' ? 28 : 0,
   },
   body: {
     flex: 1,
   },
 });
+

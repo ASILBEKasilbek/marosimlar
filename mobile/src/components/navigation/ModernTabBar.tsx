@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated, Platform } from 're
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../../theme/colors';
+import { useAppTheme } from '../../theme/ThemeContext';
 
 export type TabType = 'home' | 'venue3d' | 'invites' | 'profile';
 
@@ -48,9 +49,11 @@ const TABS: TabConfig[] = [
 ];
 
 export const ModernTabBar: React.FC<ModernTabBarProps> = ({ activeTab, onTabChange }) => {
+  const { colors, isKelin } = useAppTheme();
+
   return (
     <View style={styles.dockContainer}>
-      <View style={styles.dockGlass}>
+      <View style={[styles.dockGlass, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
         {TABS.map((tab) => {
           const isActive = activeTab === tab.id;
 
@@ -61,13 +64,13 @@ export const ModernTabBar: React.FC<ModernTabBarProps> = ({ activeTab, onTabChan
               style={styles.tabButton}
               onPress={() => onTabChange(tab.id)}
             >
-              {/* Active Golden Glow Background */}
+              {/* Active Glow Background */}
               {isActive && (
                 <LinearGradient
-                  colors={['rgba(212, 175, 55, 0.22)', 'rgba(212, 175, 55, 0.05)']}
+                  colors={colors.primaryGradientSubtle}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 0, y: 1 }}
-                  style={styles.activePillGlow}
+                  style={[styles.activePillGlow, { borderColor: colors.primaryLight }]}
                 />
               )}
 
@@ -76,13 +79,13 @@ export const ModernTabBar: React.FC<ModernTabBarProps> = ({ activeTab, onTabChan
                 <Ionicons
                   name={isActive ? tab.iconActive : tab.iconInactive}
                   size={isActive ? 22 : 21}
-                  color={isActive ? COLORS.gold[400] : '#64748B'}
+                  color={isActive ? colors.primaryLight : '#64748B'}
                 />
 
                 {/* Optional mini 3D Tag */}
                 {tab.badge && (
-                  <View style={[styles.badgeTag, isActive && styles.badgeTagActive]}>
-                    <Text style={[styles.badgeTagText, isActive && styles.badgeTagTextActive]}>
+                  <View style={[styles.badgeTag, isActive && { backgroundColor: colors.primaryLight, borderColor: colors.primaryLight }]}>
+                    <Text style={[styles.badgeTagText, isActive && { color: isKelin ? '#FFFFFF' : '#070B14' }]}>
                       {tab.badge}
                     </Text>
                   </View>
@@ -90,12 +93,12 @@ export const ModernTabBar: React.FC<ModernTabBarProps> = ({ activeTab, onTabChan
               </View>
 
               {/* Label */}
-              <Text style={[styles.tabLabel, isActive && styles.tabLabelActive]}>
+              <Text style={[styles.tabLabel, isActive && { color: colors.primaryLight, fontWeight: '800' }]}>
                 {tab.label}
               </Text>
 
               {/* Active Indicator Dot */}
-              {isActive && <View style={styles.activeDot} />}
+              {isActive && <View style={[styles.activeDot, { backgroundColor: colors.primaryLight }]} />}
             </TouchableOpacity>
           );
         })}

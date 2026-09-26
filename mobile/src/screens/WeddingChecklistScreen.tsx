@@ -14,6 +14,7 @@ import {
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeContext';
 
 interface TaskItem {
   id: number;
@@ -51,6 +52,7 @@ interface WeddingChecklistScreenProps {
 }
 
 export const WeddingChecklistScreen: React.FC<WeddingChecklistScreenProps> = ({ onBack, onOpenBudget }) => {
+  const { colors, isKelin } = useAppTheme();
   const [tasks, setTasks] = useState<TaskItem[]>(INITIAL_TASKS);
   const [activeStage, setActiveStage] = useState<'all' | '30_days' | '15_days' | '3_days' | 'sarpo'>('all');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -119,27 +121,30 @@ export const WeddingChecklistScreen: React.FC<WeddingChecklistScreenProps> = ({ 
   ];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.bgBase }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.borderColor }]}>
         <TouchableOpacity style={styles.backBtn} onPress={onBack}>
           <Ionicons name="arrow-back" size={20} color="#FFFFFF" />
         </TouchableOpacity>
         <View style={styles.headerTitleBox}>
           <Text style={styles.headerTitle}>To'y Rejasi & Cheklist</Text>
-          <Text style={styles.headerSubtitle}>Jasurbek & Madina To'y Tayyorgarligi</Text>
+          <Text style={[styles.headerSubtitle, { color: colors.textGoldOrPurple }]}>Jasurbek & Madina To'y Tayyorgarligi</Text>
         </View>
-        <TouchableOpacity style={styles.addBtn} onPress={() => setShowAddModal(true)}>
-          <Ionicons name="add" size={18} color="#070B14" />
-          <Text style={styles.addBtnText}>Qo'shish</Text>
+        <TouchableOpacity
+          style={[styles.addBtn, { backgroundColor: colors.primary }]}
+          onPress={() => setShowAddModal(true)}
+        >
+          <Ionicons name="add" size={18} color={isKelin ? '#0F051D' : '#070B14'} />
+          <Text style={[styles.addBtnText, isKelin && { color: '#0F051D' }]}>Qo'shish</Text>
         </TouchableOpacity>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollBody}>
         {/* Progress Card */}
-        <View style={styles.progressCard}>
+        <View style={[styles.progressCard, { borderColor: colors.borderColor }]}>
           <LinearGradient
-            colors={['#172036', '#0F1626']}
+            colors={[colors.bgCardElevated, colors.bgCard]}
             style={styles.progressGradient}
           >
             <View style={styles.progressTopRow}>
@@ -149,15 +154,15 @@ export const WeddingChecklistScreen: React.FC<WeddingChecklistScreenProps> = ({ 
                   {completedTasks} ta bajarildi • {totalTasks - completedTasks} ta vazifa qoldi
                 </Text>
               </View>
-              <View style={styles.percentBadge}>
-                <Text style={styles.percentText}>{progressPercent}%</Text>
+              <View style={[styles.percentBadge, { backgroundColor: colors.primary }]}>
+                <Text style={[styles.percentText, isKelin && { color: '#0F051D' }]}>{progressPercent}%</Text>
               </View>
             </View>
 
             {/* Progress Track */}
             <View style={styles.progressBarTrack}>
               <LinearGradient
-                colors={['#FFDF73', '#D4AF37']}
+                colors={colors.primaryGradient as [string, string, string]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={[styles.progressBarFill, { width: `${progressPercent}%` }]}
@@ -181,10 +186,13 @@ export const WeddingChecklistScreen: React.FC<WeddingChecklistScreenProps> = ({ 
             return (
               <TouchableOpacity
                 key={stage.id}
-                style={[styles.stagePill, isActive && styles.stagePillActive]}
+                style={[
+                  styles.stagePill,
+                  isActive && [styles.stagePillActive, { borderColor: colors.primary, backgroundColor: colors.badgeBg }]
+                ]}
                 onPress={() => setActiveStage(stage.id as any)}
               >
-                <Text style={[styles.stagePillText, isActive && styles.stagePillTextActive]}>
+                <Text style={[styles.stagePillText, isActive && [styles.stagePillTextActive, { color: colors.textGoldOrPurple }]]}>
                   {stage.label} ({stage.count})
                 </Text>
               </TouchableOpacity>

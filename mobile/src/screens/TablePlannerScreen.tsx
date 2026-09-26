@@ -14,6 +14,7 @@ import {
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
@@ -156,6 +157,7 @@ interface TablePlannerScreenProps {
 }
 
 export const TablePlannerScreen: React.FC<TablePlannerScreenProps> = ({ onBack, onOpen3D }) => {
+  const { colors, isKelin } = useAppTheme();
   const [tables, setTables] = useState<TableItem[]>(INITIAL_TABLES);
   const [selectedTableId, setSelectedTableId] = useState<number>(1);
   const [searchGuestQuery, setSearchGuestQuery] = useState('');
@@ -235,20 +237,23 @@ export const TablePlannerScreen: React.FC<TablePlannerScreenProps> = ({ onBack, 
     : [];
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.bgBase }]}>
       {/* Header */}
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.borderColor }]}>
         <TouchableOpacity style={styles.backBtn} onPress={onBack}>
           <Ionicons name="arrow-back" size={20} color="#FFFFFF" />
         </TouchableOpacity>
         <View style={styles.headerTitleBox}>
           <Text style={styles.headerTitle}>Stollar & Mehmonlar Xaritasi</Text>
-          <Text style={styles.headerSubtitle}>Smart Seating Chart • Versal Grand</Text>
+          <Text style={[styles.headerSubtitle, { color: colors.textGoldOrPurple }]}>Smart Seating Chart • Versal Grand</Text>
         </View>
         {onOpen3D && (
-          <TouchableOpacity style={styles.btn3D} onPress={onOpen3D}>
-            <Ionicons name="cube" size={13} color="#070B14" style={{ marginRight: 3 }} />
-            <Text style={styles.btn3DText}>3D Zal</Text>
+          <TouchableOpacity
+            style={[styles.btn3D, { backgroundColor: colors.primary }]}
+            onPress={onOpen3D}
+          >
+            <Ionicons name="cube" size={13} color={isKelin ? '#0F051D' : '#070B14'} style={{ marginRight: 3 }} />
+            <Text style={[styles.btn3DText, isKelin && { color: '#0F051D' }]}>3D Zal</Text>
           </TouchableOpacity>
         )}
       </View>

@@ -10,10 +10,13 @@ import {
   Modal,
   TextInput,
   Share,
+  Linking,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeContext';
+import { WEDDING_SERVICES } from '../data/weddingServices';
 import { BadgeVerified, LuxuryRating } from '../components/common/BadgeVerified';
 import { InteractiveBookingCalendar } from '../components/calendar/InteractiveBookingCalendar';
 
@@ -30,38 +33,21 @@ export const ServiceDetailScreen: React.FC<ServiceDetailScreenProps> = ({
   onOpen3D,
   onOpenMap,
 }) => {
+  const { colors, isKelin } = useAppTheme();
+  const service = WEDDING_SERVICES.find((s) => s.id === serviceId) || WEDDING_SERVICES[0];
   const [selectedPkg, setSelectedPkg] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [showOfferModal, setShowOfferModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
 
   // Offer form state
-  const [offerPrice, setOfferPrice] = useState('42000000');
+  const [offerPrice, setOfferPrice] = useState(String(Math.round(service.price * 0.9)));
   const [guestCount, setGuestCount] = useState('500');
   const [offerNote, setOfferNote] = useState('');
 
   // Review form state
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
-
-  const service = {
-    id: 1,
-    title: 'Versal Grand Ballroom (500 kishi)',
-    category: "To'yxonalar va Restoranlar",
-    businessName: 'Versal Grand Palace',
-    address: "Toshkent sh., Yakkasaroy tumani, Shota Rustaveli 45",
-    description: "Toshkent markazidagi eng hashamatli to'yxonalardan biri. Kristal qandillar, eng so'nggi rusumdagi panoramali akustika, professional to'y yoritgichlari va 500 nafargacha mehmonni bag'riga sig'diruvchi viqorli zal.",
-    rating: 4.96,
-    reviewsCount: 210,
-    basePrice: 48000000,
-    images: [
-      'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200',
-    ],
-    packages: [
-      { name: "Standart Paket", price: 48000000, desc: "Zal ijarasi + bazaviy akustika va chiroq" },
-      { name: "VIP Oltin Paket", price: 68000000, desc: "To'liq LED ekranlar + VIP to'y dasturxoni + xizmat" },
-    ]
-  };
 
   const handleShare = async () => {
     try {
@@ -106,10 +92,10 @@ export const ServiceDetailScreen: React.FC<ServiceDetailScreenProps> = ({
             <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={22} color={isFavorite ? "#F43F5E" : "#FFFFFF"} />
           </TouchableOpacity>
 
-          {onOpen3D && (
-            <TouchableOpacity style={styles.btnHero3D} onPress={onOpen3D}>
-              <Ionicons name="cube" size={16} color="#070B14" style={{ marginRight: 4 }} />
-              <Text style={styles.btnHero3DText}>3D ZALNI KO'RISH</Text>
+          {service.has3D && onOpen3D && (
+            <TouchableOpacity style={[styles.btnHero3D, { backgroundColor: colors.primaryLight }]} onPress={onOpen3D}>
+              <Ionicons name="cube" size={16} color={isKelin ? '#FFFFFF' : '#070B14'} style={{ marginRight: 4 }} />
+              <Text style={[styles.btnHero3DText, { color: isKelin ? '#FFFFFF' : '#070B14' }]}>3D ZALNI KO'RISH</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -117,7 +103,9 @@ export const ServiceDetailScreen: React.FC<ServiceDetailScreenProps> = ({
         {/* Content */}
         <View style={styles.content}>
           <View style={styles.badgeRow}>
-            <Text style={styles.categoryText}>{service.category}</Text>
+            <Text style={[styles.categoryText, { color: colors.primaryLight, backgroundColor: colors.badgeBg, borderColor: colors.borderColor }]}>
+              {service.category}
+            </Text>
             <BadgeVerified />
           </View>
           <Text style={styles.title}>{service.title}</Text>
@@ -125,29 +113,47 @@ export const ServiceDetailScreen: React.FC<ServiceDetailScreenProps> = ({
 
           <View style={styles.ratingBar}>
             <LuxuryRating rating={service.rating} count={service.reviewsCount} />
-            <Text style={styles.ratingHighlight}>⭐ 99% ijobiy sharhlar</Text>
+            <Text style={[styles.ratingHighlight, { color: colors.primaryLight }]}>⭐ 99% ijobiy sharhlar</Text>
           </View>
 
           {/* Quick Action Buttons */}
           <View style={styles.actionsRow}>
-            <TouchableOpacity style={styles.actionBtn} onPress={() => Alert.alert("Qo'ng'iroq", "+998 71 200-00-00")}>
-              <Ionicons name="call-outline" size={18} color={COLORS.gold[400]} />
-              <Text style={styles.actionText}>Qo'ng'iroq</Text>
+            <TouchableOpacity
+              style={[styles.actionBtn, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}
+              onPress={() => {
+                if (service.phone) {
+                  Linking.openURL('tel:' + service.phone);
+                } else {
+                  Alert.alert("Qo'ng'iroq", "+998 71 200-00-00");
+                }
+              }}
+            >
+              <Ionicons name="call-outline" size={18} color={colors.primaryLight} />
+              <Text style={[styles.actionText, { color: colors.primaryLight }]}>Qo'ng'iroq</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionBtn} onPress={() => setShowOfferModal(true)}>
-              <Ionicons name="pricetag-outline" size={18} color={COLORS.gold[400]} />
-              <Text style={styles.actionText}>Narx Taklifi</Text>
+            <TouchableOpacity
+              style={[styles.actionBtn, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}
+              onPress={() => setShowOfferModal(true)}
+            >
+              <Ionicons name="pricetag-outline" size={18} color={colors.primaryLight} />
+              <Text style={[styles.actionText, { color: colors.primaryLight }]}>Narx Taklifi</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionBtn} onPress={onOpenMap}>
-              <Ionicons name="map-outline" size={18} color={COLORS.gold[400]} />
-              <Text style={styles.actionText}>Xarita</Text>
+            <TouchableOpacity
+              style={[styles.actionBtn, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}
+              onPress={onOpenMap}
+            >
+              <Ionicons name="map-outline" size={18} color={colors.primaryLight} />
+              <Text style={[styles.actionText, { color: colors.primaryLight }]}>Xarita</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionBtn} onPress={handleShare}>
-              <Ionicons name="share-social-outline" size={18} color={COLORS.gold[400]} />
-              <Text style={styles.actionText}>Ulashish</Text>
+            <TouchableOpacity
+              style={[styles.actionBtn, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}
+              onPress={handleShare}
+            >
+              <Ionicons name="share-social-outline" size={18} color={colors.primaryLight} />
+              <Text style={[styles.actionText, { color: colors.primaryLight }]}>Ulashish</Text>
             </TouchableOpacity>
           </View>
 
@@ -157,6 +163,20 @@ export const ServiceDetailScreen: React.FC<ServiceDetailScreenProps> = ({
             <Text style={styles.descriptionText}>{service.description}</Text>
           </View>
 
+          {/* Xususiyatlar */}
+          {service.features && service.features.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Qulayliklar va Imkoniyatlar</Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
+                {service.features.map((feat, i) => (
+                  <View key={i} style={[styles.featurePill, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}>
+                    <Text style={{ color: colors.primaryLight, fontSize: 12, fontWeight: '600' }}>✓ {feat}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
+
           {/* Paketlar */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Tariflar va Paketlar</Text>
@@ -165,11 +185,15 @@ export const ServiceDetailScreen: React.FC<ServiceDetailScreenProps> = ({
                 <TouchableOpacity
                   key={idx}
                   onPress={() => setSelectedPkg(idx)}
-                  style={[styles.pkgCard, selectedPkg === idx && styles.pkgCardActive]}
+                  style={[
+                    styles.pkgCard,
+                    { borderColor: colors.borderColor },
+                    selectedPkg === idx && [styles.pkgCardActive, { borderColor: colors.primaryLight, backgroundColor: colors.badgeBg }],
+                  ]}
                 >
                   <View style={styles.pkgHeader}>
-                    <Text style={[styles.pkgName, selectedPkg === idx && styles.pkgNameActive]}>{pkg.name}</Text>
-                    <Text style={styles.pkgPrice}>{pkg.price.toLocaleString()} so'm</Text>
+                    <Text style={[styles.pkgName, selectedPkg === idx && { color: colors.primaryLight }]}>{pkg.name}</Text>
+                    <Text style={[styles.pkgPrice, { color: colors.primaryLight }]}>{pkg.price.toLocaleString()} so'm</Text>
                   </View>
                   <Text style={styles.pkgDesc}>{pkg.desc}</Text>
                 </TouchableOpacity>
@@ -180,21 +204,29 @@ export const ServiceDetailScreen: React.FC<ServiceDetailScreenProps> = ({
           {/* Sharhlar Bloki & Baho Berish */}
           <View style={styles.section}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <Text style={styles.sectionTitle}>Mijozlar Sharhlari</Text>
+              <Text style={styles.sectionTitle}>Mijozlar Sharhlari ({service.reviews ? service.reviews.length : 0})</Text>
               <TouchableOpacity onPress={() => setShowReviewModal(true)}>
-                <Text style={styles.addReviewText}>+ Fikr bildirish</Text>
+                <Text style={[styles.addReviewText, { color: colors.primaryLight }]}>+ Fikr bildirish</Text>
               </TouchableOpacity>
             </View>
 
-            <View style={styles.reviewCard}>
-              <View style={styles.reviewHeader}>
-                <Text style={styles.reviewerName}>Dilshod Akramov</Text>
-                <Text style={styles.reviewRating}>★★★★★ 5.0</Text>
+            {service.reviews && service.reviews.length > 0 ? (
+              service.reviews.map((rev) => (
+                <View key={rev.id} style={[styles.reviewCard, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
+                  <View style={styles.reviewHeader}>
+                    <Text style={styles.reviewerName}>{rev.author}</Text>
+                    <Text style={[styles.reviewRating, { color: colors.primaryLight }]}>
+                      {'★'.repeat(rev.rating)} {rev.rating}.0 • {rev.date}
+                    </Text>
+                  </View>
+                  <Text style={styles.reviewComment}>"{rev.comment}"</Text>
+                </View>
+              ))
+            ) : (
+              <View style={[styles.reviewCard, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
+                <Text style={styles.reviewComment}>Hozircha birinchi bo'lib fikr qoldiring!</Text>
               </View>
-              <Text style={styles.reviewComment}>
-                "Versal zalida ukamning to'yini o'tkazdik. Xizmat, akustika va yoritish shousi Oliy darajada bo'ldi! Hammaga tavsiya qilaman."
-              </Text>
-            </View>
+            )}
           </View>
 
           {/* Jonli Kalendar va Bronlash */}
@@ -589,5 +621,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '900',
     letterSpacing: 0.3,
+  },
+  featurePill: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
+    borderWidth: 1,
   },
 });

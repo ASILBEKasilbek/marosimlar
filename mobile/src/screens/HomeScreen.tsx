@@ -1,8 +1,23 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput, Modal, Dimensions, Alert } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  Modal,
+  Dimensions,
+  Alert,
+  Vibration,
+  Platform,
+} from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeContext';
+import { WEDDING_SERVICES, WeddingService } from '../data/weddingServices';
 import { CategoryPillBar } from '../components/common/CategoryPillBar';
 import { LuxuryCard } from '../components/common/LuxuryCard';
 import { BadgeVerified, LuxuryRating } from '../components/common/BadgeVerified';
@@ -29,6 +44,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onOpenSeating,
   onOpenChecklist,
 }) => {
+  const { colors, isKelin, toggleTheme } = useAppTheme();
   const [selectedCat, setSelectedCat] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeStory, setActiveStory] = useState<any | null>(null);
@@ -42,84 +58,83 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     { id: 'auto', name: 'Kortej', icon: '🚘' },
   ];
 
-  const featuredServices = [
-    {
-      id: 1,
-      title: 'Versal Grand Ballroom (500 kishi)',
-      category: "To'yxona",
-      price: 48000000,
-      city: 'Toshkent, Yakkasaroy',
-      rating: 4.96,
-      reviewsCount: 210,
-      image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800',
-      distanceKm: 2.4,
-      has3D: true,
-    },
-    {
-      id: 2,
-      title: "Jonli Ijro Ansambli va Xonandalar Guruhi",
-      category: "San'atkor",
-      price: 15000000,
-      city: 'Toshkent',
-      rating: 4.90,
-      reviewsCount: 92,
-      image: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800',
-      distanceKm: 4.1,
-      has3D: false,
-    },
-    {
-      id: 3,
-      title: "Yakkasaroy Palace (800 kishi)",
-      category: "To'yxona",
-      price: 65000000,
-      city: 'Toshkent, Mirzo Ulug\'bek',
-      rating: 4.98,
-      reviewsCount: 340,
-      image: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800',
-      distanceKm: 3.8,
-      has3D: true,
-    }
-  ];
+  // Dynamic Filtering by Category and Search Query
+  const filteredServices = useMemo(() => {
+    return WEDDING_SERVICES.filter((service) => {
+      const matchesCat = selectedCat === 'all' || service.catId === selectedCat;
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        service.title.toLowerCase().includes(q) ||
+        service.category.toLowerCase().includes(q) ||
+        service.city.toLowerCase().includes(q) ||
+        service.businessName.toLowerCase().includes(q) ||
+        service.description.toLowerCase().includes(q);
+
+      return matchesCat && matchesSearch;
+    });
+  }, [selectedCat, searchQuery]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.bgBase }]}>
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
       {/* Top Header */}
       <View style={styles.header}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image 
             source={require('../assets/logo.jpg')} 
-            style={styles.logoImage} 
+            style={[styles.logoImage, { borderColor: colors.borderColor }]} 
           />
           <View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={styles.welcomeLabel}>TuyBox Platformasi</Text>
-              <View style={styles.miniVipTag}>
-                <Text style={styles.miniVipText}>PREMIUM</Text>
+              <View style={[styles.miniVipTag, { backgroundColor: colors.badgeBg, borderColor: colors.borderColor }]}>
+                <Text style={[styles.miniVipText, { color: colors.primaryLight }]}>
+                  {isKelin ? '🌸 KELIN VIP' : '👑 KUYOV VIP'}
+                </Text>
               </View>
             </View>
-            <Text style={styles.appTitle}>Hashamatli To'ylar</Text>
+            <Text style={[styles.appTitle, { color: colors.primaryLight }]}>Hashamatli To'ylar</Text>
           </View>
         </View>
 
-        <TouchableOpacity 
-          style={styles.citySelector}
-          onPress={() => onOpenMap && onOpenMap()}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="map-outline" size={13} color={COLORS.gold[400]} style={{ marginRight: 4 }} />
-          <Text style={styles.cityText}>Xaritada</Text>
-          <Ionicons name="chevron-forward" size={11} color={COLORS.gold[400]} style={{ marginLeft: 2 }} />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          {/* Quick Dual Theme Toggle Button */}
+          <TouchableOpacity
+            style={[
+              styles.modePillBtn,
+              { borderColor: colors.borderColor, backgroundColor: colors.bgCard }
+            ]}
+            onPress={() => {
+              toggleTheme();
+              if (Platform.OS !== 'web') Vibration.vibrate(15);
+            }}
+            activeOpacity={0.8}
+          >
+            <Text style={{ fontSize: 13 }}>{isKelin ? '🌸' : '👑'}</Text>
+            <Text style={[styles.modePillText, { color: colors.primaryLight }]}>
+              {isKelin ? 'Kelin' : 'Kuyov'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.citySelector, { borderColor: colors.borderColor }]}
+            onPress={() => onOpenMap && onOpenMap()}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="map-outline" size={13} color={colors.primaryLight} style={{ marginRight: 4 }} />
+            <Text style={[styles.cityText, { color: colors.primaryLight }]}>Xaritada</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Modern Search Bar */}
       <View style={styles.searchWrapper}>
-        <View style={styles.searchBar}>
-          <Ionicons name="search-outline" size={18} color="#94A3B8" style={{ marginRight: 8 }} />
+        <View style={[styles.searchBar, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
+          <Ionicons name="search-outline" size={18} color={colors.primaryLight} style={{ marginRight: 8 }} />
           <TextInput
             style={styles.searchInput}
-            placeholder="To'yxona, san'atkor yoki fotograf izlash..."
+            placeholder="To'yxona, san'atkor, foto yoki kortej izlash..."
             placeholderTextColor="#64748B"
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -372,65 +387,111 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </LinearGradient>
       </TouchableOpacity>
 
-      {/* Featured Luxury Services */}
+      {/* Featured Luxury Services Header */}
       <View style={styles.sectionHeader}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Ionicons name="diamond" size={16} color={COLORS.gold[400]} style={{ marginRight: 6 }} />
-          <Text style={styles.sectionTitle}>VIP & Eng Sara Xizmatlar</Text>
+          <Ionicons name="diamond" size={16} color={colors.primaryLight} style={{ marginRight: 6 }} />
+          <Text style={styles.sectionTitle}>
+            {selectedCat === 'all'
+              ? 'VIP & Eng Sara Xizmatlar'
+              : categories.find((c) => c.id === selectedCat)?.name}{' '}
+            ({filteredServices.length})
+          </Text>
         </View>
-        <TouchableOpacity>
-          <Text style={styles.seeAllText}>Barchasi →</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.cardsList}>
-        {featuredServices.map((service) => (
-          <TouchableOpacity
-            key={service.id}
-            onPress={() => onSelectService(service.id)}
-            activeOpacity={0.9}
-          >
-            <LuxuryCard style={styles.serviceCard}>
-              <View style={styles.cardImageContainer}>
-                <Image source={{ uri: service.image }} style={styles.cardImage} />
-                {service.has3D && (
-                  <TouchableOpacity
-                    style={styles.card3DBadge}
-                    onPress={() => onOpen3D && onOpen3D()}
-                  >
-                    <Ionicons name="cube" size={13} color="#070B14" style={{ marginRight: 4 }} />
-                    <Text style={styles.card3DText}>3D Ko'rish</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-
-              <View style={styles.cardContent}>
-                <View style={styles.tagRow}>
-                  <Text style={styles.categoryBadge}>{service.category}</Text>
-                  <BadgeVerified />
-                </View>
-
-                <Text style={styles.serviceTitle}>{service.title}</Text>
-                
-                <View style={styles.metaRow}>
-                  <LuxuryRating rating={service.rating} count={service.reviewsCount} />
-                  <Text style={styles.distanceText}>• {service.distanceKm} km yaqin</Text>
-                </View>
-
-                <View style={styles.priceRow}>
-                  <View>
-                    <Text style={styles.priceLabel}>Boshlang'ich narxi:</Text>
-                    <Text style={styles.priceValue}>{service.price.toLocaleString()} so'm</Text>
-                  </View>
-                  <View style={styles.viewBtn}>
-                    <Text style={styles.viewBtnText}>Tafsilotlar</Text>
-                  </View>
-                </View>
-              </View>
-            </LuxuryCard>
+        {selectedCat !== 'all' ? (
+          <TouchableOpacity onPress={() => setSelectedCat('all')}>
+            <Text style={[styles.seeAllText, { color: colors.primaryLight }]}>Barchasi →</Text>
           </TouchableOpacity>
-        ))}
+        ) : (
+          <TouchableOpacity onPress={() => setSelectedCat('music')}>
+            <Text style={[styles.seeAllText, { color: colors.primaryLight }]}>San'atkorlar →</Text>
+          </TouchableOpacity>
+        )}
       </View>
+
+      {/* Services List / Empty State */}
+      {filteredServices.length === 0 ? (
+        <View style={[styles.emptyStateBox, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
+          <Text style={{ fontSize: 36, marginBottom: 8 }}>🔍</Text>
+          <Text style={styles.emptyStateTitle}>Hech qanday xizmat topilmadi</Text>
+          <Text style={styles.emptyStateSub}>
+            "{searchQuery}" bo'yicha ma'lumot chiqmadi. Boshqa so'z bilan izlab ko'ring yoki barcha toifalarni ko'ring.
+          </Text>
+          <TouchableOpacity
+            style={[styles.emptyResetBtn, { backgroundColor: colors.primaryLight }]}
+            onPress={() => {
+              setSelectedCat('all');
+              setSearchQuery('');
+            }}
+          >
+            <Text style={[styles.emptyResetText, { color: isKelin ? '#FFFFFF' : '#070B14' }]}>
+              Barcha xizmatlarni ko'rish
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View style={styles.cardsList}>
+          {filteredServices.map((service) => (
+            <TouchableOpacity
+              key={service.id}
+              onPress={() => onSelectService(service.id)}
+              activeOpacity={0.9}
+            >
+              <LuxuryCard style={[styles.serviceCard, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
+                <View style={styles.cardImageContainer}>
+                  <Image source={{ uri: service.image }} style={styles.cardImage} />
+                  {service.has3D && (
+                    <TouchableOpacity
+                      style={[styles.card3DBadge, { backgroundColor: colors.primaryLight }]}
+                      onPress={() => onOpen3D && onOpen3D()}
+                    >
+                      <Ionicons name="cube" size={13} color={isKelin ? '#FFFFFF' : '#070B14'} style={{ marginRight: 4 }} />
+                      <Text style={[styles.card3DText, { color: isKelin ? '#FFFFFF' : '#070B14' }]}>3D Ko'rish</Text>
+                    </TouchableOpacity>
+                  )}
+                  <View style={[styles.cardDistanceBadge, { backgroundColor: 'rgba(7, 11, 20, 0.78)' }]}>
+                    <Ionicons name="location-outline" size={11} color={colors.primaryLight} style={{ marginRight: 2 }} />
+                    <Text style={{ color: '#E2E8F0', fontSize: 10, fontWeight: '700' }}>
+                      {service.distanceKm} km
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.cardContent}>
+                  <View style={styles.tagRow}>
+                    <Text style={[styles.categoryBadge, { color: colors.primaryLight, backgroundColor: colors.badgeBg, borderColor: colors.borderColor }]}>
+                      {service.category}
+                    </Text>
+                    <BadgeVerified />
+                  </View>
+
+                  <Text style={styles.serviceTitle}>{service.title}</Text>
+                  <Text style={styles.businessSubtitle}>📍 {service.city}</Text>
+
+                  <View style={styles.metaRow}>
+                    <LuxuryRating rating={service.rating} count={service.reviewsCount} />
+                    <Text style={styles.featuresPreviewText} numberOfLines={1}>
+                      • {service.features ? service.features.slice(0, 2).join(', ') : ''}
+                    </Text>
+                  </View>
+
+                  <View style={styles.priceRow}>
+                    <View>
+                      <Text style={styles.priceLabel}>Boshlang'ich narxi:</Text>
+                      <Text style={[styles.priceValue, { color: colors.primaryLight }]}>
+                        {service.price.toLocaleString()} so'm
+                      </Text>
+                    </View>
+                    <View style={[styles.viewBtn, { backgroundColor: colors.badgeBg, borderColor: colors.borderColor }]}>
+                      <Text style={[styles.viewBtnText, { color: colors.primaryLight }]}>Tafsilotlar</Text>
+                    </View>
+                  </View>
+                </View>
+              </LuxuryCard>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
       </ScrollView>
 
       {/* Instagram/TikTok Style Luxury Wedding Story / Reel Modal */}
@@ -563,6 +624,74 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#FFFFFF',
     letterSpacing: 0.2,
+  },
+  modePillBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    borderRadius: 14,
+    borderWidth: 1,
+    gap: 4,
+  },
+  modePillText: {
+    fontSize: 11,
+    fontWeight: '800',
+  },
+  cardDistanceBadge: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+  },
+  businessSubtitle: {
+    fontSize: 11,
+    color: '#94A3B8',
+    marginBottom: 6,
+  },
+  featuresPreviewText: {
+    fontSize: 11,
+    color: '#94A3B8',
+    flex: 1,
+    marginLeft: 6,
+  },
+  emptyStateBox: {
+    marginHorizontal: 20,
+    padding: 30,
+    borderRadius: 20,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  emptyStateTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  emptyStateSub: {
+    fontSize: 12,
+    color: '#94A3B8',
+    textAlign: 'center',
+    marginBottom: 16,
+    lineHeight: 18,
+  },
+  emptyResetBtn: {
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 14,
+  },
+  emptyResetText: {
+    fontSize: 12,
+    fontWeight: '800',
   },
   citySelector: {
     flexDirection: 'row',

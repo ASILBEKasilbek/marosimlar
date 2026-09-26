@@ -3,11 +3,13 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Share } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeContext';
 import { RSVPTrackerCard } from '../components/invitation/RSVPTrackerCard';
 import { LuxuryCard } from '../components/common/LuxuryCard';
 import { GoldButton } from '../components/common/GoldButton';
 
 export const DigitalInvitationScreen: React.FC = () => {
+  const { colors, isKelin } = useAppTheme();
   const inviteLink = "https://tuybox.asilbek.tech/invite/jasurbek-madina-2026";
 
   const handleShare = async () => {
@@ -21,7 +23,11 @@ export const DigitalInvitationScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.bgBase }]}
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.header}>
         <Text style={styles.pageTitle}>💌 Raqamli Taklifnoma & QR</Text>
         <Text style={styles.pageSubtitle}>
@@ -41,8 +47,8 @@ export const DigitalInvitationScreen: React.FC = () => {
       {/* Havola va Ulashish */}
       <LuxuryCard style={styles.linkCard} variant="glass">
         <Text style={styles.linkCardTitle}>Shaxsiy to'y taklifnomasi havolasi:</Text>
-        <View style={styles.linkBox}>
-          <Text style={styles.linkText} numberOfLines={1}>{inviteLink}</Text>
+        <View style={[styles.linkBox, { borderColor: colors.borderColor }]}>
+          <Text style={[styles.linkText, { color: colors.textGoldOrPurple }]} numberOfLines={1}>{inviteLink}</Text>
         </View>
         <GoldButton
           title="Telegram orqali mehmonlarga yuborish ✈️"

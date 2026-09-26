@@ -15,6 +15,7 @@ import {
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeContext';
 
 interface ProfileScreenProps {
   onNavigateTab?: (tab: 'home' | 'venue3d' | 'invites') => void;
@@ -31,8 +32,8 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   onOpenSeating,
   onOpenChecklist,
 }) => {
+  const { isKelin, setMode, colors } = useAppTheme();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [isBrideMode, setIsBrideMode] = useState(false);
 
   const handleShareApp = async () => {
     try {
@@ -88,10 +89,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               </View>
               <Text style={styles.userPhone}>+998 (90) 123-45-67</Text>
               
-              <View style={styles.vipBadge}>
-                <Ionicons name="diamond" size={12} color={isBrideMode ? '#F472B6' : COLORS.gold[400]} style={{ marginRight: 4 }} />
-                <Text style={[styles.vipBadgeText, isBrideMode && { color: '#F472B6' }]}>
-                  {isBrideMode ? 'TuyBox Kelin VIP Member' : 'TuyBox VIP Gold Member'}
+              <View style={[styles.vipBadge, isKelin && { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}>
+                <Ionicons name="diamond" size={12} color={isKelin ? colors.primaryLight : COLORS.gold[400]} style={{ marginRight: 4 }} />
+                <Text style={[styles.vipBadgeText, isKelin && { color: colors.primaryLight }]}>
+                  {isKelin ? 'TuyBox Kelin VIP Member' : 'TuyBox VIP Gold Member'}
                 </Text>
               </View>
             </View>
@@ -100,28 +101,28 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           {/* Dual Luxury Mode Switcher: Kuyov vs Kelin */}
           <View style={styles.themeModeToggleRow}>
             <TouchableOpacity
-              style={[styles.themeModeBtn, !isBrideMode && styles.themeModeBtnActive]}
+              style={[styles.themeModeBtn, !isKelin && styles.themeModeBtnActive]}
               onPress={() => {
-                setIsBrideMode(false);
+                setMode('kuyov');
                 if (Platform.OS !== 'web') Vibration.vibrate(15);
               }}
             >
               <Text style={styles.themeModeEmoji}>👑</Text>
-              <Text style={[styles.themeModeBtnText, !isBrideMode && styles.themeModeBtnTextActive]}>
+              <Text style={[styles.themeModeBtnText, !isKelin && styles.themeModeBtnTextActive]}>
                 Kuyov Rejimi (Gold)
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.themeModeBtn, isBrideMode && styles.themeModeBrideActive]}
+              style={[styles.themeModeBtn, isKelin && styles.themeModeBrideActive]}
               onPress={() => {
-                setIsBrideMode(true);
+                setMode('kelin');
                 if (Platform.OS !== 'web') Vibration.vibrate(15);
               }}
             >
               <Text style={styles.themeModeEmoji}>🌸</Text>
-              <Text style={[styles.themeModeBtnText, isBrideMode && { color: '#F472B6', fontWeight: '800' }]}>
-                Kelin Rejimi (Rose)
+              <Text style={[styles.themeModeBtnText, isKelin && { color: '#C084FC', fontWeight: '800' }]}>
+                Kelin Rejimi (Binafsha)
               </Text>
             </TouchableOpacity>
           </View>
@@ -809,8 +810,8 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gold[400],
   },
   themeModeBrideActive: {
-    backgroundColor: 'rgba(244, 114, 182, 0.18)',
-    borderColor: '#F472B6',
+    backgroundColor: 'rgba(192, 132, 252, 0.22)',
+    borderColor: '#C084FC',
   },
   themeModeEmoji: {
     fontSize: 14,

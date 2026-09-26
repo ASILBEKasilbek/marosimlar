@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { COLORS } from '../../theme/colors';
+import { useAppTheme } from '../../theme/ThemeContext';
 
 interface CategoryItem {
   id: string;
@@ -19,6 +20,8 @@ export const CategoryPillBar: React.FC<CategoryPillBarProps> = ({
   selectedId,
   onSelect,
 }) => {
+  const { colors, isKelin } = useAppTheme();
+
   return (
     <ScrollView
       horizontal
@@ -32,10 +35,24 @@ export const CategoryPillBar: React.FC<CategoryPillBarProps> = ({
             key={cat.id}
             onPress={() => onSelect(cat.id)}
             activeOpacity={0.8}
-            style={[styles.pill, isSelected && styles.selectedPill]}
+            style={[
+              styles.pill,
+              {
+                borderColor: colors.borderColor,
+                backgroundColor: isSelected ? colors.primaryLight : colors.bgCard,
+              },
+            ]}
           >
             <Text style={styles.icon}>{cat.icon}</Text>
-            <Text style={[styles.text, isSelected && styles.selectedText]}>
+            <Text
+              style={[
+                styles.text,
+                isSelected && {
+                  color: isKelin ? '#FFFFFF' : '#070B14',
+                  fontWeight: '800',
+                },
+              ]}
+            >
               {cat.name}
             </Text>
           </TouchableOpacity>

@@ -3,6 +3,7 @@ import { TouchableOpacity, Text, StyleSheet, ViewStyle, TextStyle } from 'react-
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { COLORS } from '../../theme/colors';
+import { useAppTheme } from '../../theme/ThemeContext';
 
 interface GoldButtonProps {
   title: string;
@@ -21,6 +22,8 @@ export const GoldButton: React.FC<GoldButtonProps> = ({
   variant = 'solid',
   icon
 }) => {
+  const { colors, isKelin } = useAppTheme();
+
   const handlePress = () => {
     try {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -31,16 +34,32 @@ export const GoldButton: React.FC<GoldButtonProps> = ({
   };
 
   if (variant === 'solid') {
+    const gradientColors = isKelin
+      ? (colors.primaryGradient as [string, string, string])
+      : ['#F3E5AB', '#D4AF37', '#AA7C11'];
+
     return (
-      <TouchableOpacity activeOpacity={0.85} onPress={handlePress} style={[styles.touchable, style]}>
+      <TouchableOpacity
+        activeOpacity={0.85}
+        onPress={handlePress}
+        style={[
+          styles.touchable,
+          {
+            shadowColor: isKelin ? '#C084FC' : '#D4AF37',
+          },
+          style,
+        ]}
+      >
         <LinearGradient
-          colors={['#F3E5AB', '#D4AF37', '#AA7C11']}
+          colors={gradientColors}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.gradient}
         >
           {icon}
-          <Text style={[styles.solidText, textStyle]}>{title}</Text>
+          <Text style={[styles.solidText, isKelin && { color: '#0F051D' }, textStyle]}>
+            {title}
+          </Text>
         </LinearGradient>
       </TouchableOpacity>
     );
@@ -48,7 +67,11 @@ export const GoldButton: React.FC<GoldButtonProps> = ({
 
   if (variant === 'dark') {
     return (
-      <TouchableOpacity activeOpacity={0.85} onPress={handlePress} style={[styles.darkButton, style]}>
+      <TouchableOpacity
+        activeOpacity={0.85}
+        onPress={handlePress}
+        style={[styles.darkButton, isKelin && { backgroundColor: 'rgba(30, 16, 50, 0.85)' }, style]}
+      >
         {icon}
         <Text style={[styles.darkText, textStyle]}>{title}</Text>
       </TouchableOpacity>
@@ -56,9 +79,19 @@ export const GoldButton: React.FC<GoldButtonProps> = ({
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.85} onPress={handlePress} style={[styles.outlineButton, style]}>
+    <TouchableOpacity
+      activeOpacity={0.85}
+      onPress={handlePress}
+      style={[
+        styles.outlineButton,
+        { borderColor: colors.primary },
+        style,
+      ]}
+    >
       {icon}
-      <Text style={[styles.outlineText, textStyle]}>{title}</Text>
+      <Text style={[styles.outlineText, { color: colors.textGoldOrPurple }, textStyle]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,14 +6,16 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  Animated,
   ActivityIndicator,
   Share,
+  Platform,
+  Alert,
 } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
@@ -25,7 +27,6 @@ interface Venue3DItem {
   pricePerDay: string;
   rating: number;
   reviews: number;
-  glbModelUrl?: string;
   features: string[];
   description: string;
   decorStyle: string;
@@ -40,21 +41,21 @@ const VENUES_3D: Venue3DItem[] = [
     pricePerDay: "48,000,000 so'm",
     rating: 4.96,
     reviews: 210,
-    features: ['Kristal Lyustra', '3D LED Ekran', 'Og\'ir Tutun', 'VIP Prezidium', '120 Mashina Parking'],
+    features: ['Kristal Lyustra', '3D LED Ekran', "Og'ir Tutun", 'VIP Prezidium', '120 Mashina Parking'],
     description: 'Neoklassik qirollik uslubidagi hashamatli zal. 12 metr balandlikdagi gumbaz va oltin qoplama dekoratsiya.',
     decorStyle: 'Oltin & Oq Marmar',
   },
   {
     id: 'yakkasaroy',
     name: 'Yakkasaroy Palace Luxury',
-    city: 'Toshkent, Mirzo Ulug\'bek',
+    city: "Toshkent, Mirzo Ulug'bek",
     capacity: '600 - 850 kishi',
     pricePerDay: "65,000,000 so'm",
     rating: 4.98,
     reviews: 340,
-    features: ['Fransuz Arxitekturasi', 'Alohida Kelin Xonasi', 'Lazer Shousi', '200 Mashina Parking', 'Akustik Zallar'],
-    description: 'Oliy darajadagi xalqaro standartdagi to\'yxona majmuasi. Mehmonlar uchun qulay akustika va panoramali derazalar.',
-    decorStyle: 'Imperial Royal Gold',
+    features: ['Marmar Zinapoyalar', '4 Ta Rim Ustunlari', '2 Ta Kristal Qandil', '200 Mashina Parking', 'Akustik Zallar'],
+    description: "Fransuz imperatorlik saroyi uslubidagi hashamatli to'yxona majmuasi. Ikkita aylanma marmar zinapoya, Rim ustunlari va binafsha yorug'lik.",
+    decorStyle: 'Imperial Royal & Binafsha',
   },
   {
     id: 'mumtoz',
@@ -64,27 +65,28 @@ const VENUES_3D: Venue3DItem[] = [
     pricePerDay: "38,000,000 so'm",
     rating: 4.88,
     reviews: 145,
-    features: ['Milliy Ganchkorlik', 'Jonli Orkestr Maydoni', 'Favvoralar Bog\'i', 'Maxsus Oshpazlik Oshxonasi'],
-    description: 'Sharqona nozik naqshlar va zamonaviy yorug\'lik texnologiyasi uyg\'unlashgan muhtasham saroy.',
-    decorStyle: 'Sharqona Mumtoz',
+    features: ['Milliy Ganchkorlik', 'Markaziy Favvora', 'Sharqona Fonuslar', "Bog' Manzarasi"],
+    description: "Sharqona nozik ganchkorlik naqshlari, firuza gumbazli arka, markaziy marmar favvora va qadimiy jilodor fonuslar uyg'unligi.",
+    decorStyle: 'Sharqona Mumtoz & Firuza',
   },
   {
     id: 'oftob',
     name: 'Oftob Shaxona: Ochiq Osmon & Sharshara',
-    city: 'Toshkent, Qibray / Tabiat qo\'ynida',
+    city: 'Toshkent, Qibray / Tabiat',
     capacity: '700 - 1000 kishi',
     pricePerDay: "55,000,000 so'm",
     rating: 4.99,
     reviews: 420,
     features: ['Oqib Turuvchi Sharshara', 'Yulduzli Ochiq Osmon', 'Suv ustidagi Sahna', 'Lazer & Chiroq Shousi', '250 Mashina Parking'],
-    description: 'Yashil tabiat bog\'ida, oqshomgi ochiq osmon ostida joylashgan to\'yxona. Tabiiy sharshara, yorug\'lik favvoralari va toza havo.',
+    description: "Tabiat qo'ynida, oqshomgi ochiq osmon ostidagi to'yxona. 300 ta yulduz jilosi, tog' sharsharasi va suv ustidagi suzuvchi sahna.",
     decorStyle: 'Ochiq Osmon & Sharshara',
   }
 ];
 
 export const Venue3DScreen: React.FC = () => {
+  const { colors, isKelin } = useAppTheme();
   const [selectedVenue, setSelectedVenue] = useState<Venue3DItem>(VENUES_3D[0]);
-  const [lightMode, setLightMode] = useState<'evening' | 'spotlight' | 'disco'>('evening');
+  const [lightMode, setLightMode] = useState<'evening' | 'spotlight' | 'disco' | 'kelin'>('evening');
   const [autoRotate, setAutoRotate] = useState<boolean>(true);
   const [activeCameraView, setActiveCameraView] = useState<'full' | 'stage' | 'table'>('full');
   const [isWebviewLoading, setIsWebviewLoading] = useState<boolean>(true);
@@ -96,7 +98,7 @@ export const Venue3DScreen: React.FC = () => {
     webViewRef.current?.injectJavaScript(js);
   };
 
-  const handleLightChange = (mode: 'evening' | 'spotlight' | 'disco') => {
+  const handleLightChange = (mode: 'evening' | 'spotlight' | 'disco' | 'kelin') => {
     setLightMode(mode);
     sendTo3D('setLight', mode);
   };
@@ -122,7 +124,23 @@ export const Venue3DScreen: React.FC = () => {
     }
   };
 
-  // Ultra-realistic 3D WebGL Three.js Wedding Hall Scene (Embedded, Fast, Zero latency, 60 FPS)
+  const handleBook = () => {
+    Alert.alert(
+      "3D Zal Bo'yicha Bron 📅",
+      `"${selectedVenue.name}" zali bo'yicha ma'muriyatga bron so'rovingiz yuborildi. Ular to'y sanasi bo'yicha siz bilan bog'lanishadi!`
+    );
+  };
+
+  // Switch to Kelin lighting when in Kelin mode
+  useEffect(() => {
+    if (isKelin) {
+      handleLightChange('kelin');
+    } else if (lightMode === 'kelin') {
+      handleLightChange('evening');
+    }
+  }, [isKelin]);
+
+  // Ultra-realistic 3D WebGL Three.js Scene with 4 distinct wedding environments
   const threeHtml = `
     <!DOCTYPE html>
     <html>
@@ -167,7 +185,7 @@ export const Venue3DScreen: React.FC = () => {
             <div class="spinner"></div>
             <div>3D Zal yuklanmoqda...</div>
           </div>
-          <div class="badge-3d">✦ 3D GLB/WebGL Realtime 60FPS</div>
+          <div class="badge-3d">✦ TuyBox 3D Realtime 60FPS</div>
           <div class="touch-hint">👆 Aylantirish uchun suring | 🔍 Masshtab</div>
         </div>
 
@@ -180,7 +198,7 @@ export const Venue3DScreen: React.FC = () => {
           scene.background = new THREE.Color(0x070B14);
           scene.fog = new THREE.FogExp2(0x070B14, 0.025);
 
-          const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+          const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 120);
           camera.position.set(0, 10, 22);
 
           const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
@@ -189,31 +207,37 @@ export const Venue3DScreen: React.FC = () => {
           renderer.shadowMap.enabled = true;
           renderer.shadowMap.type = THREE.PCFSoftShadowMap;
           renderer.toneMapping = THREE.ACESFilmicToneMapping;
-          renderer.toneMappingExposure = 1.1;
+          renderer.toneMappingExposure = 1.15;
           container.appendChild(renderer.domElement);
 
-          // Controls
+          // Orbit Controls
           const controls = new THREE.OrbitControls(camera, renderer.domElement);
           controls.enableDamping = true;
           controls.dampingFactor = 0.05;
-          controls.maxPolarAngle = Math.PI / 2 - 0.02; // Don't go below floor
+          controls.maxPolarAngle = Math.PI / 2 - 0.02;
           controls.minDistance = 4;
-          controls.maxDistance = 35;
+          controls.maxDistance = 40;
           controls.autoRotate = true;
           controls.autoRotateSpeed = 0.6;
           controls.target.set(0, 2.5, 0);
+
+          // Shared Materials
+          const goldMaterial = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.85, roughness: 0.22 });
+          const whiteSilk = new THREE.MeshStandardMaterial({ color: 0xfafafa, roughness: 0.4 });
+          const marbleWhite = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, roughness: 0.18, metalness: 0.2 });
+          const royalPurple = new THREE.MeshStandardMaterial({ color: 0x6b21a8, roughness: 0.6 });
+          const turquoiseMat = new THREE.MeshStandardMaterial({ color: 0x0ea5e9, roughness: 0.25, metalness: 0.6 });
+          const darkFloorMat = new THREE.MeshStandardMaterial({ color: 0x111624, roughness: 0.15, metalness: 0.35 });
 
           // Lights
           const ambientLight = new THREE.AmbientLight(0xffeedd, 0.45);
           scene.add(ambientLight);
 
-          // Main Center Chandelier Warm Glow
-          const chandelierLight = new THREE.PointLight(0xffdf73, 2.2, 28);
+          const chandelierLight = new THREE.PointLight(0xffdf73, 2.2, 30);
           chandelierLight.position.set(0, 8, 0);
           chandelierLight.castShadow = true;
           scene.add(chandelierLight);
 
-          // Stage Spotlight
           const stageSpot = new THREE.SpotLight(0xfff5e6, 3.5);
           stageSpot.position.set(0, 12, 6);
           stageSpot.target.position.set(0, 2.5, -8);
@@ -223,268 +247,290 @@ export const Venue3DScreen: React.FC = () => {
           scene.add(stageSpot);
           scene.add(stageSpot.target);
 
-          // Subtle Accent Lights
-          const leftLight = new THREE.PointLight(0xd4af37, 1.2, 20);
-          leftLight.position.set(-10, 5, 2);
-          scene.add(leftLight);
-
-          const rightLight = new THREE.PointLight(0xd4af37, 1.2, 20);
-          rightLight.position.set(10, 5, 2);
-          scene.add(rightLight);
-
-          // Disco / Moving light
           const discoLight = new THREE.PointLight(0xec4899, 0, 25);
           discoLight.position.set(0, 6, 0);
           scene.add(discoLight);
 
-          // Materials
-          const goldMaterial = new THREE.MeshStandardMaterial({
-            color: 0xd4af37,
-            metalness: 0.85,
-            roughness: 0.22,
-          });
+          // ─────────────────────────────────────────────
+          // 1. VERSAL GRAND BALLROOM (Group)
+          // ─────────────────────────────────────────────
+          const versalGroup = new THREE.Group();
 
-          const whiteSilk = new THREE.MeshStandardMaterial({
-            color: 0xfafafa,
-            roughness: 0.4,
-          });
+          // Floor
+          const versalFloor = new THREE.Mesh(new THREE.PlaneGeometry(32, 32), darkFloorMat);
+          versalFloor.rotation.x = -Math.PI / 2;
+          versalFloor.receiveShadow = true;
+          versalGroup.add(versalFloor);
 
-          const carpetMaterial = new THREE.MeshStandardMaterial({
-            color: 0x6b1d2f, // Royal Burgundy Carpet
-            roughness: 0.9,
-          });
+          // Dance Floor (Round)
+          const versalDance = new THREE.Mesh(new THREE.CircleGeometry(6, 48), new THREE.MeshStandardMaterial({ color: 0x1a233a, roughness: 0.1, metalness: 0.5 }));
+          versalDance.rotation.x = -Math.PI / 2;
+          versalDance.position.y = 0.02;
+          versalDance.receiveShadow = true;
+          versalGroup.add(versalDance);
 
-          const floorMaterial = new THREE.MeshStandardMaterial({
-            color: 0x111624,
-            roughness: 0.15,
-            metalness: 0.35,
-          });
+          // Gold border
+          const versalRing = new THREE.Mesh(new THREE.RingGeometry(5.9, 6.1, 48), goldMaterial);
+          versalRing.rotation.x = -Math.PI / 2;
+          versalRing.position.y = 0.03;
+          versalGroup.add(versalRing);
 
-          // 1. Floor (Glossy Dark Marble)
-          const floorGeo = new THREE.PlaneGeometry(32, 32);
-          const floor = new THREE.Mesh(floorGeo, floorMaterial);
-          floor.rotation.x = -Math.PI / 2;
-          floor.receiveShadow = true;
-          scene.add(floor);
+          // Red Aisle Carpet
+          const versalCarpet = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 16), new THREE.MeshStandardMaterial({ color: 0x6b1d2f, roughness: 0.9 }));
+          versalCarpet.rotation.x = -Math.PI / 2;
+          versalCarpet.position.set(0, 0.025, 0);
+          versalGroup.add(versalCarpet);
 
-          // Center Dance Floor (Glossy Inlay)
-          const danceFloorGeo = new THREE.CircleGeometry(6, 48);
-          const danceFloorMat = new THREE.MeshStandardMaterial({
-            color: 0x1a233a,
-            roughness: 0.1,
-            metalness: 0.5,
-          });
-          const danceFloor = new THREE.Mesh(danceFloorGeo, danceFloorMat);
-          danceFloor.rotation.x = -Math.PI / 2;
-          danceFloor.position.y = 0.02;
-          danceFloor.receiveShadow = true;
-          scene.add(danceFloor);
+          // Stage & Arch
+          const vStage = new THREE.Mesh(new THREE.BoxGeometry(14, 0.8, 6), new THREE.MeshStandardMaterial({ color: 0x1e2738, roughness: 0.3 }));
+          vStage.position.set(0, 0.4, -8);
+          versalGroup.add(vStage);
 
-          // Gold border for dance floor
-          const ringGeo = new THREE.RingGeometry(5.9, 6.1, 48);
-          const ring = new THREE.Mesh(ringGeo, goldMaterial);
-          ring.rotation.x = -Math.PI / 2;
-          ring.position.y = 0.03;
-          scene.add(ring);
+          const vArch = new THREE.Mesh(new THREE.TorusGeometry(3.2, 0.12, 16, 64, Math.PI), goldMaterial);
+          vArch.position.set(0, 3.8, -9.8);
+          versalGroup.add(vArch);
 
-          // Red Aisle Carpet to Stage
-          const carpetGeo = new THREE.PlaneGeometry(2.4, 16);
-          const carpet = new THREE.Mesh(carpetGeo, carpetMaterial);
-          carpet.rotation.x = -Math.PI / 2;
-          carpet.position.set(0, 0.025, 0);
-          scene.add(carpet);
+          // Presidium Table & Chairs
+          const vTable = new THREE.Mesh(new THREE.BoxGeometry(3.6, 1.0, 1.2), whiteSilk);
+          vTable.position.set(0, 1.3, -8.6);
+          versalGroup.add(vTable);
 
-          // 2. STAGE & PREZIDIUM (At position z = -8)
-          const stageGroup = new THREE.Group();
-          stageGroup.position.set(0, 0, -8);
-
-          // Stage Platform
-          const stagePlatformGeo = new THREE.BoxGeometry(14, 0.8, 6);
-          const stagePlatformMat = new THREE.MeshStandardMaterial({ color: 0x1e2738, roughness: 0.3 });
-          const stagePlatform = new THREE.Mesh(stagePlatformGeo, stagePlatformMat);
-          stagePlatform.position.y = 0.4;
-          stagePlatform.receiveShadow = true;
-          stagePlatform.castShadow = true;
-          stageGroup.add(stagePlatform);
-
-          // Stage Gold Trim
-          const trimGeo = new THREE.BoxGeometry(14.2, 0.1, 6.2);
-          const trim = new THREE.Mesh(trimGeo, goldMaterial);
-          trim.position.y = 0.8;
-          stageGroup.add(trim);
-
-          // Wedding Arch (Golden Dual Rings)
-          const archGeo = new THREE.TorusGeometry(3.2, 0.1, 16, 64, Math.PI);
-          const arch = new THREE.Mesh(archGeo, goldMaterial);
-          arch.position.set(0, 3.8, -1.8);
-          arch.castShadow = true;
-          stageGroup.add(arch);
-
-          const archInnerGeo = new THREE.TorusGeometry(2.8, 0.08, 16, 64, Math.PI);
-          const archInner = new THREE.Mesh(archInnerGeo, goldMaterial);
-          archInner.position.set(0, 3.8, -1.9);
-          stageGroup.add(archInner);
-
-          // Floral Wall Backdrop
-          const backdropGeo = new THREE.BoxGeometry(10, 4.5, 0.2);
-          const backdropMat = new THREE.MeshStandardMaterial({ color: 0xfffcf5, roughness: 0.6 });
-          const backdrop = new THREE.Mesh(backdropGeo, backdropMat);
-          backdrop.position.set(0, 3.0, -2.1);
-          stageGroup.add(backdrop);
-
-          // Bride & Groom Table (Prezidium)
-          const presidiumTableGeo = new THREE.BoxGeometry(3.6, 1.0, 1.2);
-          const presidiumTable = new THREE.Mesh(presidiumTableGeo, whiteSilk);
-          presidiumTable.position.set(0, 1.3, -0.6);
-          presidiumTable.castShadow = true;
-          stageGroup.add(presidiumTable);
-
-          // Golden chairs for Couple
           for (let x of [-0.7, 0.7]) {
-            const chairBackGeo = new THREE.CylinderGeometry(0.35, 0.35, 1.2, 16);
-            const chair = new THREE.Mesh(chairBackGeo, goldMaterial);
-            chair.position.set(x, 1.8, -1.2);
-            stageGroup.add(chair);
+            const chair = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1.2, 16), goldMaterial);
+            chair.position.set(x, 1.8, -9.2);
+            versalGroup.add(chair);
           }
 
-          scene.add(stageGroup);
-
-          // 3. BANQUET TABLES (10 Round Tables around Dance Floor)
-          const tablesGroup = new THREE.Group();
-          const tablePositions = [
-            [-7, 3], [-8, -2], [-6, -6],
-            [7, 3], [8, -2], [6, -6],
-            [-3, 7], [3, 7],
-            [-9, 7], [9, 7]
-          ];
-
-          tablePositions.forEach(pos => {
-            const tGroup = new THREE.Group();
-            tGroup.position.set(pos[0], 0, pos[1]);
-
-            // Table top
-            const tGeo = new THREE.CylinderGeometry(1.3, 1.3, 0.8, 24);
-            const table = new THREE.Mesh(tGeo, whiteSilk);
-            table.position.y = 0.4;
-            table.castShadow = true;
-            table.receiveShadow = true;
-            tGroup.add(table);
-
-            // Centerpiece Flower & Candlestick
-            const centerGeo = new THREE.CylinderGeometry(0.12, 0.18, 0.7, 12);
-            const centerpiece = new THREE.Mesh(centerGeo, goldMaterial);
-            centerpiece.position.y = 1.15;
-            centerpiece.castShadow = true;
-            tGroup.add(centerpiece);
-
-            // Glowing candle tip
-            const candleGeo = new THREE.SphereGeometry(0.08, 8, 8);
-            const candleMat = new THREE.MeshBasicMaterial({ color: 0xffdf73 });
-            const candle = new THREE.Mesh(candleGeo, candleMat);
-            candle.position.y = 1.55;
-            tGroup.add(candle);
-
-            // 6 Chairs per table
-            for (let i = 0; i < 6; i++) {
-              const angle = (i / 6) * Math.PI * 2;
-              const chairGeo = new THREE.BoxGeometry(0.35, 0.7, 0.35);
-              const chair = new THREE.Mesh(chairGeo, goldMaterial);
-              chair.position.set(Math.cos(angle) * 1.7, 0.35, Math.sin(angle) * 1.7);
-              chair.castShadow = true;
-              tGroup.add(chair);
-            }
-
-            tablesGroup.add(tGroup);
+          // Versal Tables
+          const vTablePositions = [[-7, 3], [-8, -2], [-6, -6], [7, 3], [8, -2], [6, -6], [-3, 7], [3, 7]];
+          vTablePositions.forEach(pos => {
+            const t = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, 0.8, 24), whiteSilk);
+            t.position.set(pos[0], 0.4, pos[1]);
+            versalGroup.add(t);
+            const cp = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.18, 0.7, 12), goldMaterial);
+            cp.position.set(pos[0], 1.15, pos[1]);
+            versalGroup.add(cp);
           });
-          scene.add(tablesGroup);
 
-          // 4. CHANDELIER (Hanging Crystal & Gold)
-          const chandelierGroup = new THREE.Group();
-          chandelierGroup.position.set(0, 8, 0);
-
+          // Versal Grand Chandelier
+          const vChandelier = new THREE.Group();
+          vChandelier.position.set(0, 8, 0);
           for (let r of [2.2, 1.5, 0.8]) {
-            const cRing = new THREE.Mesh(new THREE.TorusGeometry(r, 0.06, 12, 32), goldMaterial);
-            cRing.rotation.x = Math.PI / 2;
-            cRing.position.y = -(2.5 - r);
-            chandelierGroup.add(cRing);
-
-            // Crystal droplets
-            for (let i = 0; i < 16; i++) {
-              const ang = (i / 16) * Math.PI * 2;
-              const dropGeo = new THREE.ConeGeometry(0.06, 0.3, 6);
-              const dropMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1, metalness: 0.9 });
-              const drop = new THREE.Mesh(dropGeo, dropMat);
-              drop.position.set(Math.cos(ang) * r, -(2.5 - r) - 0.2, Math.sin(ang) * r);
-              chandelierGroup.add(drop);
-            }
+            const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.06, 12, 32), goldMaterial);
+            ring.rotation.x = Math.PI / 2;
+            ring.position.y = -(2.5 - r);
+            vChandelier.add(ring);
           }
-          scene.add(chandelierGroup);
+          versalGroup.add(vChandelier);
+          scene.add(versalGroup);
 
-          // 5. OUTDOOR WATERFALL & STARRY SKY (Oftob Shaxona Scene)
-          const outdoorGroup = new THREE.Group();
-          outdoorGroup.visible = false;
+          // ─────────────────────────────────────────────
+          // 2. YAKKASAROY PALACE LUXURY (Group)
+          // ─────────────────────────────────────────────
+          const yakkasaroyGroup = new THREE.Group();
+          yakkasaroyGroup.visible = false;
 
-          // Twinkling Star Field (300 Stars)
+          // White Carrara Marble Floor
+          const yFloor = new THREE.Mesh(new THREE.PlaneGeometry(34, 34), marbleWhite);
+          yFloor.rotation.x = -Math.PI / 2;
+          yFloor.receiveShadow = true;
+          yakkasaroyGroup.add(yFloor);
+
+          // Grand French Stage
+          const yStage = new THREE.Mesh(new THREE.BoxGeometry(16, 1.0, 7), new THREE.MeshStandardMaterial({ color: 0x24143a, roughness: 0.2 }));
+          yStage.position.set(0, 0.5, -8);
+          yakkasaroyGroup.add(yStage);
+
+          // Twin Winding Spiral Grand Staircases (Left and Right)
+          for (let side of [-1, 1]) {
+            const stairGroup = new THREE.Group();
+            for (let step = 0; step < 8; step++) {
+              const sMesh = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.14, 0.8), goldMaterial);
+              sMesh.position.set(side * (7.5 + step * 0.4), step * 0.12, -7.5 + step * 0.5);
+              sMesh.rotation.y = side * (step * 0.1);
+              stairGroup.add(sMesh);
+            }
+            yakkasaroyGroup.add(stairGroup);
+          }
+
+          // 4 Roman Columns
+          for (let x of [-6, -2, 2, 6]) {
+            const col = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.45, 9, 24), marbleWhite);
+            col.position.set(x, 4.5, -11.5);
+            yakkasaroyGroup.add(col);
+
+            const colCap = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.4, 1.1), goldMaterial);
+            colCap.position.set(x, 8.8, -11.5);
+            yakkasaroyGroup.add(colCap);
+          }
+
+          // 3D LED Digital Wall Backdrop
+          const ledWall = new THREE.Mesh(
+            new THREE.BoxGeometry(12, 6, 0.3),
+            new THREE.MeshStandardMaterial({ color: 0x7c3aed, roughness: 0.1, emissive: 0x4c1d95, emissiveIntensity: 0.6 })
+          );
+          ledWall.position.set(0, 4.0, -11.2);
+          yakkasaroyGroup.add(ledWall);
+
+          // Couple Presidium with Royal Violet Velvet
+          const yPresidium = new THREE.Mesh(new THREE.BoxGeometry(4.0, 1.1, 1.4), whiteSilk);
+          yPresidium.position.set(0, 1.5, -7.5);
+          yakkasaroyGroup.add(yPresidium);
+
+          // Twin Crystal Chandeliers
+          for (let cx of [-4, 4]) {
+            const dChan = new THREE.Group();
+            dChan.position.set(cx, 8, 0);
+            for (let r of [1.6, 1.0]) {
+              const rMesh = new THREE.Mesh(new THREE.TorusGeometry(r, 0.05, 12, 32), goldMaterial);
+              rMesh.rotation.x = Math.PI / 2;
+              rMesh.position.y = -(2 - r);
+              dChan.add(rMesh);
+            }
+            yakkasaroyGroup.add(dChan);
+          }
+          scene.add(yakkasaroyGroup);
+
+          // ─────────────────────────────────────────────
+          // 3. MUMTOZ SHAXONA ZAL (Group - Eastern Palace)
+          // ─────────────────────────────────────────────
+          const mumtozGroup = new THREE.Group();
+          mumtozGroup.visible = false;
+
+          // Persian Silk Carpet Floor
+          const mFloor = new THREE.Mesh(
+            new THREE.PlaneGeometry(32, 32),
+            new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 })
+          );
+          mFloor.rotation.x = -Math.PI / 2;
+          mumtozGroup.add(mFloor);
+
+          // Center Persian Rug
+          const mRug = new THREE.Mesh(
+            new THREE.PlaneGeometry(14, 18),
+            new THREE.MeshStandardMaterial({ color: 0x831843, roughness: 0.8 })
+          );
+          mRug.rotation.x = -Math.PI / 2;
+          mRug.position.set(0, 0.02, 0);
+          mumtozGroup.add(mRug);
+
+          // Central Working Marble Water Fountain
+          const fBasin = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.8, 0.6, 32), marbleWhite);
+          fBasin.position.set(0, 0.3, 0);
+          mumtozGroup.add(fBasin);
+
+          const fPool = new THREE.Mesh(
+            new THREE.CircleGeometry(2.3, 32),
+            new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.05, metalness: 0.8 })
+          );
+          fPool.rotation.x = -Math.PI / 2;
+          fPool.position.set(0, 0.55, 0);
+          mumtozGroup.add(fPool);
+
+          const fPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.5, 2.0, 16), goldMaterial);
+          fPillar.position.set(0, 1.2, 0);
+          mumtozGroup.add(fPillar);
+
+          // Eastern Islamic Pointed Portal (Iwan / Ganchkorlik)
+          const archFrame = new THREE.Mesh(new THREE.BoxGeometry(12, 8, 0.6), turquoiseMat);
+          archFrame.position.set(0, 4.5, -9);
+          mumtozGroup.add(archFrame);
+
+          const archDome = new THREE.Mesh(new THREE.ConeGeometry(3.5, 4, 16), goldMaterial);
+          archDome.position.set(0, 9.5, -9);
+          mumtozGroup.add(archDome);
+
+          // Moroccan Hanging Brass Lanterns
+          for (let lx of [-6, -2, 2, 6]) {
+            const lant = new THREE.Mesh(new THREE.OctahedronGeometry(0.5), goldMaterial);
+            lant.position.set(lx, 6.5, -3);
+            mumtozGroup.add(lant);
+          }
+          scene.add(mumtozGroup);
+
+          // ─────────────────────────────────────────────
+          // 4. OFTOB SHAXONA (Group - Outdoor Waterfall & Sky)
+          // ─────────────────────────────────────────────
+          const oftobGroup = new THREE.Group();
+          oftobGroup.visible = false;
+
+          // 300 Twinkling Night Stars
           const starGeo = new THREE.BufferGeometry();
           const starCount = 300;
           const starPos = new Float32Array(starCount * 3);
-          for(let i=0; i<starCount*3; i+=3) {
-            starPos[i] = (Math.random() - 0.5) * 70;
-            starPos[i+1] = Math.random() * 25 + 8;
-            starPos[i+2] = (Math.random() - 0.5) * 70;
+          for (let i = 0; i < starCount * 3; i += 3) {
+            starPos[i] = (Math.random() - 0.5) * 80;
+            starPos[i + 1] = Math.random() * 30 + 8;
+            starPos[i + 2] = (Math.random() - 0.5) * 80;
           }
           starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-          const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.35, transparent: true, opacity: 0.85 });
-          const starField = new THREE.Points(starGeo, starMat);
-          outdoorGroup.add(starField);
+          const starField = new THREE.Points(
+            starGeo,
+            new THREE.PointsMaterial({ color: 0xffffff, size: 0.35, transparent: true, opacity: 0.9 })
+          );
+          oftobGroup.add(starField);
 
-          // Waterfall Rock Cliff behind stage
-          const cliffGeo = new THREE.BoxGeometry(18, 14, 3);
-          const cliffMat = new THREE.MeshStandardMaterial({ color: 0x1a2233, roughness: 0.95 });
-          const cliff = new THREE.Mesh(cliffGeo, cliffMat);
-          cliff.position.set(0, 6, -14);
-          outdoorGroup.add(cliff);
+          // Giant Rocky Cliff behind stage
+          const cliff = new THREE.Mesh(
+            new THREE.BoxGeometry(22, 16, 4),
+            new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.95 })
+          );
+          cliff.position.set(0, 7, -14);
+          oftobGroup.add(cliff);
 
-          // Flowing Waterfall Stream
-          const waterGeo = new THREE.PlaneGeometry(10, 13, 16, 16);
-          const waterMat = new THREE.MeshStandardMaterial({
-            color: 0x38bdf8,
-            roughness: 0.05,
-            metalness: 0.7,
-            transparent: true,
-            opacity: 0.8,
-          });
-          const waterfall = new THREE.Mesh(waterGeo, waterMat);
-          waterfall.position.set(0, 6, -12.4);
-          outdoorGroup.add(waterfall);
+          // Cascading Waterfall
+          const waterfall = new THREE.Mesh(
+            new THREE.PlaneGeometry(12, 14, 16, 16),
+            new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.05, metalness: 0.8, transparent: true, opacity: 0.85 })
+          );
+          waterfall.position.set(0, 7, -11.9);
+          oftobGroup.add(waterfall);
 
           // Reflective Water Pool around stage
-          const poolGeo = new THREE.RingGeometry(6, 14, 32);
-          const poolMat = new THREE.MeshStandardMaterial({ color: 0x08192e, roughness: 0.05, metalness: 0.9 });
-          const pool = new THREE.Mesh(poolGeo, poolMat);
+          const pool = new THREE.Mesh(
+            new THREE.RingGeometry(6, 16, 32),
+            new THREE.MeshStandardMaterial({ color: 0x0c4a6e, roughness: 0.05, metalness: 0.9 })
+          );
           pool.rotation.x = -Math.PI / 2;
           pool.position.y = 0.03;
-          outdoorGroup.add(pool);
+          oftobGroup.add(pool);
 
-          scene.add(outdoorGroup);
+          // Floating Wooden Stage Deck
+          const deck = new THREE.Mesh(
+            new THREE.CylinderGeometry(5.5, 5.5, 0.6, 32),
+            new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.7 })
+          );
+          deck.position.set(0, 0.35, -5);
+          oftobGroup.add(deck);
+
+          // Fairy Lights Arc
+          const fairyArc = new THREE.Mesh(
+            new THREE.TorusGeometry(3.6, 0.06, 12, 32, Math.PI),
+            new THREE.MeshBasicMaterial({ color: 0xfef08a })
+          );
+          fairyArc.position.set(0, 3.8, -5);
+          oftobGroup.add(fairyArc);
+          scene.add(oftobGroup);
 
           // Animation Loop
           let clock = new THREE.Clock();
           function animate() {
             requestAnimationFrame(animate);
-            const delta = clock.getDelta();
             const time = clock.getElapsedTime();
-
             controls.update();
 
-            // Subtle chandelier sway
-            chandelierGroup.rotation.y = time * 0.1;
+            // Chandelier animation
+            vChandelier.rotation.y = time * 0.08;
 
-            // Disco light effects if active
+            // Water animation for waterfall
+            if (oftobGroup.visible) {
+              waterfall.position.y = 7 + Math.sin(time * 3) * 0.1;
+            }
+
+            // Disco light effects
             if (discoLight.intensity > 0) {
-              discoLight.position.x = Math.sin(time * 2) * 5;
-              discoLight.position.z = Math.cos(time * 2) * 5;
-              discoLight.color.setHSL((time * 0.2) % 1, 0.9, 0.5);
+              discoLight.position.x = Math.sin(time * 2) * 6;
+              discoLight.position.z = Math.cos(time * 2) * 6;
             }
 
             renderer.render(scene, camera);
@@ -494,49 +540,69 @@ export const Venue3DScreen: React.FC = () => {
           // Hide Loader
           setTimeout(() => {
             loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 500);
-            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'LOADED' }));
-          }, 600);
+            setTimeout(() => loader.style.display = 'none', 400);
+            if (window.ReactNativeWebView) {
+              window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'LOADED' }));
+            }
+          }, 500);
 
-          // Handle External Events from React Native
+          // App Events Bridge
           window.handleAppEvent = function(action, payload) {
             if (action === 'setLight') {
               if (payload === 'evening') {
                 chandelierLight.intensity = 2.2;
+                chandelierLight.color.setHex(0xffdf73);
                 stageSpot.intensity = 3.5;
+                stageSpot.color.setHex(0xfff5e6);
                 discoLight.intensity = 0;
                 ambientLight.color.setHex(0xffeedd);
               } else if (payload === 'spotlight') {
-                chandelierLight.intensity = 0.6;
+                chandelierLight.intensity = 0.5;
                 stageSpot.intensity = 6.0;
+                stageSpot.color.setHex(0xffffff);
                 discoLight.intensity = 0;
                 ambientLight.color.setHex(0x334466);
               } else if (payload === 'disco') {
                 chandelierLight.intensity = 0.8;
-                stageSpot.intensity = 1.5;
-                discoLight.intensity = 4.0;
+                stageSpot.intensity = 1.8;
+                discoLight.intensity = 4.5;
+                discoLight.color.setHex(0xec4899);
                 ambientLight.color.setHex(0x111122);
+              } else if (payload === 'kelin') {
+                // Binafsha / Kelin Rejimi
+                chandelierLight.intensity = 2.0;
+                chandelierLight.color.setHex(0xd8b4fe);
+                stageSpot.intensity = 4.8;
+                stageSpot.color.setHex(0xf0abfc);
+                discoLight.intensity = 2.5;
+                discoLight.color.setHex(0xa855f7);
+                ambientLight.color.setHex(0x3b0764);
               }
             } else if (action === 'setRotate') {
               controls.autoRotate = !!payload;
             } else if (action === 'setCamera') {
-              if (payload === 'full') {
-                gsapFly(0, 10, 22, 0, 2.5, 0);
-              } else if (payload === 'stage') {
-                gsapFly(0, 3.5, -1, 0, 2.8, -8);
-              } else if (payload === 'table') {
-                gsapFly(-5, 2.5, 6, -7, 1.2, 3);
-              }
+              if (payload === 'full') gsapFly(0, 10, 22, 0, 2.5, 0);
+              else if (payload === 'stage') gsapFly(0, 3.5, -1, 0, 2.8, -8);
+              else if (payload === 'table') gsapFly(-5, 2.5, 6, -7, 1.2, 3);
             } else if (action === 'setVenue') {
+              versalGroup.visible = (payload === 'versal');
+              yakkasaroyGroup.visible = (payload === 'yakkasaroy');
+              mumtozGroup.visible = (payload === 'mumtoz');
+              oftobGroup.visible = (payload === 'oftob');
+
               if (payload === 'oftob') {
-                chandelierGroup.visible = false;
-                outdoorGroup.visible = true;
                 scene.background.setHex(0x040816);
                 ambientLight.color.setHex(0x93c5fd);
                 stageSpot.color.setHex(0xffffff);
+              } else if (payload === 'yakkasaroy') {
+                scene.background.setHex(0x0a0614);
+                ambientLight.color.setHex(0xd8b4fe);
+                stageSpot.color.setHex(0xf3e8ff);
+              } else if (payload === 'mumtoz') {
+                scene.background.setHex(0x060b14);
+                ambientLight.color.setHex(0xfef08a);
+                stageSpot.color.setHex(0x38bdf8);
               } else {
-                chandelierGroup.visible = true;
-                outdoorGroup.visible = false;
                 scene.background.setHex(0x070B14);
                 ambientLight.color.setHex(0xffeedd);
                 stageSpot.color.setHex(0xfff5e6);
@@ -574,22 +640,29 @@ export const Venue3DScreen: React.FC = () => {
   `;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.bgBase }]}>
       {/* Top Header */}
       <View style={styles.topHeader}>
         <View>
           <View style={styles.brandRow}>
-            <Text style={styles.badgeGold}>3D VIRTUAL TOUR</Text>
-            <View style={styles.liveIndicator}>
-              <View style={styles.liveDot} />
-              <Text style={styles.liveText}>INTERAKTIV</Text>
+            <Text style={[styles.badgeGold, { color: colors.primaryLight, borderColor: colors.borderColor }]}>
+              {isKelin ? '🌸 3D KELIN ZALLARI' : '3D VIRTUAL TOUR'}
+            </Text>
+            <View style={[styles.liveIndicator, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}>
+              <View style={[styles.liveDot, { backgroundColor: colors.primaryLight }]} />
+              <Text style={[styles.liveText, { color: colors.primaryLight }]}>INTERAKTIV</Text>
             </View>
           </View>
-          <Text style={styles.headerTitle}>To'yxona 3D Zallari</Text>
+          <Text style={[styles.headerTitle, { color: colors.primaryLight }]}>
+            {selectedVenue.name.split(' (')[0]}
+          </Text>
         </View>
 
-        <TouchableOpacity style={styles.iconCircleBtn} onPress={handleShare}>
-          <Ionicons name="share-social-outline" size={20} color={COLORS.gold[400]} />
+        <TouchableOpacity
+          style={[styles.iconCircleBtn, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}
+          onPress={handleShare}
+        >
+          <Ionicons name="share-social-outline" size={19} color={colors.primaryLight} />
         </TouchableOpacity>
       </View>
 
@@ -601,7 +674,14 @@ export const Venue3DScreen: React.FC = () => {
             return (
               <TouchableOpacity
                 key={item.id}
-                style={[styles.venuePill, isSelected && styles.venuePillActive]}
+                style={[
+                  styles.venuePill,
+                  { borderColor: colors.borderColor, backgroundColor: colors.bgCard },
+                  isSelected && [
+                    styles.venuePillActive,
+                    { borderColor: colors.primaryLight, backgroundColor: colors.badgeBg },
+                  ],
+                ]}
                 onPress={() => {
                   setSelectedVenue(item);
                   sendTo3D('setVenue', item.id);
@@ -610,11 +690,16 @@ export const Venue3DScreen: React.FC = () => {
                 <Ionicons
                   name={isSelected ? "business" : "business-outline"}
                   size={14}
-                  color={isSelected ? COLORS.obsidian.base : COLORS.gold[400]}
+                  color={isSelected ? colors.primaryLight : '#94A3B8'}
                   style={{ marginRight: 6 }}
                 />
-                <Text style={[styles.venuePillText, isSelected && styles.venuePillTextActive]}>
-                  {item.name}
+                <Text
+                  style={[
+                    styles.venuePillText,
+                    isSelected && { color: colors.primaryLight, fontWeight: '800' },
+                  ]}
+                >
+                  {item.name.split(' ')[0]}
                 </Text>
               </TouchableOpacity>
             );
@@ -631,11 +716,14 @@ export const Venue3DScreen: React.FC = () => {
           style={styles.webView}
           javaScriptEnabled={true}
           domStorageEnabled={true}
+          mixedContentMode="always"
           onMessage={(e) => {
             try {
               const data = JSON.parse(e.nativeEvent.data);
               if (data.type === 'LOADED') {
                 setIsWebviewLoading(false);
+                sendTo3D('setVenue', selectedVenue.id);
+                if (isKelin) sendTo3D('setLight', 'kelin');
               }
             } catch (err) {}
           }}
@@ -644,54 +732,65 @@ export const Venue3DScreen: React.FC = () => {
         {/* 3D Floating Overlays Controls */}
         <View style={styles.controlsOverlay}>
           {/* Camera View Switcher */}
-          <View style={styles.camControls}>
+          <View style={[styles.camControls, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
             <TouchableOpacity
-              style={[styles.camBtn, activeCameraView === 'full' && styles.camBtnActive]}
+              style={[styles.camBtn, activeCameraView === 'full' && [styles.camBtnActive, { backgroundColor: colors.primaryLight }]]}
               onPress={() => handleCameraChange('full')}
             >
-              <Ionicons name="scan-outline" size={14} color={activeCameraView === 'full' ? '#070B14' : '#FFF'} />
-              <Text style={[styles.camBtnText, activeCameraView === 'full' && styles.camBtnTextActive]}>Umumiy</Text>
+              <Ionicons name="scan-outline" size={13} color={activeCameraView === 'full' ? (isKelin ? '#FFF' : '#070B14') : '#FFF'} />
+              <Text style={[styles.camBtnText, activeCameraView === 'full' && { color: isKelin ? '#FFF' : '#070B14' }]}>Umumiy</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.camBtn, activeCameraView === 'stage' && styles.camBtnActive]}
+              style={[styles.camBtn, activeCameraView === 'stage' && [styles.camBtnActive, { backgroundColor: colors.primaryLight }]]}
               onPress={() => handleCameraChange('stage')}
             >
-              <Ionicons name="sparkles-outline" size={14} color={activeCameraView === 'stage' ? '#070B14' : '#FFF'} />
-              <Text style={[styles.camBtnText, activeCameraView === 'stage' && styles.camBtnTextActive]}>Sahna</Text>
+              <Ionicons name="sparkles-outline" size={13} color={activeCameraView === 'stage' ? (isKelin ? '#FFF' : '#070B14') : '#FFF'} />
+              <Text style={[styles.camBtnText, activeCameraView === 'stage' && { color: isKelin ? '#FFF' : '#070B14' }]}>Sahna</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.camBtn, activeCameraView === 'table' && styles.camBtnActive]}
+              style={[styles.camBtn, activeCameraView === 'table' && [styles.camBtnActive, { backgroundColor: colors.primaryLight }]]}
               onPress={() => handleCameraChange('table')}
             >
-              <Ionicons name="restaurant-outline" size={14} color={activeCameraView === 'table' ? '#070B14' : '#FFF'} />
-              <Text style={[styles.camBtnText, activeCameraView === 'table' && styles.camBtnTextActive]}>VIP Stol</Text>
+              <Ionicons name="restaurant-outline" size={13} color={activeCameraView === 'table' ? (isKelin ? '#FFF' : '#070B14') : '#FFF'} />
+              <Text style={[styles.camBtnText, activeCameraView === 'table' && { color: isKelin ? '#FFF' : '#070B14' }]}>VIP Stol</Text>
             </TouchableOpacity>
           </View>
 
           {/* Right Action Icons (Rotate + Light Mode) */}
           <View style={styles.rightFloatingTools}>
-            <TouchableOpacity style={[styles.toolIconBtn, autoRotate && styles.toolIconBtnActive]} onPress={toggleRotate}>
+            <TouchableOpacity
+              style={[styles.toolIconBtn, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}
+              onPress={toggleRotate}
+            >
               <MaterialCommunityIcons
                 name={autoRotate ? "axis-z-rotate-clockwise" : "axis-arrow"}
                 size={20}
-                color={autoRotate ? COLORS.gold[400] : '#94A3B8'}
+                color={autoRotate ? colors.primaryLight : '#94A3B8'}
               />
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={styles.toolIconBtn}
+              style={[styles.toolIconBtn, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}
               onPress={() => {
-                const modes: ('evening' | 'spotlight' | 'disco')[] = ['evening', 'spotlight', 'disco'];
+                const modes: ('evening' | 'spotlight' | 'disco' | 'kelin')[] = ['evening', 'spotlight', 'disco', 'kelin'];
                 const nextIdx = (modes.indexOf(lightMode) + 1) % modes.length;
                 handleLightChange(modes[nextIdx]);
               }}
             >
               <Ionicons
-                name={lightMode === 'evening' ? "bulb-outline" : lightMode === 'spotlight' ? "flashlight-outline" : "color-wand-outline"}
-                size={20}
-                color={COLORS.gold[400]}
+                name={
+                  lightMode === 'evening'
+                    ? "bulb-outline"
+                    : lightMode === 'spotlight'
+                    ? "flashlight-outline"
+                    : lightMode === 'disco'
+                    ? "color-wand-outline"
+                    : "heart-outline"
+                }
+                size={19}
+                color={lightMode === 'kelin' ? '#C084FC' : colors.primaryLight}
               />
             </TouchableOpacity>
           </View>
@@ -700,15 +799,15 @@ export const Venue3DScreen: React.FC = () => {
 
       {/* Details & Booking Bottom Section */}
       <ScrollView style={styles.detailsScroll} showsVerticalScrollIndicator={false}>
-        <View style={styles.detailsCard}>
+        <View style={[styles.detailsCard, { borderColor: colors.borderColor, backgroundColor: colors.bgCard }]}>
           <View style={styles.venueTitleRow}>
             <View style={{ flex: 1 }}>
               <Text style={styles.venueName}>{selectedVenue.name}</Text>
               <Text style={styles.venueLocation}>📍 {selectedVenue.city}</Text>
             </View>
-            <View style={styles.ratingBadge}>
-              <Ionicons name="star" size={14} color="#FFD700" />
-              <Text style={styles.ratingText}>{selectedVenue.rating}</Text>
+            <View style={[styles.ratingBadge, { backgroundColor: colors.badgeBg }]}>
+              <Ionicons name="star" size={13} color="#FFD700" />
+              <Text style={[styles.ratingText, { color: colors.primaryLight }]}>{selectedVenue.rating}</Text>
               <Text style={styles.reviewsText}>({selectedVenue.reviews})</Text>
             </View>
           </View>
@@ -722,7 +821,7 @@ export const Venue3DScreen: React.FC = () => {
             <View style={styles.specDivider} />
             <View style={styles.specBox}>
               <Text style={styles.specLabel}>Kunlik Ijara</Text>
-              <Text style={styles.specValueGold}>{selectedVenue.pricePerDay}</Text>
+              <Text style={[styles.specValueGold, { color: colors.primaryLight }]}>{selectedVenue.pricePerDay}</Text>
             </View>
             <View style={styles.specDivider} />
             <View style={styles.specBox}>
@@ -737,23 +836,25 @@ export const Venue3DScreen: React.FC = () => {
           {/* Features Chips */}
           <View style={styles.featuresRow}>
             {selectedVenue.features.map((feat, idx) => (
-              <View key={idx} style={styles.featureChip}>
-                <Ionicons name="checkmark-circle" size={13} color={COLORS.gold[400]} style={{ marginRight: 4 }} />
-                <Text style={styles.featureText}>{feat}</Text>
+              <View key={idx} style={[styles.featureChip, { borderColor: colors.borderColor, backgroundColor: colors.badgeBg }]}>
+                <Ionicons name="checkmark-circle" size={13} color={colors.primaryLight} style={{ marginRight: 4 }} />
+                <Text style={[styles.featureText, { color: colors.primaryLight }]}>{feat}</Text>
               </View>
             ))}
           </View>
 
           {/* Action Booking Button */}
-          <TouchableOpacity style={styles.bookBtn}>
+          <TouchableOpacity style={styles.bookBtn} onPress={handleBook}>
             <LinearGradient
-              colors={['#FFDF73', '#D4AF37', '#997519']}
+              colors={colors.primaryGradient}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
-              style={styles.bookGradient}
+              style={styles.bookBtnGradient}
             >
-              <Ionicons name="calendar" size={18} color="#070B14" style={{ marginRight: 8 }} />
-              <Text style={styles.bookBtnText}>Sanani Tanlash & Bron Qilish</Text>
+              <Ionicons name="calendar-outline" size={17} color={isKelin ? '#FFFFFF' : '#070B14'} style={{ marginRight: 6 }} />
+              <Text style={[styles.bookBtnText, { color: isKelin ? '#FFFFFF' : '#070B14' }]}>
+                Zalni Bron Qilish & Shartnoma
+              </Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -765,114 +866,95 @@ export const Venue3DScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.obsidian.base,
+    backgroundColor: '#070B14',
   },
   topHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 14,
+    paddingHorizontal: 16,
+    paddingTop: 10,
     paddingBottom: 8,
   },
   brandRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
+    gap: 8,
+    marginBottom: 2,
   },
   badgeGold: {
-    color: COLORS.gold[400],
     fontSize: 10,
     fontWeight: '800',
-    letterSpacing: 1,
-    marginRight: 8,
+    letterSpacing: 0.8,
   },
   liveIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 8,
     borderWidth: 0.5,
-    borderColor: 'rgba(16, 185, 129, 0.4)',
   },
   liveDot: {
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#10B981',
     marginRight: 4,
   },
   liveText: {
-    color: '#10B981',
     fontSize: 9,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   headerTitle: {
-    color: '#FFFFFF',
-    fontSize: 22,
-    fontWeight: '800',
-    letterSpacing: 0.3,
+    fontSize: 18,
+    fontWeight: '900',
   },
   iconCircleBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.3)',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
   },
   venuePickerWrapper: {
-    paddingVertical: 10,
+    marginBottom: 6,
   },
   venuePickerScroll: {
     paddingHorizontal: 16,
+    gap: 8,
   },
   venuePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(15, 22, 38, 0.8)',
-    borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.25)',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
     borderRadius: 20,
-    marginRight: 8,
+    borderWidth: 1,
   },
   venuePillActive: {
-    backgroundColor: COLORS.gold[400],
-    borderColor: COLORS.gold[400],
+    borderWidth: 1.5,
   },
   venuePillText: {
     color: '#94A3B8',
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
   },
-  venuePillTextActive: {
-    color: '#070B14',
-    fontWeight: '800',
-  },
   canvasContainer: {
-    width: width,
-    height: width * 0.85,
+    width: '100%',
+    height: 290,
     position: 'relative',
     backgroundColor: '#070B14',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.2)',
   },
   webView: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#070B14',
   },
   controlsOverlay: {
     position: 'absolute',
-    bottom: 12,
-    left: 14,
-    right: 14,
+    bottom: 10,
+    left: 12,
+    right: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -880,101 +962,89 @@ const styles = StyleSheet.create({
   },
   camControls: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(10, 15, 26, 0.85)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-    borderRadius: 18,
+    borderRadius: 14,
     padding: 3,
+    borderWidth: 1,
   },
   camBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 14,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 10,
   },
   camBtnActive: {
-    backgroundColor: COLORS.gold[400],
+    borderRadius: 10,
   },
   camBtnText: {
-    color: '#94A3B8',
     fontSize: 11,
+    color: '#94A3B8',
+    marginLeft: 3,
     fontWeight: '600',
-    marginLeft: 4,
-  },
-  camBtnTextActive: {
-    color: '#070B14',
-    fontWeight: '800',
   },
   rightFloatingTools: {
     flexDirection: 'row',
+    gap: 8,
   },
   toolIconBtn: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(10, 15, 26, 0.85)',
-    borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.35)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 8,
-  },
-  toolIconBtnActive: {
-    borderColor: COLORS.gold[400],
-    backgroundColor: 'rgba(212, 175, 55, 0.2)',
+    borderWidth: 1,
   },
   detailsScroll: {
     flex: 1,
   },
   detailsCard: {
-    padding: 20,
+    margin: 14,
+    padding: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    marginBottom: 40,
   },
   venueTitleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   venueName: {
     color: '#FFFFFF',
-    fontSize: 19,
+    fontSize: 16,
     fontWeight: '800',
-    marginBottom: 4,
   },
   venueLocation: {
     color: '#94A3B8',
-    fontSize: 13,
+    fontSize: 12,
+    marginTop: 2,
   },
   ratingBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(212, 175, 55, 0.12)',
-    borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.3)',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 10,
   },
   ratingText: {
-    color: '#FFFFFF',
-    fontSize: 13,
-    fontWeight: '700',
-    marginLeft: 4,
+    fontSize: 12,
+    fontWeight: '800',
+    marginLeft: 3,
   },
   reviewsText: {
     color: '#94A3B8',
-    fontSize: 11,
+    fontSize: 10,
     marginLeft: 2,
   },
   specsRow: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(15, 22, 38, 0.7)',
-    borderWidth: 1,
-    borderColor: 'rgba(212, 175, 55, 0.15)',
-    borderRadius: 16,
-    padding: 14,
-    marginBottom: 16,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    borderRadius: 14,
+    padding: 10,
+    marginBottom: 14,
   },
   specBox: {
     flex: 1,
@@ -982,76 +1052,60 @@ const styles = StyleSheet.create({
   },
   specDivider: {
     width: 1,
+    height: 24,
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    marginHorizontal: 4,
   },
   specLabel: {
     color: '#64748B',
     fontSize: 10,
-    fontWeight: '600',
-    marginBottom: 4,
-    textTransform: 'uppercase',
+    marginBottom: 2,
   },
   specValue: {
-    color: '#E2E8F0',
-    fontSize: 12,
+    color: '#FFFFFF',
+    fontSize: 11,
     fontWeight: '700',
-    textAlign: 'center',
   },
   specValueGold: {
-    color: COLORS.gold[400],
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '800',
-    textAlign: 'center',
   },
   descriptionText: {
-    color: '#94A3B8',
-    fontSize: 13,
-    lineHeight: 20,
-    marginBottom: 16,
+    color: '#CBD5E1',
+    fontSize: 12,
+    lineHeight: 18,
+    marginBottom: 14,
   },
   featuresRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 20,
+    gap: 6,
+    marginBottom: 18,
   },
   featureChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    paddingHorizontal: 8,
+    paddingVertical: 5,
     borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    marginRight: 8,
-    marginBottom: 8,
+    borderWidth: 1,
   },
   featureText: {
-    color: '#CBD5E1',
-    fontSize: 12,
-    fontWeight: '500',
+    fontSize: 11,
+    fontWeight: '600',
   },
   bookBtn: {
-    borderRadius: 16,
+    borderRadius: 14,
     overflow: 'hidden',
-    shadowColor: COLORS.gold[500],
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 8,
-    marginBottom: 30,
   },
-  bookGradient: {
+  bookBtnGradient: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 15,
+    paddingVertical: 12,
   },
   bookBtnText: {
-    color: '#070B14',
-    fontSize: 15,
-    fontWeight: '800',
+    fontSize: 13,
+    fontWeight: '900',
     letterSpacing: 0.3,
   },
 });

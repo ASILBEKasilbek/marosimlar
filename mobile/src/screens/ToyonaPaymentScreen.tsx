@@ -12,12 +12,14 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../theme/colors';
+import { useAppTheme } from '../theme/ThemeContext';
 
 interface ToyonaPaymentScreenProps {
   onBack?: () => void;
 }
 
 export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack }) => {
+  const { colors, isKelin } = useAppTheme();
   const [selectedAmount, setSelectedAmount] = useState<number>(200000);
   const [customAmount, setCustomAmount] = useState<string>('');
   const [donorName, setDonorName] = useState<string>('');
@@ -56,7 +58,11 @@ export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: colors.bgBase }]}
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={false}
+    >
       {/* Header */}
       <View style={styles.header}>
         {onBack && (
@@ -65,21 +71,25 @@ export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack
           </TouchableOpacity>
         )}
         <View style={{ flex: 1 }}>
-          <Text style={styles.badge}>✦ ONLAYN TO'YONA & TO'LOV</Text>
+          <Text style={[styles.badge, { color: colors.accentBadge }]}>✦ ONLAYN TO'YONA & TO'LOV</Text>
           <Text style={styles.headerTitle}>To'yona Sovg'a Fondi</Text>
         </View>
       </View>
 
       {/* Couple Fund Progress Card */}
-      <View style={styles.fundCard}>
+      <View style={[styles.fundCard, { borderColor: colors.borderColor }]}>
         <LinearGradient
-          colors={['rgba(212, 175, 55, 0.25)', 'rgba(15, 22, 38, 0.95)', '#070B14']}
+          colors={[
+            isKelin ? 'rgba(192, 132, 252, 0.25)' : 'rgba(212, 175, 55, 0.25)',
+            isKelin ? 'rgba(30, 16, 50, 0.95)' : 'rgba(15, 22, 38, 0.95)',
+            colors.bgBase,
+          ]}
           style={styles.fundGradient}
         >
           <View style={styles.fundHeader}>
             <Text style={styles.fundCouple}>Jasurbek & Madina 💍</Text>
-            <View style={styles.percentBadge}>
-              <Text style={styles.percentText}>{percent}% To'plandi</Text>
+            <View style={[styles.percentBadge, { backgroundColor: colors.primary }]}>
+              <Text style={[styles.percentText, isKelin && { color: '#0F051D' }]}>{percent}% To'plandi</Text>
             </View>
           </View>
 
@@ -90,7 +100,7 @@ export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack
           {/* Progress Bar */}
           <View style={styles.progressTrack}>
             <LinearGradient
-              colors={['#FFDF73', '#D4AF37']}
+              colors={colors.primaryGradient as [string, string, string]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={[styles.progressFill, { width: `${percent}%` }]}
@@ -98,7 +108,7 @@ export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack
           </View>
 
           <View style={styles.amountsRow}>
-            <Text style={styles.currentAmountText}>{currentAmount.toLocaleString()} so'm</Text>
+            <Text style={[styles.currentAmountText, { color: colors.textGoldOrPurple }]}>{currentAmount.toLocaleString()} so'm</Text>
             <Text style={styles.targetAmountText}>Maqsad: {targetAmount.toLocaleString()} so'm</Text>
           </View>
         </LinearGradient>
@@ -113,13 +123,24 @@ export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack
             return (
               <TouchableOpacity
                 key={amt}
-                style={[styles.quickPill, isSelected && styles.quickPillActive]}
+                style={[
+                  styles.quickPill,
+                  isSelected && [
+                    styles.quickPillActive,
+                    { borderColor: colors.primary, backgroundColor: colors.badgeBg }
+                  ],
+                ]}
                 onPress={() => {
                   setSelectedAmount(amt);
                   setCustomAmount('');
                 }}
               >
-                <Text style={[styles.quickPillText, isSelected && styles.quickPillTextActive]}>
+                <Text
+                  style={[
+                    styles.quickPillText,
+                    isSelected && [styles.quickPillTextActive, { color: colors.textGoldOrPurple }],
+                  ]}
+                >
                   {amt.toLocaleString()} so'm
                 </Text>
               </TouchableOpacity>
@@ -129,7 +150,7 @@ export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack
 
         {/* Custom Amount */}
         <TextInput
-          style={styles.input}
+          style={[styles.input, { borderColor: colors.borderLight }]}
           placeholder="Boshqa summa kiritish (so'mda)"
           placeholderTextColor="#64748B"
           keyboardType="numeric"
@@ -142,7 +163,7 @@ export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Kimdan (Ismingiz):</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { borderColor: colors.borderLight }]}
           placeholder="Masalan: Sardorbek va oilasi"
           placeholderTextColor="#64748B"
           value={donorName}
@@ -151,7 +172,7 @@ export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack
 
         <Text style={[styles.sectionTitle, { marginTop: 12 }]}>Tabrik va tilagingiz:</Text>
         <TextInput
-          style={[styles.input, { height: 70, textAlignVertical: 'top' }]}
+          style={[styles.input, { height: 70, textAlignVertical: 'top', borderColor: colors.borderLight }]}
           placeholder="Baxtli bo'linglar!..."
           placeholderTextColor="#64748B"
           multiline
@@ -165,19 +186,41 @@ export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack
         <Text style={styles.sectionTitle}>To'lov tizimini tanlang:</Text>
         <View style={styles.providersRow}>
           <TouchableOpacity
-            style={[styles.providerBtn, paymentProvider === 'click' && styles.providerBtnActive]}
+            style={[
+              styles.providerBtn,
+              paymentProvider === 'click' && [
+                styles.providerBtnActive,
+                { borderColor: colors.primary, backgroundColor: colors.badgeBg }
+              ],
+            ]}
             onPress={() => setPaymentProvider('click')}
           >
-            <Text style={[styles.providerText, paymentProvider === 'click' && styles.providerTextActive]}>
+            <Text
+              style={[
+                styles.providerText,
+                paymentProvider === 'click' && [styles.providerTextActive, { color: colors.textGoldOrPurple }],
+              ]}
+            >
               CLICK (0% komissiya)
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.providerBtn, paymentProvider === 'payme' && styles.providerBtnActive]}
+            style={[
+              styles.providerBtn,
+              paymentProvider === 'payme' && [
+                styles.providerBtnActive,
+                { borderColor: colors.primary, backgroundColor: colors.badgeBg }
+              ],
+            ]}
             onPress={() => setPaymentProvider('payme')}
           >
-            <Text style={[styles.providerText, paymentProvider === 'payme' && styles.providerTextActive]}>
+            <Text
+              style={[
+                styles.providerText,
+                paymentProvider === 'payme' && [styles.providerTextActive, { color: colors.textGoldOrPurple }],
+              ]}
+            >
               PAYME
             </Text>
           </TouchableOpacity>
@@ -185,15 +228,18 @@ export const ToyonaPaymentScreen: React.FC<ToyonaPaymentScreenProps> = ({ onBack
       </View>
 
       {/* Pay Action Button */}
-      <TouchableOpacity style={styles.payBtn} onPress={handlePay}>
+      <TouchableOpacity
+        style={[styles.payBtn, { shadowColor: isKelin ? '#C084FC' : COLORS.gold[500] }]}
+        onPress={handlePay}
+      >
         <LinearGradient
-          colors={['#FFDF73', '#D4AF37', '#997519']}
+          colors={colors.primaryGradient as [string, string, string]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={styles.payGradient}
         >
-          <Ionicons name="card" size={20} color="#070B14" style={{ marginRight: 8 }} />
-          <Text style={styles.payBtnText}>
+          <Ionicons name="card" size={20} color={isKelin ? '#0F051D' : '#070B14'} style={{ marginRight: 8 }} />
+          <Text style={[styles.payBtnText, isKelin && { color: '#0F051D' }]}>
             {(customAmount ? parseInt(customAmount, 10) || 0 : selectedAmount).toLocaleString()} SO'M TO'LASH
           </Text>
         </LinearGradient>
