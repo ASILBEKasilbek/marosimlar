@@ -134,6 +134,14 @@ async def download_apk():
         )
     return RedirectResponse(url="/static/TuyBox.apk", status_code=302)
 
+@app.api_route("/pitch", methods=["GET", "HEAD"], response_class=HTMLResponse)
+async def pitch_landing():
+    pitch_path = os.path.join(os.path.dirname(__file__), "templates", "pitch.html")
+    if os.path.exists(pitch_path):
+        with open(pitch_path, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read(), status_code=200)
+    return HTMLResponse("<h1>TuyBox Pitch Deck</h1>", status_code=200)
+
 @app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def root():
     landing_path = os.path.join(os.path.dirname(__file__), "templates", "index.html")

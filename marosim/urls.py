@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 from .views import (
     EventListView, EventDetailView, EventCreateView, ServiceCreateView,
     ProfileEditView, register_view, NotificationsListView, XaritadaView, ServiceDetailView,
@@ -7,6 +8,7 @@ from .views import (
 from . import views
 urlpatterns = [
     path('', EventListView.as_view(), name='event_list'),
+    path('pitch/', TemplateView.as_view(template_name='pitch.html'), name='pitch'),
     path('event/<int:event_id>/', EventDetailView.as_view(), name='event_detail'),
     path('event/create/', EventCreateView.as_view(), name='event_create'),
     path('service/create/', ServiceCreateView.as_view(), name='service_create'),
