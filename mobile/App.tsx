@@ -87,7 +87,7 @@ function MainApp() {
       );
     }
 
-    // 3. Tab Screens (4 Main Tabs)
+    // 3. Tab Screens (5 Main Tabs)
     switch (activeTab) {
       case 'home':
         return (
@@ -95,10 +95,17 @@ function MainApp() {
             onSelectService={(id) => setSelectedServiceId(id)}
             onOpenBudget={() => setActiveTab('invites')}
             onOpen3D={() => setActiveTab('venue3d')}
-            onOpenMap={() => setActiveOverlay('map')}
+            onOpenMap={() => setActiveTab('map')}
             onOpenToyona={() => setActiveOverlay('toyona')}
             onOpenSeating={() => setActiveOverlay('seating')}
             onOpenChecklist={() => setActiveOverlay('checklist')}
+          />
+        );
+      case 'map':
+        return (
+          <VenueMapScreen
+            onSelectVenue={(id) => setSelectedServiceId(id)}
+            onOpen3D={() => setActiveTab('venue3d')}
           />
         );
       case 'venue3d':
@@ -109,7 +116,7 @@ function MainApp() {
         return (
           <ProfileScreen
             onNavigateTab={(tab) => setActiveTab(tab)}
-            onOpenMap={() => setActiveOverlay('map')}
+            onOpenMap={() => setActiveTab('map')}
             onOpenToyona={() => setActiveOverlay('toyona')}
             onOpenSeating={() => setActiveOverlay('seating')}
             onOpenChecklist={() => setActiveOverlay('checklist')}

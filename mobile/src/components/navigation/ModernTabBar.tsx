@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../../theme/colors';
 import { useAppTheme } from '../../theme/ThemeContext';
 
-export type TabType = 'home' | 'venue3d' | 'invites' | 'profile';
+export type TabType = 'home' | 'map' | 'venue3d' | 'invites' | 'profile';
 
 interface ModernTabBarProps {
   activeTab: TabType;
@@ -28,8 +28,15 @@ const TABS: TabConfig[] = [
     iconInactive: 'home-outline',
   },
   {
+    id: 'map',
+    label: 'Xarita',
+    iconActive: 'map',
+    iconInactive: 'map-outline',
+    badge: 'GPS',
+  },
+  {
     id: 'venue3d',
-    label: '3D Zallar',
+    label: '3D Zal',
     iconActive: 'cube',
     iconInactive: 'cube-outline',
     badge: '3D',
