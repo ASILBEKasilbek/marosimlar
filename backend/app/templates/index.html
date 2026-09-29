@@ -2,36 +2,46 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TuyBox — O‘zbekistondagi №1 To‘y va Marosimlar Ekotizimi</title>
-    <meta name="description" content="TuyBox: Eng sara to‘yxonalar, sanʼatkorlar, foto-video studiyalar, kortej va bezaklar bitta ilovada. AI to‘y byudjeti kalkulyatori va jonli kalendar.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>TuyBox — To'y va Marosimlar Super-Ilovasi</title>
     
-    <!-- Open Graph (Telegram va Ijtimoiy tarmoqlar uchun) -->
-    <meta property="og:title" content="TuyBox — To‘y va Marosimlar Super-Ilovasi">
-    <meta property="og:description" content="To‘yingizni 10 barobar oson va arzon rejalashtiring. TuyBox ilovasini yuklab oling yoki Telegram orqali oching!">
-    <meta property="og:image" content="https://tuybox.asilbek.tech/static/logo.jpg">
-    <meta property="og:url" content="https://tuybox.asilbek.tech">
-    <meta property="og:type" content="website">
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Three.js 3D WebGL Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Leaflet CSS & JS for Interactive Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
         :root {
-            --gold-50:  #FDFBF7;
-            --gold-100: #F9F3E5;
-            --gold-300: #E6CE94;
+            /* Royal Champagne & Ivory Light Palette */
+            --bg-base: #FAF8F5;
+            --bg-card: #FFFFFF;
+            --bg-glass: rgba(255, 255, 255, 0.88);
+            --gold-50: #FCF9F2;
+            --gold-100: #F6ECCF;
+            --gold-300: #E5C87A;
             --gold-500: #D4AF37;
+            --gold-600: #B89332;
             --gold-700: #8C6D1F;
-            --obsidian-900: #0B0E14;
-            --obsidian-800: #121721;
-            --obsidian-700: #1D2432;
-            --emerald: #10B981;
+            --charcoal-900: #1E232A;
+            --charcoal-700: #334155;
+            --charcoal-500: #64748B;
+            --charcoal-300: #94A3B8;
+            --border-subtle: rgba(212, 175, 55, 0.22);
+            --border-light: rgba(0, 0, 0, 0.06);
+            --shadow-soft: 0 4px 20px -2px rgba(184, 147, 50, 0.12);
+            --shadow-hover: 0 10px 28px -4px rgba(184, 147, 50, 0.22);
+            --radius-card: 20px;
+            --radius-pill: 30px;
         }
 
         * {
@@ -42,612 +52,2145 @@
         }
 
         body {
-            background-color: var(--obsidian-900);
-            color: #FFFFFF;
+            background-color: var(--bg-base);
+            color: var(--charcoal-900);
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
-            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+            padding-bottom: 90px;
         }
 
-        /* 3D Background Canvas */
-        #webgl-canvas {
-            position: fixed;
+        /* Top Luxury App Bar */
+        .app-header {
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-            opacity: 0.85;
-        }
-
-        /* Navigation Header */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 100;
-            padding: 16px 24px;
+            z-index: 90;
+            background: var(--bg-glass);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 18px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: rgba(11, 14, 20, 0.75);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            justify-content: space-between;
         }
 
-        .brand-logo {
+        .header-brand {
             display: flex;
             align-items: center;
             gap: 10px;
-            text-decoration: none;
         }
 
-        .logo-symbol {
-            font-size: 24px;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
-        }
-
-        .brand-name {
-            font-family: 'Cinzel', serif;
+        .header-logo-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #FFF9EB, #F2DC9B);
+            border: 1.5px solid var(--gold-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 20px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #FFF 0%, var(--gold-300) 50%, var(--gold-500) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            box-shadow: 0 3px 10px rgba(212, 175, 55, 0.25);
         }
 
-        .header-actions {
+        .header-title-box h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--charcoal-900);
+            line-height: 1.1;
+        }
+
+        .header-title-box p {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gold-600);
+            letter-spacing: 0.3px;
+        }
+
+        .header-user-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gold-50);
+            border: 1px solid var(--border-subtle);
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--charcoal-900);
+            cursor: pointer;
+        }
+
+        .header-user-chip i {
+            color: var(--gold-500);
+        }
+
+        /* Event Type Filter (Strategic Wedge: To'y + Banket + Tug'ilgan Kun + Korporativ) */
+        .event-types-scroller {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 12px 16px 4px;
+            scrollbar-width: none;
+        }
+        .event-types-scroller::-webkit-scrollbar { display: none; }
+
+        .event-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--charcoal-700);
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .event-pill.active {
+            background: linear-gradient(135deg, #F9F1DC, #F0DBA0);
+            border-color: var(--gold-500);
+            color: var(--gold-700);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Search & Location Bar */
+        .search-container {
+            padding: 10px 16px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 10px 14px;
+            gap: 10px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .search-box i {
+            color: var(--gold-500);
+            font-size: 16px;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: var(--charcoal-900);
+            font-weight: 500;
+        }
+        .search-input::placeholder { color: var(--charcoal-300); }
+
+        /* District / Filter Chips */
+        .district-scroller {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 2px 16px 10px;
+            scrollbar-width: none;
+        }
+        .district-scroller::-webkit-scrollbar { display: none; }
+
+        .district-chip {
+            padding: 6px 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--charcoal-500);
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .district-chip.active {
+            background: var(--charcoal-900);
+            color: #FFFFFF;
+            border-color: var(--charcoal-900);
+        }
+
+        /* View Screens Container */
+        .screen-view {
+            display: none;
+            animation: fadeIn 0.25s ease-out;
+        }
+        .screen-view.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* TAB 1: ASOSIY (Home Screen) */
+        /* Hero VIP Banner */
+        .hero-banner {
+            margin: 6px 16px 16px;
+            padding: 20px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #1C232E 0%, #0F141C 100%);
+            color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -5px rgba(15, 20, 28, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .hero-banner::after {
+            content: '👑';
+            position: absolute;
+            right: 12px;
+            bottom: -15px;
+            font-size: 85px;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            color: var(--gold-300);
+            margin-bottom: 8px;
+        }
+
+        .hero-title {
+            font-size: 21px;
+            font-weight: 900;
+            line-height: 1.25;
+            margin-bottom: 6px;
+        }
+
+        .hero-desc {
+            font-size: 12px;
+            color: #CBD5E1;
+            line-height: 1.5;
+            max-width: 85%;
+            margin-bottom: 14px;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89332 100%);
+            color: #070B14;
+            padding: 10px 18px;
+            border-radius: 14px;
+            font-size: 12.5px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
+        }
+
+        /* Categories Section */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 18px 10px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--charcoal-900);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title i { color: var(--gold-500); }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 0 16px 18px;
+        }
+
+        .category-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 18px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .category-card:active {
+            transform: scale(0.96);
+        }
+
+        .cat-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: var(--gold-50);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .cat-name {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--charcoal-900);
+            line-height: 1.25;
+        }
+
+        .cat-count {
+            font-size: 10px;
+            color: var(--charcoal-500);
+            margin-top: 2px;
+        }
+
+        /* Map Preview Shortcut Banner */
+        .map-shortcut-card {
+            margin: 0 16px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            background-image: radial-gradient(circle at right, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
+        }
+
+        .map-shortcut-left {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .btn-telegram-header {
-            display: inline-flex;
+        .map-pin-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+            border: 1px solid #93C5FD;
+            display: flex;
             align-items: center;
-            gap: 6px;
-            background: #229ED9;
-            color: #FFFFFF;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s;
+            justify-content: center;
+            color: #2563EB;
+            font-size: 18px;
         }
 
-        .btn-telegram-header:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(34, 158, 217, 0.4);
+        .map-shortcut-title {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: var(--charcoal-900);
         }
 
-        /* Main Content wrapper */
-        main {
-            position: relative;
-            z-index: 10;
-            padding-top: 100px;
+        .map-shortcut-sub {
+            font-size: 11.5px;
+            color: var(--charcoal-500);
         }
 
-        /* Hero Section */
-        .hero-section {
-            min-height: 85vh;
+        .map-shortcut-btn {
+            background: var(--gold-500);
+            color: #070B14;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-size: 11.5px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Featured Venues & Services Cards */
+        .services-list {
+            padding: 0 16px 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 40px 20px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .vip-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.35);
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--gold-300);
-            margin-bottom: 24px;
-            backdrop-filter: blur(10px);
-        }
-
-        .hero-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(34px, 6vw, 62px);
-            font-weight: 900;
-            line-height: 1.15;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #FFFFFF 0%, #F3E5AB 40%, #D4AF37 80%, #AA7C11 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero-description {
-            font-size: clamp(15px, 2vw, 19px);
-            color: #9CA3AF;
-            max-width: 640px;
-            margin-bottom: 36px;
-            font-weight: 400;
-        }
-
-        /* CTA Buttons Row */
-        .cta-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
-            width: 100%;
-            max-width: 580px;
-        }
-
-        .btn-gold-download {
-            flex: 1;
-            min-width: 240px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #AA7C11 100%);
-            color: #0B0E14;
-            padding: 18px 28px;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 800;
-            text-decoration: none;
-            box-shadow: 0 12px 30px -5px rgba(212, 175, 55, 0.45);
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-        }
-
-        .btn-gold-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 18px 40px -5px rgba(212, 175, 55, 0.6);
-        }
-
-        .btn-telegram-app {
-            flex: 1;
-            min-width: 240px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: rgba(34, 158, 217, 0.15);
-            border: 1.5px solid #229ED9;
-            color: #FFFFFF;
-            padding: 18px 28px;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 700;
-            text-decoration: none;
-            backdrop-filter: blur(10px);
-            transition: transform 0.2s, background 0.2s;
-        }
-
-        .btn-telegram-app:hover {
-            background: rgba(34, 158, 217, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .app-specs {
-            margin-top: 14px;
-            font-size: 12px;
-            color: #6B7280;
-            display: flex;
             gap: 14px;
-            justify-content: center;
         }
 
-        /* 3D Model Hint */
-        .model-hint {
-            margin-top: 28px;
-            font-size: 12px;
-            color: var(--gold-300);
-            opacity: 0.7;
-            animation: pulse 2s infinite;
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.9; }
+        .service-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 170px;
+            background: #E2E8F0;
         }
 
-        /* Stats Section */
-        .stats-section {
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
+        .service-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .stat-card {
-            background: rgba(18, 23, 33, 0.7);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 20px;
-            padding: 24px;
-            text-align: center;
-            backdrop-filter: blur(15px);
-        }
-
-        .stat-number {
-            font-family: 'Cinzel', serif;
-            font-size: 32px;
+        .service-tag-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border-subtle);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 10px;
             font-weight: 800;
-            color: var(--gold-300);
+            color: var(--gold-700);
+            letter-spacing: 0.5px;
+        }
+
+        .service-rating-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(15, 20, 30, 0.85);
+            backdrop-filter: blur(8px);
+            color: #FFFFFF;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .service-rating-badge i { color: #FBBF24; font-size: 10px; }
+
+        .service-body {
+            padding: 14px 16px;
+        }
+
+        .service-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--charcoal-900);
             margin-bottom: 4px;
         }
 
-        .stat-label {
-            font-size: 13px;
-            color: #9CA3AF;
-        }
-
-        /* Interactive Features Section */
-        .features-section {
-            max-width: 1100px;
-            margin: 80px auto;
-            padding: 0 20px;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .section-subtitle {
+        .service-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: var(--gold-500);
+            color: var(--charcoal-500);
+            margin-bottom: 12px;
+        }
+
+        .service-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .service-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .service-price-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-price-label {
+            font-size: 10px;
+            color: var(--charcoal-500);
+            font-weight: 600;
             text-transform: uppercase;
+        }
+
+        .service-price-val {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--gold-700);
+        }
+
+        .service-actions-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-view-details {
+            padding: 8px 12px;
+            background: var(--gold-50);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--charcoal-900);
+            cursor: pointer;
+        }
+
+        .btn-book-now {
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89332 100%);
+            border: none;
+            border-radius: 12px;
+            font-size: 11.5px;
+            font-weight: 800;
+            color: #070B14;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+        }
+
+        /* TAB 2: XARITA (Map Screen) */
+        .map-screen-wrapper {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 150px);
+            min-height: 480px;
+        }
+
+        #leaflet-map {
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+
+        .map-controls-floating {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .map-floating-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 8px 12px;
+            font-size: 11.5px;
+            font-weight: 800;
+            color: var(--charcoal-900);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .map-floating-btn.active {
+            background: var(--gold-500);
+            color: #070B14;
+        }
+
+        .map-venue-popup-card {
+            font-family: inherit;
+            width: 180px;
+            padding: 4px;
+        }
+        .map-venue-popup-img {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 6px;
+        }
+        .map-venue-popup-title {
+            font-size: 12.5px;
+            font-weight: 800;
+            color: var(--charcoal-900);
+        }
+        .map-venue-popup-price {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--gold-700);
+            margin: 2px 0 6px;
+        }
+        .map-venue-popup-btn {
+            display: block;
+            text-align: center;
+            background: var(--gold-500);
+            color: #070B14;
+            padding: 5px 0;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* TAB 3: JOYLASH (Vendor Onboarding) */
+        .form-container {
+            padding: 10px 16px 20px;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 20px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .form-header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gold-50);
+            border: 1px solid var(--border-subtle);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 10.5px;
+            font-weight: 800;
+            color: var(--gold-700);
             margin-bottom: 8px;
         }
 
-        .section-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(26px, 4vw, 40px);
-            font-weight: 800;
-            color: #FFF;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-        }
-
-        .feature-card {
-            background: rgba(18, 23, 33, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 32px 24px;
-            backdrop-filter: blur(15px);
-            transition: transform 0.3s, border-color 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(212, 175, 55, 0.4);
-        }
-
-        .feature-icon {
-            font-size: 36px;
-            margin-bottom: 16px;
-            display: inline-block;
-        }
-
-        .feature-name {
+        .form-title {
             font-size: 18px;
+            font-weight: 900;
+            color: var(--charcoal-900);
+            margin-bottom: 4px;
+        }
+
+        .form-subtitle {
+            font-size: 12px;
+            color: var(--charcoal-500);
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11.5px;
             font-weight: 700;
-            color: #FFF;
-            margin-bottom: 10px;
+            color: var(--charcoal-700);
+            margin-bottom: 6px;
         }
 
-        .feature-desc {
+        .form-control {
+            width: 100%;
+            background: var(--bg-base);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: var(--charcoal-900);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-control:focus {
+            border-color: var(--gold-500);
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 16px;
+        }
+
+        .btn-submit-gold {
+            width: 100%;
+            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89332 100%);
+            color: #070B14;
+            border: none;
+            border-radius: 14px;
+            padding: 14px;
             font-size: 14px;
-            color: #9CA3AF;
-            line-height: 1.6;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.35);
+            cursor: pointer;
+            margin-top: 16px;
         }
 
-        /* Footer */
-        footer {
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            padding: 40px 20px;
+        /* TAB 4: BYUDJET (Smart Budget Calculator) */
+        .budget-container {
+            padding: 10px 16px 20px;
+        }
+
+        .budget-hero-box {
+            background: linear-gradient(135deg, #FAF4E3 0%, #F5E8C3 100%);
+            border: 1px solid var(--gold-300);
+            border-radius: var(--radius-card);
+            padding: 20px;
             text-align: center;
-            color: #6B7280;
-            font-size: 13px;
-            position: relative;
-            z-index: 10;
-            background: var(--obsidian-900);
+            box-shadow: var(--shadow-soft);
+            margin-bottom: 16px;
         }
 
-        footer a {
-            color: var(--gold-300);
+        .budget-hero-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--gold-700);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .budget-stepper-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 12px 0;
+        }
+
+        .budget-step-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            border: 1px solid var(--gold-500);
+            background: #FFFFFF;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--gold-700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .budget-number-display {
+            font-size: 34px;
+            font-weight: 900;
+            color: var(--charcoal-900);
+            line-height: 1;
+        }
+
+        .budget-currency-text {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--charcoal-500);
+        }
+
+        .budget-chips-row {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .budget-chip {
+            padding: 5px 10px;
+            border-radius: 10px;
+            background: #FFFFFF;
+            border: 1px solid var(--gold-300);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gold-700);
+            cursor: pointer;
+        }
+
+        .budget-chip.active {
+            background: var(--gold-700);
+            color: #FFFFFF;
+            border-color: var(--gold-700);
+        }
+
+        /* Visual Progress Bar */
+        .progress-multi-bar {
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            margin: 16px 0;
+            background: #E2E8F0;
+        }
+        .progress-part-1 { flex: 45; background: #D4AF37; }
+        .progress-part-2 { flex: 20; background: #10B981; }
+        .progress-part-3 { flex: 12; background: #38BDF8; }
+        .progress-part-4 { flex: 10; background: #A855F7; }
+        .progress-part-5 { flex: 8;  background: #F43F5E; }
+        .progress-part-6 { flex: 5;  background: #F59E0B; }
+
+        .breakdown-items-col {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .breakdown-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .breakdown-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .breakdown-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .breakdown-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--charcoal-900);
+        }
+        .breakdown-pct {
+            font-size: 11px;
+            color: var(--charcoal-500);
+        }
+
+        .breakdown-amount {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--gold-700);
+        }
+
+        /* TAB 5: TAKLIFNOMA & PROFIL */
+        .invite-container {
+            padding: 10px 16px 20px;
+        }
+
+        .invite-card-preview {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FAF6ED 100%);
+            border: 2px solid var(--gold-500);
+            border-radius: 24px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-hover);
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .invite-seal {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #F3E5AB, #D4AF37);
+            border: 2px solid #FFFFFF;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
+        }
+
+        .invite-ornament {
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            letter-spacing: 2px;
+            color: var(--gold-600);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .invite-couple-names {
+            font-family: 'Cinzel', serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--charcoal-900);
+            margin-bottom: 8px;
+        }
+
+        .invite-date-badge {
+            display: inline-block;
+            background: var(--gold-50);
+            border: 1px solid var(--border-subtle);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gold-700);
+            margin-bottom: 12px;
+        }
+
+        .invite-venue-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--charcoal-700);
+        }
+
+        .invite-actions-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn-share-telegram {
+            flex: 1;
+            background: #229ED9;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 14px;
+            padding: 12px;
+            font-size: 12.5px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(34, 158, 217, 0.35);
+        }
+
+        .btn-open-demo {
+            padding: 12px 16px;
+            background: #FFFFFF;
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--charcoal-900);
+            cursor: pointer;
             text-decoration: none;
+        }
+
+        /* Bottom Floating App Navigation Dock (5 Buttons) */
+        .bottom-nav-dock {
+            position: fixed;
+            bottom: 12px;
+            left: 14px;
+            right: 14px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid var(--border-subtle);
+            border-radius: 28px;
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(184, 147, 50, 0.2);
+        }
+
+        .dock-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 0;
+            cursor: pointer;
+            position: relative;
+            color: var(--charcoal-500);
+            transition: all 0.2s ease;
+        }
+
+        .dock-item i {
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+
+        .dock-label {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.1px;
+        }
+
+        .dock-item.active {
+            color: var(--gold-700);
+        }
+
+        .dock-item.active .dock-label {
+            font-weight: 900;
+        }
+
+        .dock-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0px;
+            width: 4px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--gold-600);
+        }
+
+        /* Center Elevated "Joylash" Button */
+        .dock-center-item {
+            flex: 1.1;
+            margin-top: -22px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .center-circle-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #F9F1DC 0%, #D4AF37 50%, #B89332 100%);
+            border: 3px solid #FFFFFF;
+            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #070B14;
+            font-size: 20px;
+            transition: transform 0.2s;
+        }
+
+        .center-circle-btn:active {
+            transform: scale(0.92);
+        }
+
+        .center-label {
+            font-size: 9.5px;
+            font-weight: 800;
+            color: var(--gold-700);
+            margin-top: 3px;
+        }
+
+        /* Detail Modal / Drawer */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal-drawer {
+            width: 100%;
+            max-width: 500px;
+            max-height: 85vh;
+            background: var(--bg-card);
+            border-radius: 28px 28px 0 0;
+            padding: 20px 20px 30px;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-drag-bar {
+            width: 40px;
+            height: 4px;
+            border-radius: 2px;
+            background: #CBD5E1;
+            margin: 0 auto 16px;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 18px;
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            background: var(--gold-50);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--charcoal-900);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Success Toast */
+        .toast-msg {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50px);
+            background: #1E232A;
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--gold-500);
+            font-size: 13px;
+            font-weight: 700;
+            z-index: 300;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .toast-msg.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
     </style>
 </head>
 <body>
 
-    <!-- 3D WebGL Canvas (Rotating Gold Rings) -->
-    <canvas id="webgl-canvas"></canvas>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-msg">
+        <i class="fa-solid fa-circle-check text-gold" style="color: #D4AF37;"></i>
+        <span id="toast-text">Amal muvaffaqiyatli bajarildi!</span>
+    </div>
 
-    <!-- Header -->
-    <header>
-        <a href="/" class="brand-logo">
-            <img src="/static/logo.png" alt="TuyBox Logo" style="height: 38px; width: 38px; border-radius: 8px; object-fit: cover; box-shadow: 0 0 10px rgba(212,175,55,0.4);">
-            <span class="brand-name">TUYBOX</span>
-        </a>
-        <div class="header-actions">
-            <a href="https://t.me/tuyboxbot" target="_blank" class="btn-telegram-header">
-                ✈️ @tuyboxbot
-            </a>
+    <!-- Top App Bar -->
+    <header class="app-header">
+        <div class="header-brand">
+            <div class="header-logo-badge">💍</div>
+            <div class="header-title-box">
+                <h1>TuyBox</h1>
+                <p>Hashamatli To'ylar & Marosimlar</p>
+            </div>
+        </div>
+        <div class="header-user-chip" onclick="switchTab('profile')">
+            <i class="fa-solid fa-crown"></i>
+            <span id="header-user-name">Mening Kabinetim</span>
         </div>
     </header>
 
-    <main>
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <div class="vip-pill">
-                <span>✨ O‘ZBEKISTON №1 TO‘Y EKOTIZIMI</span>
+    <!-- Event Types (Strategic Wedge: To'y + Banket + Tug'ilgan Kun + Korporativ) -->
+    <div class="event-types-scroller">
+        <div class="event-pill active" onclick="selectEventType('nikoh', this)">
+            <span>💍</span> Nikoh To'yi
+        </div>
+        <div class="event-pill" onclick="selectEventType('birthday', this)">
+            <span>🎂</span> Tug'ilgan Kun
+        </div>
+        <div class="event-pill" onclick="selectEventType('restaurant', this)">
+            <span>🍽️</span> Restoran & Banket
+        </div>
+        <div class="event-pill" onclick="selectEventType('corporate', this)">
+            <span>🏢</span> Korporativ
+        </div>
+        <div class="event-pill" onclick="selectEventType('fotiha', this)">
+            <span>💐</span> Fotiha Marosimi
+        </div>
+    </div>
+
+    <!-- Search & Location Bar -->
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="main-search-input" class="search-input" placeholder="To'yxona, san'atkor, foto yoki tuman qidirish..." oninput="handleSearch(this.value)">
+            <i class="fa-solid fa-sliders" style="color: var(--charcoal-500); cursor: pointer;" onclick="toggleFilterDrawer()"></i>
+        </div>
+    </div>
+
+    <!-- District Chips -->
+    <div class="district-scroller">
+        <div class="district-chip active" onclick="selectDistrict('all', this)">Barchasi</div>
+        <div class="district-chip" onclick="selectDistrict('Yakkasaroy', this)">Yakkasaroy</div>
+        <div class="district-chip" onclick="selectDistrict('Chilonzor', this)">Chilonzor</div>
+        <div class="district-chip" onclick="selectDistrict('Mirzo Ulug‘bek', this)">Mirzo Ulug‘bek</div>
+        <div class="district-chip" onclick="selectDistrict('Yunusobod', this)">Yunusobod</div>
+        <div class="district-chip" onclick="selectDistrict('Mirobod', this)">Mirobod</div>
+        <div class="district-chip" onclick="selectDistrict('Samarqand', this)">Samarqand</div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: ASOSIY (Home / Katalog) -->
+    <!-- ========================================== -->
+    <div id="screen-home" class="screen-view active">
+        <!-- Hero VIP Banner -->
+        <div class="hero-banner">
+            <div class="hero-tag">✨ RASMIY TELEGRAM MINI APP</div>
+            <div class="hero-title">Orzuingizdagi To'y va Marosimlarni Rejalashtiring</div>
+            <div class="hero-desc">500+ hashamatli to'yxonalar, san'atkorlar va to'y jamoalarini 1-klikda toping va bepul so'rov yuboring!</div>
+            <div class="hero-btn" onclick="openBookingModal('Umumiy So‘rov')">
+                <i class="fa-solid fa-bolt"></i> Tezkor So'rov Yuborish
             </div>
+        </div>
 
-            <h1 class="hero-title">
-                Hayotingizdagi Eng Go‘zal Kunni Bizga Ishoning
-            </h1>
-
-            <p class="hero-description">
-                500+ hashamatli to‘yxonalar, eng sara sanʼatkorlar, foto-video studiyalar va kortejlar. Real-vaqtda jonli kalendar va AI to‘y byudjeti kalkulyatori.
-            </p>
-
-            <!-- Action Buttons -->
-            <div class="cta-row">
-                <a href="/static/TuyBox.apk" download="TuyBox.apk" class="btn-gold-download" id="apkDownloadBtn">
-                    <span>📲 Ilovani Yuklab Olish (APK)</span>
-                </a>
-                <a href="https://t.me/tuyboxbot" target="_blank" class="btn-telegram-app">
-                    <span>✈️ Telegramda Ochish (Mini App)</span>
-                </a>
+        <!-- Categories Section -->
+        <div class="section-header">
+            <div class="section-title">
+                <i class="fa-solid fa-sparkles"></i> Asosiy Xizmat Turlari
             </div>
-
-            <div class="app-specs">
-                <span>⚡ Hajmi: 38 MB</span>
-                <span>•</span>
-                <span>🤖 Android 8.0+</span>
-                <span>•</span>
-                <span>🛡️ 100% Xavfsiz</span>
+        </div>
+        <div class="categories-grid">
+            <div class="category-card" onclick="filterByCategory('venues')">
+                <div class="cat-icon-box">🏰</div>
+                <div class="cat-name">To'yxona & Saroylar</div>
+                <div class="cat-count">120+ zal</div>
             </div>
-
-            <div class="model-hint">
-                ✨ Yuqoridagi 3D oltin uzuklarni barmog‘ingiz yoki sichqoncha bilan aylantirib ko‘ring!
+            <div class="category-card" onclick="filterByCategory('singers')">
+                <div class="cat-icon-box">🎤</div>
+                <div class="cat-name">San'atkor & Boshlovchi</div>
+                <div class="cat-count">85+ jamoa</div>
             </div>
-        </section>
-
-        <!-- Stats Section -->
-        <section class="stats-section">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">500+</div>
-                    <div class="stat-label">Tasdiqlangan To‘yxonalar</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">100K+</div>
-                    <div class="stat-label">Rejalashtirilgan To‘ylar</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">0%</div>
-                    <div class="stat-label">Double-Booking (Kafolat)</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">4.95 ★</div>
-                    <div class="stat-label">Mijozlar Bahosi</div>
-                </div>
+            <div class="category-card" onclick="filterByCategory('photo')">
+                <div class="cat-icon-box">📸</div>
+                <div class="cat-name">Foto & Video Montaj</div>
+                <div class="cat-count">64+ studiya</div>
             </div>
-        </section>
-
-        <!-- Interactive Features -->
-        <section class="features-section">
-            <div class="section-header">
-                <div class="section-subtitle">Zamonaviy Imkoniyatlar</div>
-                <h2 class="section-title">Nega Aynan Tuyxona Platform?</h2>
+            <div class="category-card" onclick="filterByCategory('decor')">
+                <div class="cat-icon-box">💐</div>
+                <div class="cat-name">Bezak & Floristika</div>
+                <div class="cat-count">48+ dekorator</div>
             </div>
+            <div class="category-card" onclick="filterByCategory('cars')">
+                <div class="cat-icon-box">🚘</div>
+                <div class="cat-name">To'y Korteji & Avto</div>
+                <div class="cat-count">32+ avto</div>
+            </div>
+            <div class="category-card" onclick="filterByCategory('catering')">
+                <div class="cat-icon-box">🍽️</div>
+                <div class="cat-name">Katering & Tortlar</div>
+                <div class="cat-count">40+ xizmat</div>
+            </div>
+        </div>
 
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">📅</div>
-                    <h3 class="feature-name">Jonli Kalendar va Bandlik</h3>
-                    <p class="feature-desc">
-                        Xizmat ko‘rsatuvchining qaysi kunlari bo‘sh, qaysi kunlari bandligini bir zumda ko‘ring. Bir vaqtda 2 ta to‘y olinishidan 100% himoyalangan.
-                    </p>
+        <!-- Map Shortcut Card -->
+        <div class="map-shortcut-card" onclick="switchTab('map')">
+            <div class="map-shortcut-left">
+                <div class="map-pin-icon">
+                    <i class="fa-solid fa-map-location-dot"></i>
                 </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">💍</div>
-                    <h3 class="feature-name">AI To‘y Byudjeti Kalkulyatori</h3>
-                    <p class="feature-desc">
-                        Byudjetingizni kiritasiz — tizim to‘yxona, sanʼatkor, kiyim va mashinalarga xarajatlarni aniq taqsimlab, mos mutaxassislarni topib beradi.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">💌</div>
-                    <h3 class="feature-name">Raqamli Taklifnoma va QR RSVP</h3>
-                    <p class="feature-desc">
-                        Qog‘oz taklifnoma o‘rniga shaxsiy veb-havola. Mehmonlaringiz Telegram orqali javob beradi va keladiganlar soni ilovangizda avtomat hisoblanadi.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">💳</div>
-                    <h3 class="feature-name">Xavfsiz To‘lov (Escrow Kafolati)</h3>
-                    <p class="feature-desc">
-                        Click va Payme orqali to‘langan avans mablag‘lari to‘yingiz muvaffaqiyatli o‘tgandan keyingina ijrochiga o‘tkazib beriladi.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🗺️</div>
-                    <h3 class="feature-name">GPS va Xaritada Qidiruv</h3>
-                    <p class="feature-desc">
-                        O‘zingizga eng yaqin to‘yxonalarni masofasi bo‘yicha toping va bir bosishda Yandex / Google Navigator orqali yo‘nalish oling.
-                    </p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">👑</div>
-                    <h3 class="feature-name">Xizmat Ko‘rsatuvchilar CRM</h3>
-                    <p class="feature-desc">
-                        To‘yxona va sanʼatkorlar uchun telefonidan turib kalendarni boshqarish, buyurtmalarni 1 bosishda qabul qilish imkoniyati.
-                    </p>
+                <div>
+                    <div class="map-shortcut-title">To'yxonalar Xaritasi (GPS)</div>
+                    <div class="map-shortcut-sub">Sizga eng yaqin hashamatli saroylarni ko'ring</div>
                 </div>
             </div>
-        </section>
-    </main>
+            <div class="map-shortcut-btn">
+                Xaritaga <i class="fa-solid fa-arrow-right"></i>
+            </div>
+        </div>
 
-    <footer>
-        <p>© 2026 TuyBox Platform. Barcha huquqlar himoyalangan.</p>
-        <p style="margin-top: 6px;">
-            Domen: <a href="https://tuybox.asilbek.tech">tuybox.asilbek.tech</a> | 
-            <a href="/pitch" style="color: var(--gold-300); font-weight: 700; text-decoration: underline;">📊 6 Oylik Reja & Pitch Deck</a> | 
-            Bot: <a href="https://t.me/tuyboxbot">@tuyboxbot</a>
-        </p>
-    </footer>
+        <!-- Services List Header -->
+        <div class="section-header">
+            <div class="section-title">
+                <i class="fa-solid fa-gem"></i> Sara To'yxona va Xizmatlar
+            </div>
+            <span style="font-size: 12px; color: var(--gold-600); font-weight: 700;" id="services-count">6 ta topildi</span>
+        </div>
 
-    <!-- Three.js 3D WebGL Script: Ultra-Smooth Golden Rings & Starfield -->
+        <!-- Dynamic Services Cards Container -->
+        <div class="services-list" id="services-container">
+            <!-- Rendered by JavaScript -->
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: XARITA (Map View) -->
+    <!-- ========================================== -->
+    <div id="screen-map" class="screen-view">
+        <div class="map-screen-wrapper">
+            <div id="leaflet-map"></div>
+            
+            <div class="map-controls-floating">
+                <div class="map-floating-btn active" id="layer-osm-btn" onclick="setMapBaseLayer('dark')">
+                    🌙 Tungi
+                </div>
+                <div class="map-floating-btn" id="layer-sat-btn" onclick="setMapBaseLayer('satellite')">
+                    🛰️ Yo'ldosh
+                </div>
+                <div class="map-floating-btn" id="layer-street-btn" onclick="setMapBaseLayer('street')">
+                    ☀️ Kunduzgi
+                </div>
+                <div class="map-floating-btn" onclick="getUserGpsLocation()">
+                    📍 Joylashuvim
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: JOYLASH (Vendor Form) -->
+    <!-- ========================================== -->
+    <div id="screen-create" class="screen-view">
+        <div class="form-container">
+            <div class="form-card">
+                <div class="form-header-badge">
+                    <i class="fa-solid fa-crown"></i> HAMKORLIK DASTURI
+                </div>
+                <div class="form-title">Xizmatingizni Joylashtiring</div>
+                <div class="form-subtitle">To'yxona, san'atkor yoki xizmatingizni TuyBox platformasida minglab kelin-kuyovlarga bepul taqdim eting.</div>
+
+                <div class="form-group">
+                    <label class="form-label">Yo'nalish / Kategoriya *</label>
+                    <select id="create-category" class="form-control form-select">
+                        <option value="venues">🏰 To'yxonalar & Saroylar</option>
+                        <option value="singers">🎤 San'atkorlar & Guruhlar</option>
+                        <option value="photo">📸 Foto & Video Studiyalar</option>
+                        <option value="decor">💐 Bezak & Floristika</option>
+                        <option value="cars">🚘 To'y Korteji & Mashinalar</option>
+                        <option value="catering">🍽️ Katering & Shirinliklar</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Xizmat yoki Biznes Nomi *</label>
+                    <input type="text" id="create-title" class="form-control" placeholder="Masalan: Versal Grand Saroyi">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Hudud / Shahar *</label>
+                    <select id="create-region" class="form-control form-select">
+                        <option value="Toshkent shahri">Toshkent shahri</option>
+                        <option value="Samarqand">Samarqand</option>
+                        <option value="Buxoro">Buxoro</option>
+                        <option value="Farg'ona">Farg'ona</option>
+                        <option value="Andijon">Andijon</option>
+                        <option value="Namangan">Namangan</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Boshlang'ich Narx (so'mda) *</label>
+                    <input type="text" id="create-price" class="form-control" placeholder="Masalan: 35,000,000">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Telefon Raqamingiz *</label>
+                    <input type="tel" id="create-phone" class="form-control" placeholder="+998 90 123 45 67">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Telegram Profilingiz (@username)</label>
+                    <input type="text" id="create-telegram" class="form-control" placeholder="@username">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Xizmat Haqida Qisqacha Tavsif</label>
+                    <textarea id="create-desc" class="form-control" rows="3" placeholder="Zal imkoniyatlari, takliflar va afzalliklar..."></textarea>
+                </div>
+
+                <button class="btn-submit-gold" onclick="submitVendorService()">
+                    <i class="fa-solid fa-sparkles"></i> Xizmatni Joylashtirish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: BYUDJET (Smart Budget Calculator) -->
+    <!-- ========================================== -->
+    <div id="screen-budget" class="screen-view">
+        <div class="budget-container">
+            <div class="budget-hero-box">
+                <div class="budget-hero-label">Jami To'y Byudjeti</div>
+                <div class="budget-stepper-row">
+                    <div class="budget-step-btn" onclick="adjustBudget(-10)">-</div>
+                    <div>
+                        <div class="budget-number-display" id="budget-million-text">80</div>
+                        <div class="budget-currency-text">million so'm jami</div>
+                    </div>
+                    <div class="budget-step-btn" onclick="adjustBudget(+10)">+</div>
+                </div>
+
+                <div class="budget-chips-row">
+                    <div class="budget-chip" onclick="setPresetBudget(40)">40M</div>
+                    <div class="budget-chip" onclick="setPresetBudget(60)">60M</div>
+                    <div class="budget-chip active" onclick="setPresetBudget(80)">80M</div>
+                    <div class="budget-chip" onclick="setPresetBudget(100)">100M</div>
+                    <div class="budget-chip" onclick="setPresetBudget(150)">150M</div>
+                </div>
+
+                <div style="margin-top: 14px; font-size: 12px; color: var(--charcoal-700); font-weight: 700;">
+                    👥 350 mehmon uchun ~<span id="cost-per-guest">228,000</span> so'mdan to'g'ri keladi
+                </div>
+            </div>
+
+            <!-- Visual Segmented Bar -->
+            <div class="section-title" style="margin-bottom: 6px;">
+                <i class="fa-solid fa-chart-pie"></i> Xarajatlar Taqsimoti (Foizda)
+            </div>
+            <div class="progress-multi-bar">
+                <div class="progress-part-1" title="To'yxona 45%"></div>
+                <div class="progress-part-2" title="San'atkor 20%"></div>
+                <div class="progress-part-3" title="Foto/Video 12%"></div>
+                <div class="progress-part-4" title="Sarpo 10%"></div>
+                <div class="progress-part-5" title="Bezak 8%"></div>
+                <div class="progress-part-6" title="Kortej 5%"></div>
+            </div>
+
+            <div class="breakdown-items-col">
+                <div class="breakdown-item">
+                    <div class="breakdown-left">
+                        <div class="breakdown-icon" style="background: rgba(212, 175, 55, 0.15); color: #D4AF37;">🏰</div>
+                        <div>
+                            <div class="breakdown-title">To'yxona & Dasturxon</div>
+                            <div class="breakdown-pct">45% ulush</div>
+                        </div>
+                    </div>
+                    <div class="breakdown-amount" id="budget-venue">36 mln</div>
+                </div>
+
+                <div class="breakdown-item">
+                    <div class="breakdown-left">
+                        <div class="breakdown-icon" style="background: rgba(16, 185, 129, 0.15); color: #10B981;">🎤</div>
+                        <div>
+                            <div class="breakdown-title">San'atkor & Boshlovchi</div>
+                            <div class="breakdown-pct">20% ulush</div>
+                        </div>
+                    </div>
+                    <div class="breakdown-amount" id="budget-singer">16 mln</div>
+                </div>
+
+                <div class="breakdown-item">
+                    <div class="breakdown-left">
+                        <div class="breakdown-icon" style="background: rgba(56, 189, 248, 0.15); color: #0284C7;">📸</div>
+                        <div>
+                            <div class="breakdown-title">Foto & Video Montaj</div>
+                            <div class="breakdown-pct">12% ulush</div>
+                        </div>
+                    </div>
+                    <div class="breakdown-amount" id="budget-photo">9.6 mln</div>
+                </div>
+
+                <div class="breakdown-item">
+                    <div class="breakdown-left">
+                        <div class="breakdown-icon" style="background: rgba(168, 85, 247, 0.15); color: #9333EA;">👗</div>
+                        <div>
+                            <div class="breakdown-title">Kelin Sarposi & Libos</div>
+                            <div class="breakdown-pct">10% ulush</div>
+                        </div>
+                    </div>
+                    <div class="breakdown-amount" id="budget-dress">8 mln</div>
+                </div>
+
+                <div class="breakdown-item">
+                    <div class="breakdown-left">
+                        <div class="breakdown-icon" style="background: rgba(244, 63, 94, 0.15); color: #E11D48;">💐</div>
+                        <div>
+                            <div class="breakdown-title">Zal Bezagi & Gullar</div>
+                            <div class="breakdown-pct">8% ulush</div>
+                        </div>
+                    </div>
+                    <div class="breakdown-amount" id="budget-decor">6.4 mln</div>
+                </div>
+
+                <div class="breakdown-item">
+                    <div class="breakdown-left">
+                        <div class="breakdown-icon" style="background: rgba(245, 158, 11, 0.15); color: #D97706;">🚘</div>
+                        <div>
+                            <div class="breakdown-title">To'y Korteji & Avto</div>
+                            <div class="breakdown-pct">5% ulush</div>
+                        </div>
+                    </div>
+                    <div class="breakdown-amount" id="budget-car">4 mln</div>
+                </div>
+            </div>
+
+            <!-- Savings Tip Card -->
+            <div style="margin-top: 16px; background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: 18px; padding: 16px;">
+                <div style="font-size: 13px; font-weight: 800; color: var(--gold-700); margin-bottom: 6px;">
+                    💡 Qanday qilib 15-20% tejash mumkin?
+                </div>
+                <div style="font-size: 12px; color: var(--charcoal-700); line-height: 1.6;">
+                    • To'yxonani qish yoki bahor mavsumida bron qilish narxni 20% gacha tushiradi.<br>
+                    • Foto va videoni bitta studiyadan "Paket" ko'rinishida olish alohida buyurtmadan 3-5 mln arzonroq tushadi.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: TAKLIFNOMA (RSVP & Profil) -->
+    <!-- ========================================== -->
+    <div id="screen-profile" class="screen-view">
+        <div class="invite-container">
+            <div class="invite-card-preview">
+                <div class="invite-seal">💌</div>
+                <div class="invite-ornament">SHOHONA TO'Y TAKLIFNOMASI</div>
+                <div class="invite-couple-names">Jasurbek & Madina</div>
+                <div class="invite-date-badge">📅 2026-yil 15-Oktyabr, 18:00</div>
+                <div class="invite-venue-name">🏰 Versal Grand Palace, Toshkent</div>
+                
+                <div class="invite-actions-row">
+                    <button class="btn-share-telegram" onclick="shareInviteOnTelegram()">
+                        <i class="fa-brands fa-telegram"></i> Telegramda Ulashish
+                    </button>
+                    <a href="/invite/demo" target="_blank" class="btn-open-demo">
+                        Ko'rish <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Contacts & Support -->
+            <div style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: 20px; padding: 18px; box-shadow: var(--shadow-soft);">
+                <div style="font-size: 14px; font-weight: 800; color: var(--charcoal-900); margin-bottom: 12px;">
+                    📞 Yordam & Aloqa Markazi
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="https://t.me/tuybox_support" target="_blank" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; padding: 10px 12px; background: var(--gold-50); border-radius: 12px; color: var(--charcoal-900);">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-brands fa-telegram" style="color: #229ED9; font-size: 18px;"></i>
+                            <span style="font-size: 13px; font-weight: 700;">Telegram Qo'llab-quvvatlash</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="color: var(--charcoal-500); font-size: 11px;"></i>
+                    </a>
+
+                    <a href="tel:+998901112233" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; padding: 10px 12px; background: var(--gold-50); border-radius: 12px; color: var(--charcoal-900);">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-phone" style="color: #10B981; font-size: 16px;"></i>
+                            <span style="font-size: 13px; font-weight: 700;">+998 90 111 22 33 (Call-markaz)</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right" style="color: var(--charcoal-500); font-size: 11px;"></i>
+                    </a>
+
+                    <a href="/download" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; padding: 10px 12px; background: var(--gold-50); border-radius: 12px; color: var(--charcoal-900);">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-brands fa-android" style="color: #10B981; font-size: 18px;"></i>
+                            <span style="font-size: 13px; font-weight: 700;">Android APK Ilovasini Yuklash</span>
+                        </div>
+                        <i class="fa-solid fa-download" style="color: var(--charcoal-500); font-size: 12px;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SERVICE DETAIL DRAWER MODAL -->
+    <!-- ========================================== -->
+    <div id="detail-modal" class="modal-overlay" onclick="closeDetailModal(event)">
+        <div class="modal-drawer" onclick="event.stopPropagation()">
+            <div class="modal-drag-bar"></div>
+            <div class="modal-close-btn" onclick="closeDetailModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+
+            <div id="modal-content">
+                <!-- Dynamically filled by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BOOKING REQUEST MODAL -->
+    <!-- ========================================== -->
+    <div id="booking-modal" class="modal-overlay" onclick="closeBookingModal(event)">
+        <div class="modal-drawer" onclick="event.stopPropagation()">
+            <div class="modal-drag-bar"></div>
+            <div class="modal-close-btn" onclick="closeBookingModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+
+            <div style="font-size: 18px; font-weight: 900; color: var(--charcoal-900); margin-bottom: 4px;">
+                📝 Bron So'rovi Qoldirish
+            </div>
+            <div style="font-size: 12px; color: var(--charcoal-500); margin-bottom: 16px;" id="booking-target-title">
+                Versal Grand Ballroom
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Ism va Familiyangiz *</label>
+                <input type="text" id="book-name" class="form-control" placeholder="Masalan: Sardor Rahimov">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Telefon Raqamingiz *</label>
+                <input type="tel" id="book-phone" class="form-control" placeholder="+998 90 123 45 67">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Mo'ljallangan Tadbir Sanasi *</label>
+                <input type="date" id="book-date" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Taxminiy Mehmonlar Soni</label>
+                <input type="number" id="book-guests" class="form-control" placeholder="Masalan: 400 kishi">
+            </div>
+
+            <button class="btn-submit-gold" onclick="submitBookingRequest()">
+                <i class="fa-solid fa-paper-plane"></i> So'rovni Yuborish
+            </button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BOTTOM APP NAVIGATION DOCK (5 Buttons) -->
+    <!-- ========================================== -->
+    <nav class="bottom-nav-dock">
+        <div class="dock-item active" id="nav-home" onclick="switchTab('home')">
+            <i class="fa-solid fa-house"></i>
+            <span class="dock-label">Asosiy</span>
+        </div>
+        <div class="dock-item" id="nav-map" onclick="switchTab('map')">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <span class="dock-label">Xarita</span>
+        </div>
+        <div class="dock-center-item" onclick="switchTab('create')">
+            <div class="center-circle-btn">
+                <i class="fa-solid fa-plus"></i>
+            </div>
+            <span class="center-label">Joylash</span>
+        </div>
+        <div class="dock-item" id="nav-budget" onclick="switchTab('budget')">
+            <i class="fa-solid fa-wallet"></i>
+            <span class="dock-label">Byudjet</span>
+        </div>
+        <div class="dock-item" id="nav-profile" onclick="switchTab('profile')">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <span class="dock-label">Taklifnoma</span>
+        </div>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC & REACTIVE STATE -->
+    <!-- ========================================== -->
     <script>
-        const canvas = document.getElementById('webgl-canvas');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 7;
+        // 1. Telegram WebApp Initialization
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+            try {
+                tg.setHeaderColor('#FAF8F5');
+                tg.setBackgroundColor('#FAF8F5');
+            } catch (e) {}
 
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-        // Lights
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-        scene.add(ambientLight);
-
-        const pointLight1 = new THREE.PointLight(0xD4AF37, 3, 50);
-        pointLight1.position.set(5, 5, 5);
-        scene.add(pointLight1);
-
-        const pointLight2 = new THREE.PointLight(0xF3E5AB, 2, 50);
-        pointLight2.position.set(-5, -5, 2);
-        scene.add(pointLight2);
-
-        // Gold Ring 1 (Groom Ring)
-        const ringGeo1 = new THREE.TorusGeometry(1.6, 0.18, 32, 100);
-        const goldMat = new THREE.MeshStandardMaterial({
-            color: 0xD4AF37,
-            metalness: 0.95,
-            roughness: 0.15,
-        });
-        const ring1 = new THREE.Mesh(ringGeo1, goldMat);
-        ring1.position.x = -0.7;
-        ring1.rotation.x = Math.PI / 3;
-        scene.add(ring1);
-
-        // Gold Ring 2 (Bride Ring - Intertwined)
-        const ringGeo2 = new THREE.TorusGeometry(1.4, 0.14, 32, 100);
-        const ring2 = new THREE.Mesh(ringGeo2, goldMat);
-        ring2.position.x = 0.7;
-        ring2.position.y = -0.2;
-        ring2.rotation.x = -Math.PI / 4;
-        ring2.rotation.y = Math.PI / 4;
-        scene.add(ring2);
-
-        // Floating Diamond Gem on Ring 2
-        const gemGeo = new THREE.OctahedronGeometry(0.35, 2);
-        const gemMat = new THREE.MeshStandardMaterial({
-            color: 0xFFFFFF,
-            metalness: 0.1,
-            roughness: 0.05,
-            transparent: true,
-            opacity: 0.85,
-        });
-        const gem = new THREE.Mesh(gemGeo, gemMat);
-        gem.position.set(0.7, 1.3, 0);
-        ring2.add(gem);
-
-        // Starfield Particles
-        const starsGeo = new THREE.BufferGeometry();
-        const starsCount = 400;
-        const starPositions = new Float32Array(starsCount * 3);
-        for(let i = 0; i < starsCount * 3; i++) {
-            starPositions[i] = (Math.random() - 0.5) * 20;
-        }
-        starsGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-        const starsMat = new THREE.PointsMaterial({
-            color: 0xD4AF37,
-            size: 0.04,
-            transparent: true,
-            opacity: 0.6,
-        });
-        const starField = new THREE.Points(starsGeo, starsMat);
-        scene.add(starField);
-
-        // Mouse Parallax & Touch Interaction
-        let mouseX = 0, mouseY = 0;
-        let targetX = 0, targetY = 0;
-
-        window.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-            mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-        });
-
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                mouseX = (e.touches[0].clientX / window.innerWidth - 0.5) * 2;
-                mouseY = (e.touches[0].clientY / window.innerHeight - 0.5) * 2;
+            // Set user name if available
+            const user = tg.initDataUnsafe?.user;
+            if (user && user.first_name) {
+                document.getElementById('header-user-name').textContent = user.first_name;
             }
-        });
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-
-        // 60FPS Render Loop
-        const clock = new THREE.Clock();
-        function animate() {
-            requestAnimationFrame(animate);
-            const delta = clock.getDelta();
-
-            targetX += (mouseX - targetX) * 0.05;
-            targetY += (mouseY - targetY) * 0.05;
-
-            // Slow elegant rotation
-            ring1.rotation.y += 0.5 * delta;
-            ring1.rotation.z += 0.2 * delta;
-
-            ring2.rotation.y -= 0.4 * delta;
-            ring2.rotation.z += 0.3 * delta;
-
-            starField.rotation.y += 0.05 * delta;
-
-            // Parallax shift
-            scene.rotation.y = targetX * 0.4;
-            scene.rotation.x = targetY * 0.3;
-
-            renderer.render(scene, camera);
         }
-        animate();
+
+        // Haptic feedback helper
+        function triggerHaptic(type = 'light') {
+            if (tg?.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred(type);
+            }
+        }
+
+        // Toast Helper
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').textContent = text;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        // 2. Mock Luxury Services Data
+        const SERVICES_DATA = [
+            {
+                id: 1,
+                name: "Versal Grand Ballroom",
+                category: "venues",
+                catName: "🏰 TO'YXONA & SAROY",
+                image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800",
+                city: "Toshkent",
+                district: "Yakkasaroy",
+                capacity: "500 kishi",
+                rating: 4.95,
+                reviews: 184,
+                price: 45000000,
+                priceFormatted: "45,000,000 so'm",
+                lat: 41.2856,
+                lng: 69.2432,
+                desc: "Kristal qandillar, og'ir tutun, shohona prezidium va panoramali akustika tizimi bilan jihozlangan O'zbekistondagi eng mashhur to'ylar zali.",
+                features: ["VIP Mehmonxona", "Bepul Avtoturargoh (150 mashina)", "Kelinsarpo xonasi", "Light & Sound shou"]
+            },
+            {
+                id: 2,
+                name: "Mumtoz Shohona Saroyi",
+                category: "venues",
+                catName: "🏰 TO'YXONA & SAROY",
+                image: "https://images.unsplash.com/photo-1545232979-fbf68fe9ec41?q=80&w=800",
+                city: "Toshkent",
+                district: "Chilonzor",
+                capacity: "600 kishi",
+                rating: 4.92,
+                reviews: 142,
+                price: 40000000,
+                priceFormatted: "40,000,000 so'm",
+                lat: 41.2721,
+                lng: 69.2045,
+                desc: "600 nafar mehmonga mo'ljallangan ulkan hashamatli zal. Milliy va yevropa taomlari uchun mo'ljallangan qirollik dasturxoni.",
+                features: ["Zamonaviy LED ekranlar", "Jonli orkestr sahnasi", "Bolalar maydonchasi"]
+            },
+            {
+                id: 3,
+                name: "Ezidiyor Banquet Hall",
+                category: "venues",
+                catName: "🏰 TO'YXONA & RESTORAN",
+                image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800",
+                city: "Toshkent",
+                district: "Mirzo Ulug‘bek",
+                capacity: "450 kishi",
+                rating: 4.88,
+                reviews: 98,
+                price: 38000000,
+                priceFormatted: "38,000,000 so'm",
+                lat: 41.3289,
+                lng: 69.3345,
+                desc: "Sharqona nafislik va zamonaviy arxitektura uyg'unligi. Ochiq terassa va sharshara maydoni mavjud.",
+                features: ["Ochiq terassa", "Fotosessiya hududi", "Qizil gilam yo'lakchasi"]
+            },
+            {
+                id: 4,
+                name: "Jasurbek Jonli Ansambli & Boshlovchi",
+                category: "singers",
+                catName: "🎤 SAN'ATKOR & GURUH",
+                image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800",
+                city: "Toshkent",
+                district: "Mirobod",
+                capacity: "Butun to'y dasturi",
+                rating: 4.98,
+                reviews: 215,
+                price: 20000000,
+                priceFormatted: "20,000,000 so'm",
+                lat: 41.2980,
+                lng: 69.2780,
+                desc: "Xalq sevgan xonandalar, professional boshlovchi, karnay-surnay va unutilmas shodiyona raqslar to'liq xizmatda.",
+                features: ["Jonli ijro", "Boshlovchilik (o'zbek/rus)", "Karnay-surnay guruhi", "Maxsus to'y ssenariysi"]
+            },
+            {
+                id: 5,
+                name: "Love Story VIP Foto-Video Studiya",
+                category: "photo",
+                catName: "📸 FOTO & VIDEO STUDIYA",
+                image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=800",
+                city: "Toshkent",
+                district: "Yunusobod",
+                capacity: "Hammasi ichida",
+                rating: 4.94,
+                reviews: 167,
+                price: 12000000,
+                priceFormatted: "12,000,000 so'm",
+                lat: 41.3450,
+                lng: 69.2890,
+                desc: "4K Dron syomka, 3 kamerali to'y montaji, pre-wedding Love Story filmi va hashamatli charm foto-albom.",
+                features: ["4K Dron syomka", "3 ta operator", "Charm to'y albomi", "Tezkor 7 kunda tayyor"]
+            },
+            {
+                id: 6,
+                name: "Shohona Mercedes Maybach Korteji",
+                category: "cars",
+                catName: "🚘 TO'Y KORTEJI",
+                image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800",
+                city: "Toshkent",
+                district: "Mirobod",
+                capacity: "Bosh mashina + 2 ta S-Class",
+                rating: 4.91,
+                reviews: 84,
+                price: 10000000,
+                priceFormatted: "10,000,000 so'm",
+                lat: 41.2950,
+                lng: 69.2720,
+                desc: "Oppoq Mercedes Maybach va kuzatuvchi avtomobillar. Professional haydovchilar va bayramona gul bezaklari bilan.",
+                features: ["Professional haydovchi", "Jonli gullar bilan bezak", "Yoqilg'i narx ichida"]
+            }
+        ];
+
+        let currentCategoryFilter = 'all';
+        let currentDistrictFilter = 'all';
+        let currentSearchQuery = '';
+
+        // 3. Render Services Function
+        function renderServices() {
+            const container = document.getElementById('services-container');
+            const filtered = SERVICES_DATA.filter(item => {
+                const matchesCat = currentCategoryFilter === 'all' || item.category === currentCategoryFilter;
+                const matchesDist = currentDistrictFilter === 'all' || item.district === currentDistrictFilter;
+                const q = currentSearchQuery.toLowerCase().trim();
+                const matchesSearch = !q || item.name.toLowerCase().includes(q) || item.district.toLowerCase().includes(q) || item.city.toLowerCase().includes(q);
+                return matchesCat && matchesDist && matchesSearch;
+            });
+
+            document.getElementById('services-count').textContent = `${filtered.length} ta topildi`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px; background: #FFFFFF; border-radius: 20px; border: 1px solid var(--border-subtle);">
+                        <div style="font-size: 40px; margin-bottom: 10px;">🔍</div>
+                        <div style="font-size: 15px; font-weight: 800; color: var(--charcoal-900);">Hech qanday xizmat topilmadi</div>
+                        <div style="font-size: 12px; color: var(--charcoal-500); margin-top: 4px;">Qidiruv so'zini yoki tanlangan tumanni o'zgartirib ko'ring</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => `
+                <div class="service-card">
+                    <div class="service-img-wrapper" onclick="openDetailModal(${item.id})">
+                        <img src="${item.image}" alt="${item.name}" class="service-img" loading="lazy">
+                        <div class="service-tag-badge">${item.catName}</div>
+                        <div class="service-rating-badge">
+                            <i class="fa-solid fa-star"></i> ${item.rating}
+                        </div>
+                    </div>
+                    <div class="service-body">
+                        <div class="service-title" onclick="openDetailModal(${item.id})">${item.name}</div>
+                        <div class="service-meta-row">
+                            <span class="service-meta-item">
+                                <i class="fa-solid fa-location-dot" style="color: var(--gold-600);"></i> ${item.city}, ${item.district}
+                            </span>
+                            <span class="service-meta-item">
+                                <i class="fa-solid fa-users" style="color: var(--charcoal-500);"></i> ${item.capacity}
+                            </span>
+                        </div>
+                        <div class="service-footer">
+                            <div class="service-price-box">
+                                <span class="service-price-label">Narxi:</span>
+                                <span class="service-price-val">${item.priceFormatted}</span>
+                            </div>
+                            <div class="service-actions-row">
+                                <button class="btn-view-details" onclick="openDetailModal(${item.id})">Batafsil</button>
+                                <button class="btn-book-now" onclick="openBookingModal('${item.name}')">Tezkor Bron</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 4. Filtering Helpers
+        function filterByCategory(cat) {
+            triggerHaptic();
+            currentCategoryFilter = (currentCategoryFilter === cat) ? 'all' : cat;
+            renderServices();
+        }
+
+        function selectEventType(type, el) {
+            triggerHaptic();
+            document.querySelectorAll('.event-pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            if (type === 'restaurant') {
+                currentCategoryFilter = 'venues';
+            } else {
+                currentCategoryFilter = 'all';
+            }
+            renderServices();
+        }
+
+        function selectDistrict(dist, el) {
+            triggerHaptic();
+            document.querySelectorAll('.district-chip').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            currentDistrictFilter = dist;
+            renderServices();
+        }
+
+        function handleSearch(val) {
+            currentSearchQuery = val;
+            renderServices();
+        }
+
+        // 5. Tab Switching Logic
+        function switchTab(tabId) {
+            triggerHaptic('medium');
+            document.querySelectorAll('.screen-view').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.dock-item').forEach(d => d.classList.remove('active'));
+
+            const targetScreen = document.getElementById('screen-' + tabId);
+            const targetNav = document.getElementById('nav-' + tabId);
+
+            if (targetScreen) targetScreen.classList.add('active');
+            if (targetNav) targetNav.classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (tabId === 'map') {
+                setTimeout(initLeafletMap, 150);
+            }
+        }
+
+        // 6. Interactive Leaflet Map
+        let leafletMapInstance = null;
+        let activeBaseLayer = null;
+        let mapMarkers = {};
+
+        function initLeafletMap() {
+            if (leafletMapInstance) {
+                leafletMapInstance.invalidateSize();
+                return;
+            }
+
+            leafletMapInstance = L.map('leaflet-map', {
+                zoomControl: false,
+                attributionControl: false
+            }).setView([41.3050, 69.2650], 12);
+
+            // Default OpenStreetMap Layer (Works 100% everywhere in UZ)
+            activeBaseLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(leafletMapInstance);
+
+            // Add Markers
+            SERVICES_DATA.forEach(v => {
+                if (v.lat && v.lng) {
+                    const icon = L.divIcon({
+                        className: 'custom-map-pin',
+                        html: `<div style="background: linear-gradient(135deg, #FAF4E3, #D4AF37); border: 2px solid #070B14; color: #070B14; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); white-space: nowrap; cursor: pointer;">🏰 ${v.name.split(' ')[0]} • ${(v.price/1000000).toFixed(0)}M</div>`,
+                        iconSize: [100, 24],
+                        iconAnchor: [50, 24]
+                    });
+
+                    const marker = L.marker([v.lat, v.lng], { icon: icon }).addTo(leafletMapInstance);
+                    
+                    const popupHtml = `
+                        <div class="map-venue-popup-card">
+                            <img src="${v.image}" class="map-venue-popup-img" />
+                            <div class="map-venue-popup-title">${v.name}</div>
+                            <div class="map-venue-popup-price">${v.priceFormatted}</div>
+                            <div class="map-venue-popup-btn" onclick="openDetailModal(${v.id})">Tafsilotlar & Bron</div>
+                        </div>
+                    `;
+                    marker.bindPopup(popupHtml, { offset: [0, -18] });
+                    mapMarkers[v.id] = marker;
+                }
+            });
+        }
+
+        function setMapBaseLayer(layerType) {
+            triggerHaptic();
+            if (!leafletMapInstance) return;
+
+            document.querySelectorAll('.map-floating-btn').forEach(b => b.classList.remove('active'));
+
+            if (activeBaseLayer) leafletMapInstance.removeLayer(activeBaseLayer);
+
+            if (layerType === 'satellite') {
+                document.getElementById('layer-sat-btn').classList.add('active');
+                activeBaseLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+                    maxZoom: 20
+                }).addTo(leafletMapInstance);
+            } else if (layerType === 'street') {
+                document.getElementById('layer-street-btn').classList.add('active');
+                activeBaseLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19
+                }).addTo(leafletMapInstance);
+            } else {
+                document.getElementById('layer-osm-btn').classList.add('active');
+                activeBaseLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19
+                }).addTo(leafletMapInstance);
+            }
+        }
+
+        function getUserGpsLocation() {
+            triggerHaptic();
+            if (navigator.geolocation) {
+                showToast("GPS joylashuv aniqlanmoqda...");
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    if (leafletMapInstance) {
+                        leafletMapInstance.flyTo([lat, lng], 15, { duration: 1.2 });
+                        const userMarker = L.marker([lat, lng]).addTo(leafletMapInstance);
+                        userMarker.bindPopup('<div style="font-weight: 800; color: #2563EB;">📍 Siz shu yerdasiz</div>').openPopup();
+                        showToast("Joylashuvingiz topildi!");
+                    }
+                }, () => {
+                    showToast("GPS joylashuv ruxsati berilmadi.");
+                });
+            }
+        }
+
+        // 7. Smart Budget Calculator Logic
+        let currentBudgetMln = 80;
+
+        function adjustBudget(diff) {
+            triggerHaptic();
+            currentBudgetMln = Math.max(20, Math.min(500, currentBudgetMln + diff));
+            updateBudgetUI();
+        }
+
+        function setPresetBudget(val) {
+            triggerHaptic();
+            currentBudgetMln = val;
+            document.querySelectorAll('.budget-chip').forEach(c => {
+                c.classList.toggle('active', c.textContent === val + 'M');
+            });
+            updateBudgetUI();
+        }
+
+        function updateBudgetUI() {
+            document.getElementById('budget-million-text').textContent = currentBudgetMln;
+            const total = currentBudgetMln * 1000000;
+
+            const costPerGuest = Math.round(total / 350);
+            document.getElementById('cost-per-guest').textContent = costPerGuest.toLocaleString('uz-UZ');
+
+            document.getElementById('budget-venue').textContent = (currentBudgetMln * 0.45).toFixed(1) + " mln";
+            document.getElementById('budget-singer').textContent = (currentBudgetMln * 0.20).toFixed(1) + " mln";
+            document.getElementById('budget-photo').textContent = (currentBudgetMln * 0.12).toFixed(1) + " mln";
+            document.getElementById('budget-dress').textContent = (currentBudgetMln * 0.10).toFixed(1) + " mln";
+            document.getElementById('budget-decor').textContent = (currentBudgetMln * 0.08).toFixed(1) + " mln";
+            document.getElementById('budget-car').textContent = (currentBudgetMln * 0.05).toFixed(1) + " mln";
+        }
+
+        // 8. Service Detail Drawer
+        function openDetailModal(id) {
+            triggerHaptic();
+            const s = SERVICES_DATA.find(item => item.id === id);
+            if (!s) return;
+
+            const content = document.getElementById('modal-content');
+            content.innerHTML = `
+                <img src="${s.image}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 18px; margin-bottom: 14px;" />
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                    <span style="font-size: 11px; font-weight: 800; color: var(--gold-700); background: var(--gold-50); padding: 4px 10px; border-radius: 8px;">${s.catName}</span>
+                    <span style="font-size: 12px; font-weight: 800; color: var(--charcoal-900);"><i class="fa-solid fa-star" style="color: #FBBF24;"></i> ${s.rating} (${s.reviews} sharh)</span>
+                </div>
+                <div style="font-size: 19px; font-weight: 900; color: var(--charcoal-900); margin-bottom: 4px;">${s.name}</div>
+                <div style="font-size: 12.5px; color: var(--charcoal-500); margin-bottom: 12px;">
+                    <i class="fa-solid fa-location-dot" style="color: var(--gold-600);"></i> ${s.city}, ${s.district} • 👥 ${s.capacity}
+                </div>
+                <div style="font-size: 13px; color: var(--charcoal-700); line-height: 1.6; margin-bottom: 16px;">
+                    ${s.desc}
+                </div>
+
+                <div style="font-size: 13px; font-weight: 800; color: var(--charcoal-900); margin-bottom: 8px;">Afzalliklar va Qulayliklar:</div>
+                <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px;">
+                    ${s.features.map(f => `
+                        <div style="font-size: 12px; color: var(--charcoal-700); display: flex; align-items: center; gap: 6px;">
+                            <i class="fa-solid fa-check" style="color: #10B981;"></i> ${f}
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 14px;">
+                    <a href="tel:+998901112233" style="flex: 1; background: var(--gold-50); border: 1px solid var(--border-subtle); color: var(--charcoal-900); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 800; text-align: center; text-decoration: none;">
+                        <i class="fa-solid fa-phone" style="color: #10B981;"></i> Qo'ng'iroq
+                    </a>
+                    <button class="btn-submit-gold" style="flex: 1.5; margin: 0; padding: 12px;" onclick="openBookingModal('${s.name}')">
+                        <i class="fa-solid fa-calendar-check"></i> Bron So'rovi
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('detail-modal').classList.add('active');
+        }
+
+        function closeDetailModal(e) {
+            document.getElementById('detail-modal').classList.remove('active');
+        }
+
+        // 9. Booking Modal
+        function openBookingModal(targetTitle) {
+            triggerHaptic();
+            closeDetailModal();
+            document.getElementById('booking-target-title').textContent = targetTitle || "Umumiy So'rov";
+            document.getElementById('booking-modal').classList.add('active');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('booking-modal').classList.remove('active');
+        }
+
+        function submitBookingRequest() {
+            const name = document.getElementById('book-name').value.trim();
+            const phone = document.getElementById('book-phone').value.trim();
+            const target = document.getElementById('booking-target-title').textContent;
+
+            if (!name || !phone) {
+                alert("Iltimos, ismingiz va telefon raqamingizni kiriting!");
+                return;
+            }
+
+            triggerHaptic('heavy');
+            closeBookingModal();
+            showToast("So'rovingiz qabul qilindi! Tez orada bog'lanamiz. ✅");
+
+            // If inside Telegram, we can send notification or data
+            if (tg) {
+                try {
+                    tg.sendData(JSON.stringify({ type: 'BOOKING_REQUEST', name, phone, target }));
+                } catch(e) {}
+            }
+        }
+
+        // 10. Vendor Service Submission
+        function submitVendorService() {
+            const title = document.getElementById('create-title').value.trim();
+            const phone = document.getElementById('create-phone').value.trim();
+            const price = document.getElementById('create-price').value.trim();
+
+            if (!title || !phone || !price) {
+                alert("Iltimos, xizmat nomi, narxi va telefon raqamini to'ldiring!");
+                return;
+            }
+
+            triggerHaptic('heavy');
+            showToast("Xizmatingiz qabul qilindi va tekshiruvga yuborildi! ✨");
+
+            // Reset inputs
+            document.getElementById('create-title').value = '';
+            document.getElementById('create-phone').value = '';
+            document.getElementById('create-price').value = '';
+            document.getElementById('create-telegram').value = '';
+            document.getElementById('create-desc').value = '';
+
+            setTimeout(() => switchTab('home'), 1200);
+        }
+
+        // 11. Share Invite on Telegram
+        function shareInviteOnTelegram() {
+            triggerHaptic();
+            const url = "https://tuybox.asilbek.tech/invite/demo";
+            const text = "Hurmatli mehmon! Sizni to'yimizga samimiy taklif etamiz. Ushbu havola orqali manzil, vaqt va tafsilotlarni ko'rishingiz mumkin: 💍";
+            const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+            
+            if (tg?.openTelegramLink) {
+                tg.openTelegramLink(tgShareUrl);
+            } else {
+                window.open(tgShareUrl, '_blank');
+            }
+        }
+
+        // Initial Boot
+        document.addEventListener('DOMContentLoaded', () => {
+            renderServices();
+            updateBudgetUI();
+        });
     </script>
 </body>
 </html>

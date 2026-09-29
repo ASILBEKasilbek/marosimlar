@@ -353,6 +353,11 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
         <style>
           * { margin: 0; padding: 0; box-sizing: border-box; }
           body, html, #map { width: 100%; height: 100%; background: #0B0E14; overflow: hidden; }
+
+          /* OpenStreetMap Dark Theme Filter */
+          .dark-tiles {
+            filter: brightness(0.65) invert(1) contrast(2.6) hue-rotate(200deg) saturate(0.3) brightness(0.85);
+          }
           
           /* Razor-Sharp Custom Pins */
           .custom-pin {
@@ -483,21 +488,21 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
             attributionControl: false
           }).setView([41.3050, 69.2650], 12);
 
-          // 1. Ultra-Clean CartoDB Dark Matter Retina Tile Layer (Default, zero blur, sharp labels)
-          const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}@2x.png', {
+          // 1. Ochiq va Tezkor OpenStreetMap (Tungi Rejim)
+          const darkLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            subdomains: ['a', 'b', 'c', 'd']
+            className: 'dark-tiles'
           }).addTo(map);
 
-          // 2. High-Res Satellite Layer (ESRI World Imagery)
-          const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            maxZoom: 19
+          // 2. Yuqori Aniq Sun'iy Yo'ldosh (Google Satellite Hybrid)
+          const satelliteLayer = L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['0', '1', '2', '3']
           });
 
-          // 3. Crisp Daylight Street Layer (CartoDB Voyager Retina)
-          const streetLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png', {
-            maxZoom: 19,
-            subdomains: ['a', 'b', 'c', 'd']
+          // 3. Kunduzgi Ochiq OpenStreetMap
+          const streetLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
           });
 
           let venues = ${JSON.stringify(filteredVenues)};
@@ -760,12 +765,15 @@ export const VenueMapScreen: React.FC<VenueMapScreenProps> = ({
         <WebView
           ref={webViewRef}
           originWhitelist={['*']}
-          source={{ html: mapHtml }}
+          source={{ html: mapHtml, baseUrl: 'https://openstreetmap.org' }}
           style={styles.mapWebView}
           javaScriptEnabled={true}
           domStorageEnabled={true}
           geolocationEnabled={true}
           mixedContentMode="always"
+          allowFileAccess={true}
+          allowUniversalAccessFromFileURLs={true}
+          userAgent="Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36 TuyBox/1.0"
           startInLoadingState={true}
           renderLoading={() => (
             <View style={[styles.mapLoadingBox, { backgroundColor: colors.bgBase }]}>
