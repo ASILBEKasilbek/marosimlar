@@ -22,24 +22,57 @@
 
     <style>
         :root {
-            /* Hashamatli Oltin & Ipak Chini (Royal Champagne Gold & Warm Ivory) */
+            /* KUNDUZGI REJIM (LIGHT MODE) - ZARHAL TILLO VA OQ IPAK */
             --bg-page: #FAF7F2;
             --bg-card: #FFFFFF;
             --bg-card-soft: #FDFBF8;
-            --gold-gradient: linear-gradient(135deg, #E5C383 0%, #C4984F 100%);
-            --gold-gradient-hover: linear-gradient(135deg, #EDCF93 0%, #D3A75E 100%);
-            --gold-primary: #C4984F;
-            --gold-dark: #9B7433;
-            --gold-light: #F7EEDB;
-            --gold-border: rgba(196, 152, 79, 0.28);
-            --gold-glow: 0 8px 25px rgba(196, 152, 79, 0.25);
-            --text-dark: #2A2521;
-            --text-muted: #7E746A;
-            --shadow-card: 0 10px 30px rgba(160, 130, 95, 0.09);
-            --shadow-elevated: 0 16px 45px rgba(160, 130, 95, 0.16);
+            --bg-input: #F7F3EC;
+            --text-dark: #241E19;
+            --text-muted: #786C60;
+            --border-color: rgba(230, 162, 10, 0.28);
+            --border-light: rgba(0, 0, 0, 0.06);
+
+            /* ZUR SARIQ GOLD PALITRASI (Radiant Imperial Gold) */
+            --gold-primary: #E6A10A;
+            --gold-dark: #B57700;
+            --gold-light: #FFF8E6;
+            --gold-gradient: linear-gradient(135deg, #FFD54F 0%, #FFA000 50%, #D47A00 100%);
+            --gold-gradient-hover: linear-gradient(135deg, #FFE082 0%, #FFB300 50%, #E68A00 100%);
+            --gold-glow: 0 8px 24px rgba(255, 160, 0, 0.35);
+            --gold-badge-bg: rgba(255, 160, 0, 0.12);
+
+            --shadow-card: 0 8px 26px rgba(140, 105, 50, 0.08);
+            --shadow-elevated: 0 16px 45px rgba(140, 105, 50, 0.15);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --map-tiles-filter: none;
             --radius-card: 22px;
             --radius-pill: 999px;
             --safe-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        /* TUNGI REJIM (DARK MODE) - OBSIDIAN & YORQIN ZARHAL TILLO */
+        body.dark-mode {
+            --bg-page: #0D111A;
+            --bg-card: #151C28;
+            --bg-card-soft: #1B2434;
+            --bg-input: #101622;
+            --text-dark: #F7FAFC;
+            --text-muted: #94A3B8;
+            --border-color: rgba(255, 213, 79, 0.25);
+            --border-light: rgba(255, 255, 255, 0.08);
+
+            --gold-primary: #FFD54F;
+            --gold-dark: #FFA000;
+            --gold-light: rgba(255, 213, 79, 0.15);
+            --gold-gradient: linear-gradient(135deg, #FFE082 0%, #FFB300 50%, #D47A00 100%);
+            --gold-gradient-hover: linear-gradient(135deg, #FFF176 0%, #FFCA28 50%, #E68A00 100%);
+            --gold-glow: 0 8px 28px rgba(255, 179, 0, 0.45);
+            --gold-badge-bg: rgba(255, 213, 79, 0.18);
+
+            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.45);
+            --shadow-elevated: 0 16px 45px rgba(0, 0, 0, 0.6);
+            --nav-bg: rgba(21, 28, 40, 0.96);
+            --map-tiles-filter: brightness(0.65) invert(1) contrast(2.6) hue-rotate(200deg) saturate(0.3) brightness(0.85);
         }
 
         * {
@@ -48,6 +81,7 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
         }
 
         body {
@@ -59,7 +93,6 @@
             justify-content: center;
         }
 
-        /* Mobil qobiq */
         .app-shell {
             width: 100%;
             max-width: 440px;
@@ -68,7 +101,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            box-shadow: 0 0 50px rgba(0,0,0,0.06);
+            box-shadow: 0 0 50px rgba(0,0,0,0.1);
             padding-bottom: calc(75px + var(--safe-bottom));
         }
 
@@ -77,23 +110,23 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(250, 247, 242, 0.96);
+            background: var(--nav-bg);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
-            padding: 12px 18px 10px;
+            padding: 12px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(196, 152, 79, 0.14);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .header-avatar {
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #E6D0B3, #C9A779);
-            border: 2px solid #FFFFFF;
-            box-shadow: 0 4px 12px rgba(196, 152, 79, 0.2);
+            background: var(--gold-gradient);
+            padding: 2px;
+            box-shadow: var(--gold-glow);
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -104,6 +137,7 @@
         .header-avatar img {
             width: 100%;
             height: 100%;
+            border-radius: 50%;
             object-fit: cover;
         }
 
@@ -133,21 +167,43 @@
             line-height: 1;
         }
 
+        .header-right-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Tezkor rejim almashtirish tugmasi */
+        .theme-toggle-header {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--gold-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: var(--shadow-card);
+        }
+
         .header-call-btn {
             background: var(--gold-gradient);
-            color: #FFFFFF;
+            color: #1A1200;
             padding: 8px 14px;
             border-radius: var(--radius-pill);
             text-decoration: none;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 6px;
             box-shadow: var(--gold-glow);
         }
 
-        /* 2. QIDIRUV VA FILTRLAR */
+        /* 2. QIDIRUV VA MAROSIM TURLARI */
         .search-section {
             padding: 12px 18px 6px;
         }
@@ -155,7 +211,7 @@
         .search-pill-box {
             position: relative;
             background: var(--bg-card);
-            border: 1px solid var(--gold-border);
+            border: 1.5px solid var(--border-color);
             border-radius: var(--radius-pill);
             padding: 6px 8px 6px 18px;
             display: flex;
@@ -174,7 +230,7 @@
         }
 
         .search-pill-box input::placeholder {
-            color: #9C8E82;
+            color: var(--text-muted);
             font-weight: 500;
         }
 
@@ -184,7 +240,7 @@
             border-radius: 50%;
             background: var(--gold-gradient);
             border: none;
-            color: #FFFFFF;
+            color: #1A1200;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -193,7 +249,6 @@
             box-shadow: var(--gold-glow);
         }
 
-        /* Marosim Turlari (Katta yoshdagilarga tushunarli) */
         .event-pills-row {
             display: flex;
             gap: 8px;
@@ -211,7 +266,7 @@
             padding: 9px 16px;
             border-radius: var(--radius-pill);
             background: var(--bg-card);
-            border: 1.5px solid rgba(196, 152, 79, 0.22);
+            border: 1.5px solid var(--border-color);
             font-size: 14px;
             font-weight: 700;
             color: var(--text-dark);
@@ -219,14 +274,13 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-            transition: all 0.2s ease;
+            box-shadow: var(--shadow-card);
         }
 
         .event-chip.active {
             background: var(--gold-gradient);
             border-color: transparent;
-            color: #FFFFFF;
+            color: #1A1200;
             box-shadow: var(--gold-glow);
         }
 
@@ -242,7 +296,7 @@
             font-family: 'Playfair Display', serif;
             font-size: 21px;
             font-weight: 700;
-            color: #382C22;
+            color: var(--text-dark);
             letter-spacing: -0.2px;
         }
 
@@ -274,14 +328,9 @@
             background: var(--bg-card);
             border-radius: var(--radius-card);
             padding: 12px;
-            border: 1px solid var(--gold-border);
+            border: 1.5px solid var(--border-color);
             box-shadow: var(--shadow-card);
             cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .palace-card:active {
-            transform: scale(0.98);
         }
 
         .palace-img-wrap {
@@ -290,7 +339,7 @@
             height: 175px;
             border-radius: 16px;
             overflow: hidden;
-            background: #EAE5DE;
+            background: #2A2520;
         }
 
         .palace-img-wrap img {
@@ -303,14 +352,14 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(30, 24, 18, 0.8);
+            background: rgba(18, 14, 10, 0.85);
             backdrop-filter: blur(6px);
-            color: #FFFFFF;
-            padding: 5px 10px;
+            color: #FFD54F;
+            border: 1px solid rgba(255, 213, 79, 0.4);
+            padding: 5px 12px;
             border-radius: var(--radius-pill);
             font-size: 11px;
             font-weight: 800;
-            letter-spacing: 0.3px;
         }
 
         .palace-info {
@@ -339,7 +388,7 @@
             align-items: center;
             gap: 4px;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--gold-primary);
         }
 
@@ -350,7 +399,7 @@
             font-size: 13px;
             color: var(--text-muted);
             font-weight: 600;
-            margin-top: 2px;
+            margin-top: 3px;
         }
 
         .palace-price {
@@ -359,14 +408,14 @@
             color: var(--gold-primary);
         }
 
-        /* 5. SIZGA YAQIN TO'YXONALAR (Xarita banneri) */
+        /* 5. YAQIN ATROFDAGI JOYLAR BANNERI */
         .near-you-section {
             padding: 10px 18px 14px;
         }
 
         .near-you-card {
-            background: linear-gradient(135deg, #FFFDF9 0%, #F5ECE0 100%);
-            border: 1.5px solid var(--gold-border);
+            background: var(--bg-card-soft);
+            border: 1.5px solid var(--border-color);
             border-radius: var(--radius-card);
             padding: 16px 18px;
             display: flex;
@@ -374,18 +423,13 @@
             justify-content: space-between;
             box-shadow: var(--shadow-card);
             cursor: pointer;
-            transition: transform 0.15s ease;
-        }
-
-        .near-you-card:active {
-            transform: scale(0.98);
         }
 
         .near-you-text h4 {
             font-family: 'Playfair Display', serif;
             font-size: 18px;
             font-weight: 700;
-            color: #382C22;
+            color: var(--text-dark);
             margin-bottom: 3px;
         }
 
@@ -397,18 +441,18 @@
 
         .map-badge-btn {
             background: var(--gold-gradient);
-            color: #FFFFFF;
-            width: 44px;
-            height: 44px;
+            color: #1A1200;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 19px;
             box-shadow: var(--gold-glow);
         }
 
-        /* 6. TO'Y XIZMATLARI BO'LIMLARI (2x2 Katta Vizual) */
+        /* 6. TO'Y XIZMATLARI (2x2 Katta Vizual Grid) */
         .categories-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -421,11 +465,10 @@
             height: 140px;
             border-radius: 20px;
             overflow: hidden;
-            background: #E8E2D8;
+            background: #2A2520;
             box-shadow: var(--shadow-card);
-            border: 1px solid rgba(196, 152, 79, 0.2);
+            border: 1.5px solid var(--border-color);
             cursor: pointer;
-            transition: transform 0.2s ease;
         }
 
         .cat-card:active {
@@ -441,7 +484,7 @@
         .cat-card-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(30, 24, 20, 0.75) 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(15, 12, 10, 0.78) 100%);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -452,25 +495,25 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.92);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 15px;
-            color: var(--gold-primary);
+            font-size: 16px;
+            color: #D47A00;
         }
 
         .cat-badge-bottom {
             background: var(--gold-gradient);
             padding: 6px 12px;
             border-radius: var(--radius-pill);
-            color: #FFFFFF;
+            color: #1A1200;
             font-size: 13px;
-            font-weight: 700;
+            font-weight: 800;
             text-align: center;
         }
 
-        /* 7. TO'YXONALAR RO'YXATI (Katta, aniq, sodda) */
+        /* 7. TO'YXONALAR RO'YXATI */
         .venue-list-section {
             padding: 0 18px 24px;
             display: flex;
@@ -482,7 +525,7 @@
             background: var(--bg-card);
             border-radius: var(--radius-card);
             overflow: hidden;
-            border: 1.5px solid var(--gold-border);
+            border: 1.5px solid var(--border-color);
             box-shadow: var(--shadow-card);
         }
 
@@ -490,7 +533,7 @@
             position: relative;
             width: 100%;
             height: 200px;
-            background: #ECE6DE;
+            background: #2A2520;
             cursor: pointer;
         }
 
@@ -504,13 +547,14 @@
             position: absolute;
             top: 12px;
             left: 12px;
-            background: rgba(255, 255, 255, 0.96);
+            background: var(--bg-card);
             padding: 5px 12px;
             border-radius: var(--radius-pill);
             font-size: 12px;
             font-weight: 800;
             color: var(--gold-primary);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            border: 1px solid var(--border-color);
         }
 
         .venue-card-body {
@@ -533,8 +577,8 @@
         }
 
         .venue-rate {
-            background: #FDF7EC;
-            border: 1px solid rgba(196, 152, 79, 0.3);
+            background: var(--gold-badge-bg);
+            border: 1px solid var(--border-color);
             color: var(--gold-primary);
             padding: 4px 9px;
             border-radius: 8px;
@@ -559,7 +603,7 @@
             align-items: center;
             justify-content: space-between;
             padding-top: 14px;
-            border-top: 1px solid #F0EAE1;
+            border-top: 1px solid var(--border-light);
         }
 
         .venue-price-box {
@@ -589,9 +633,9 @@
             padding: 0 16px;
             height: 44px;
             border-radius: 12px;
-            background: #F3ECE1;
+            background: var(--gold-light);
             color: var(--gold-dark);
-            border: 1px solid var(--gold-border);
+            border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -607,9 +651,9 @@
             border-radius: 12px;
             background: var(--gold-gradient);
             border: none;
-            color: #FFFFFF;
+            color: #1A1200;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -617,11 +661,7 @@
             box-shadow: var(--gold-glow);
         }
 
-        .btn-book:active {
-            transform: scale(0.96);
-        }
-
-        /* 8. XARITA (TO'LIQ ISHLAYDIGAN VA QULAY) */
+        /* 8. XARITA (TO'LIQ ISHLAYDIGAN, QIDIRUV VA TUMANLAR BILAN) */
         .map-view-container {
             display: none;
             height: calc(100vh - 135px);
@@ -632,20 +672,28 @@
             width: 100%;
             height: 100%;
             z-index: 1;
+            filter: var(--map-tiles-filter);
+        }
+
+        /* Tumanlar filtri paneli xaritada */
+        .map-controls-box {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            right: 12px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .map-search-bar {
-            position: absolute;
-            top: 12px;
-            left: 14px;
-            right: 14px;
-            z-index: 999;
-            background: #FFFFFF;
+            background: var(--bg-card);
             border-radius: var(--radius-pill);
             padding: 6px 16px;
             display: flex;
             align-items: center;
-            border: 1.5px solid var(--gold-border);
+            border: 1.5px solid var(--border-color);
             box-shadow: var(--shadow-elevated);
         }
 
@@ -653,21 +701,53 @@
             flex: 1;
             border: none;
             outline: none;
+            background: transparent;
             font-size: 14px;
             font-weight: 600;
             color: var(--text-dark);
         }
 
+        .map-district-chips {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 2px 0;
+        }
+
+        .map-district-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .district-chip {
+            flex-shrink: 0;
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-dark);
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
+        }
+
+        .district-chip.active {
+            background: var(--gold-gradient);
+            color: #1A1200;
+            border-color: transparent;
+        }
+
         .map-gps-btn {
             position: absolute;
             right: 14px;
-            top: 70px;
+            top: 100px;
             z-index: 999;
             width: 44px;
             height: 44px;
             border-radius: 50%;
-            background: #FFFFFF;
-            border: 1.5px solid var(--gold-border);
+            background: var(--bg-card);
+            border: 1.5px solid var(--border-color);
             color: var(--gold-primary);
             display: flex;
             align-items: center;
@@ -679,14 +759,14 @@
 
         .map-overlay-card {
             position: absolute;
-            bottom: 16px;
-            left: 14px;
-            right: 14px;
+            bottom: 14px;
+            left: 12px;
+            right: 12px;
             z-index: 999;
             background: var(--bg-card);
             border-radius: 20px;
             padding: 14px;
-            border: 1.5px solid var(--gold-border);
+            border: 1.5px solid var(--border-color);
             box-shadow: var(--shadow-elevated);
             display: flex;
             gap: 12px;
@@ -728,7 +808,7 @@
         .budget-hero-box {
             background: var(--bg-card);
             border-radius: var(--radius-card);
-            border: 1.5px solid var(--gold-border);
+            border: 1.5px solid var(--border-color);
             padding: 24px 18px;
             text-align: center;
             box-shadow: var(--shadow-card);
@@ -746,20 +826,15 @@
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background: #F4EDE2;
-            border: 1.5px solid var(--gold-border);
+            background: var(--gold-light);
+            border: 1.5px solid var(--border-color);
             color: var(--gold-dark);
             font-size: 22px;
-            font-weight: 700;
+            font-weight: 800;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-        }
-
-        .step-btn:active {
-            transform: scale(0.92);
         }
 
         .step-value-display {
@@ -778,22 +853,21 @@
 
         .tier-card {
             background: var(--bg-card-soft);
-            border: 1.5px solid #EAE3D5;
+            border: 1.5px solid var(--border-color);
             border-radius: 16px;
             padding: 12px 6px;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
         .tier-card.active {
-            background: #FFFDF9;
+            background: var(--gold-light);
             border-color: var(--gold-primary);
             box-shadow: var(--gold-glow);
         }
 
         .total-budget-display {
-            background: linear-gradient(135deg, #FFFDF9 0%, #F5ECE0 100%);
-            border: 1.5px solid var(--gold-border);
+            background: var(--bg-card-soft);
+            border: 1.5px solid var(--border-color);
             border-radius: 20px;
             padding: 18px;
             margin-bottom: 20px;
@@ -807,14 +881,14 @@
             margin: 6px 0;
         }
 
-        /* Byudjet taqsimoti kartochkalari */
         .budget-breakdown-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px dashed #E5DCCF;
+            padding: 9px 0;
+            border-bottom: 1px dashed var(--border-color);
             font-size: 13px;
             font-weight: 600;
+            color: var(--text-dark);
         }
 
         .btn-find-venues {
@@ -823,9 +897,9 @@
             border-radius: var(--radius-pill);
             background: var(--gold-gradient);
             border: none;
-            color: #FFFFFF;
+            color: #1A1200;
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
             box-shadow: var(--gold-glow);
             display: flex;
@@ -834,7 +908,7 @@
             gap: 8px;
         }
 
-        /* 10. E'LON BERISH (SODDA VA TUSHUNARLI) */
+        /* 10. E'LON BERISH */
         .add-view-container {
             display: none;
             padding: 16px 18px 30px;
@@ -843,7 +917,7 @@
         .form-card {
             background: var(--bg-card);
             border-radius: var(--radius-card);
-            border: 1.5px solid var(--gold-border);
+            border: 1.5px solid var(--border-color);
             padding: 24px 18px;
             box-shadow: var(--shadow-card);
         }
@@ -864,8 +938,8 @@
             width: 100%;
             height: 48px;
             border-radius: 12px;
-            border: 1.5px solid #E2D9CC;
-            background: #FDFBF8;
+            border: 1.5px solid var(--border-color);
+            background: var(--bg-input);
             padding: 0 14px;
             font-size: 15px;
             font-weight: 600;
@@ -875,29 +949,69 @@
 
         .form-control:focus {
             border-color: var(--gold-primary);
-            background: #FFFFFF;
+            background: var(--bg-card);
         }
 
-        /* 11. ALOQA & YORDAM */
-        .contact-view-container {
+        /* 11. PROFIL VA REJIMLAR (DARK/LIGHT MODE) */
+        .profile-view-container {
             display: none;
             padding: 16px 18px 30px;
         }
 
-        .contact-hero {
+        .profile-hero {
             background: var(--bg-card);
             border-radius: var(--radius-card);
-            border: 1.5px solid var(--gold-border);
+            border: 1.5px solid var(--border-color);
             padding: 24px 18px;
             text-align: center;
             box-shadow: var(--shadow-card);
             margin-bottom: 16px;
         }
 
+        /* Rejim tanlash blok */
+        .theme-selector-box {
+            background: var(--bg-card-soft);
+            border: 1.5px solid var(--border-color);
+            border-radius: 18px;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .theme-pills {
+            display: flex;
+            background: var(--bg-input);
+            padding: 4px;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--border-color);
+        }
+
+        .theme-pill-btn {
+            border: none;
+            background: transparent;
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .theme-pill-btn.active {
+            background: var(--gold-gradient);
+            color: #1A1200;
+            box-shadow: var(--gold-glow);
+        }
+
         .action-link-item {
             background: var(--bg-card);
             border-radius: 16px;
-            border: 1.5px solid var(--gold-border);
+            border: 1.5px solid var(--border-color);
             padding: 16px 18px;
             margin-bottom: 12px;
             display: flex;
@@ -906,7 +1020,7 @@
             text-decoration: none;
             color: var(--text-dark);
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            box-shadow: var(--shadow-card);
         }
 
         .action-link-left {
@@ -921,15 +1035,15 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: #F7EEDB;
-            color: var(--gold-primary);
+            background: var(--gold-light);
+            color: var(--gold-dark);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 17px;
         }
 
-        /* 12. PASTKI NAVIGATSIYA (O'ZBEK TUSHUNARLI SO'ZLAR BILAN) */
+        /* 12. PASTKI NAVIGATSIYA */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -938,14 +1052,14 @@
             width: 100%;
             max-width: 440px;
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--nav-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(196, 152, 79, 0.2);
+            border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-around;
             padding: 8px 8px calc(8px + var(--safe-bottom));
-            box-shadow: 0 -8px 25px rgba(160, 130, 95, 0.08);
+            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.08);
         }
 
         .nav-item {
@@ -954,11 +1068,10 @@
             align-items: center;
             gap: 3px;
             text-decoration: none;
-            color: #9C8E82;
+            color: var(--text-muted);
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.15s ease;
             padding: 4px 10px;
             border-radius: 12px;
         }
@@ -979,7 +1092,7 @@
         .drawer-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(30, 24, 18, 0.65);
+            background: rgba(10, 8, 5, 0.7);
             backdrop-filter: blur(4px);
             z-index: 2000;
             opacity: 0;
@@ -1000,11 +1113,12 @@
             width: 100%;
             max-width: 440px;
             z-index: 2001;
-            background: #FFFFFF;
+            background: var(--bg-card);
             border-radius: 28px 28px 0 0;
             padding: 24px 20px calc(24px + var(--safe-bottom));
-            box-shadow: 0 -15px 40px rgba(0,0,0,0.25);
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.3);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border-top: 2px solid var(--border-color);
         }
 
         .drawer-container.active {
@@ -1014,7 +1128,7 @@
         .drawer-handle {
             width: 44px;
             height: 4px;
-            background: #E0D7CB;
+            background: var(--border-color);
             border-radius: 10px;
             margin: 0 auto 16px;
         }
@@ -1024,13 +1138,14 @@
             top: 24px;
             left: 50%;
             transform: translateX(-50%) translateY(-100px);
-            background: #2A2521;
-            color: #FFFFFF;
+            background: #241E19;
+            color: #FFD54F;
+            border: 1px solid var(--border-color);
             padding: 14px 24px;
             border-radius: var(--radius-pill);
             font-size: 14px;
             font-weight: 700;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.35);
             z-index: 3000;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
@@ -1047,9 +1162,9 @@
 
     <div class="app-shell">
 
-        <!-- TEPADAGI PANEL -->
+        <!-- TEPADAGI ASOSIY PANEL -->
         <header class="app-header">
-            <div class="header-avatar" onclick="switchTab('contact')">
+            <div class="header-avatar" onclick="switchTab('profile')">
                 <img id="header-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200" alt="Avatar">
             </div>
 
@@ -1058,12 +1173,17 @@
                 <span class="brand-title">TuyBox</span>
             </div>
 
-            <a href="tel:+998712000000" class="header-call-btn">
-                <i class="fa-solid fa-phone"></i> Aloqa
-            </a>
+            <div class="header-right-actions">
+                <button class="theme-toggle-header" onclick="toggleTheme()" title="Rejimni almashtirish">
+                    <i class="fa-solid fa-moon" id="header-theme-icon"></i>
+                </button>
+                <a href="tel:+998712000000" class="header-call-btn">
+                    <i class="fa-solid fa-phone"></i> Aloqa
+                </a>
+            </div>
         </header>
 
-        <!-- 1-SAHIFA: ASOSIY (VITRINA) -->
+        <!-- 1-SAHIFA: ASOSIY VITRINA -->
         <main id="tab-home">
             <!-- Qidiruv maydoni -->
             <div class="search-section">
@@ -1075,7 +1195,7 @@
                 </div>
             </div>
 
-            <!-- Marosim turlari (To'y, Banket, Tug'ilgan kun, Korporativ) -->
+            <!-- Marosim turlari filtri -->
             <div class="event-pills-row">
                 <div class="event-chip active" onclick="filterByEvent(this, 'all')">
                     <span>✨</span> Barchasi
@@ -1158,7 +1278,7 @@
                 <div class="near-you-card" onclick="switchTab('map')">
                     <div class="near-you-text">
                         <h4>📍 Yaqin Atrofdagi Joylar</h4>
-                        <p>Xaritada joylashgan barcha to'yxonalarni ko'rish</p>
+                        <p>Xaritadan tumanlar bo'yicha to'yxonalarni topish</p>
                     </div>
                     <div class="map-badge-btn">
                         <i class="fa-solid fa-map-location-dot"></i>
@@ -1166,7 +1286,7 @@
                 </div>
             </div>
 
-            <!-- 3. TO'Y XIZMATLARI (2x2 Katta Vizual) -->
+            <!-- 3. TO'Y XIZMATLARI BO'LIMLARI (2x2 Grid) -->
             <div class="section-header">
                 <h3 class="section-title">Xizmat Bo'limlari</h3>
             </div>
@@ -1216,12 +1336,24 @@
             </div>
         </main>
 
-        <!-- 2-SAHIFA: XARITA (INTERAKTIV VA TO'LIQ ISHLAYDI) -->
+        <!-- 2-SAHIFA: XARITA (QIDIRUV VA TUMANLAR BILAN) -->
         <section id="tab-map" class="map-view-container">
-            <!-- Qidiruv paneli xarita ichida -->
-            <div class="map-search-bar">
-                <i class="fa-solid fa-magnifying-glass" style="color: var(--gold-primary); margin-right: 8px;"></i>
-                <input type="text" placeholder="Xaritadan to'yxona qidirish..." oninput="handleMapSearch(this.value)">
+            <div class="map-controls-box">
+                <!-- Qidiruv paneli -->
+                <div class="map-search-bar">
+                    <i class="fa-solid fa-magnifying-glass" style="color: var(--gold-primary); margin-right: 8px;"></i>
+                    <input type="text" placeholder="Xaritadan to'yxona yoki tuman qidirish..." oninput="handleMapSearch(this.value)">
+                </div>
+
+                <!-- Tumanlar tezkor filtri -->
+                <div class="map-district-chips">
+                    <div class="district-chip active" onclick="filterMapByDistrict(this, 'all')">Barchasi</div>
+                    <div class="district-chip" onclick="filterMapByDistrict(this, 'Yakkasaroy')">Yakkasaroy</div>
+                    <div class="district-chip" onclick="filterMapByDistrict(this, 'Chilonzor')">Chilonzor</div>
+                    <div class="district-chip" onclick="filterMapByDistrict(this, 'Yunusobod')">Yunusobod</div>
+                    <div class="district-chip" onclick="filterMapByDistrict(this, 'Mirobod')">Mirobod</div>
+                    <div class="district-chip" onclick="filterMapByDistrict(this, 'Shayxontohur')">Shayxontohur</div>
+                </div>
             </div>
 
             <!-- GPS tugmasi -->
@@ -1236,14 +1368,19 @@
                 <img id="map-card-img" class="map-overlay-thumb" src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=400" alt="Venue">
                 <div class="map-overlay-info">
                     <h4 id="map-card-title">Versal Grand Ballroom</h4>
-                    <p id="map-card-location"><i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> Yakkasaroy tumani</p>
+                    <p id="map-card-location" style="font-size: 13px; color: var(--text-muted);"><i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> Yakkasaroy tumani</p>
                     <div id="map-card-price" class="map-overlay-price">48,000,000 so'm</div>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <a id="map-card-phone-btn" href="tel:+998712000001" class="btn-call" style="height: 36px; padding: 0 10px;">
-                        <i class="fa-solid fa-phone"></i>
-                    </a>
-                    <button class="btn-book" style="height: 36px; padding: 0 12px; font-size: 12px;" onclick="openBookingDrawerFromMap()">
+                    <div style="display: flex; gap: 6px;">
+                        <a id="map-card-phone-btn" href="tel:+998712000001" class="btn-call" style="height: 38px; padding: 0 12px;" title="Qo'ng'iroq">
+                            <i class="fa-solid fa-phone"></i>
+                        </a>
+                        <a id="map-card-nav-btn" href="https://yandex.com/maps/?rtext=~41.2825,69.2435" target="_blank" class="btn-call" style="height: 38px; padding: 0 12px; background: var(--gold-badge-bg);" title="Yo'l ochish">
+                            <i class="fa-solid fa-diamond-turn-right" style="color: var(--gold-primary);"></i>
+                        </a>
+                    </div>
+                    <button class="btn-book" style="height: 38px; padding: 0 12px; font-size: 12px;" onclick="openBookingDrawerFromMap()">
                         Band Qilish
                     </button>
                 </div>
@@ -1255,7 +1392,7 @@
             <div class="budget-hero-box">
                 <h3 class="section-title" style="margin-bottom: 6px;">To'y Xarajatlari Hisoblagichi</h3>
                 <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
-                    To'yingizga qancha pul ketishini mehmonlar soniga qarab 1 soniyada bilib oling
+                    Mehmonlar soniga qarab to'y xarajatini 1 soniyada bilib oling
                 </p>
 
                 <div style="font-size: 13px; text-transform: uppercase; font-weight: 700; color: var(--text-muted);">
@@ -1273,17 +1410,17 @@
                 <div class="budget-tiers-grid">
                     <div class="tier-card" id="tier-eco" onclick="setBudgetTier('eco')">
                         <div style="font-size: 22px;">🟢</div>
-                        <div style="font-size: 13px; font-weight: 700;">Kamxarj</div>
+                        <div style="font-size: 13px; font-weight: 700; color: var(--text-dark);">Kamxarj</div>
                         <div style="font-size: 11px; color: var(--text-muted);">180 ming / kishi</div>
                     </div>
                     <div class="tier-card active" id="tier-std" onclick="setBudgetTier('std')">
                         <div style="font-size: 22px;">🟡</div>
-                        <div style="font-size: 13px; font-weight: 700;">O'rtacha</div>
+                        <div style="font-size: 13px; font-weight: 700; color: var(--text-dark);">O'rtacha</div>
                         <div style="font-size: 11px; color: var(--text-muted);">280 ming / kishi</div>
                     </div>
                     <div class="tier-card" id="tier-vip" onclick="setBudgetTier('vip')">
                         <div style="font-size: 22px;">👑</div>
-                        <div style="font-size: 13px; font-weight: 700;">VIP Dabdaba</div>
+                        <div style="font-size: 13px; font-weight: 700; color: var(--text-dark);">VIP Dabdaba</div>
                         <div style="font-size: 11px; color: var(--text-muted);">450 ming / kishi</div>
                     </div>
                 </div>
@@ -1295,27 +1432,27 @@
                     <div style="font-size: 13px; color: var(--text-muted);" id="per-guest-note">Kishi boshiga ~280,000 so'm to'g'ri keladi</div>
                 </div>
 
-                <!-- Taqsimot -->
-                <div style="background: #FFFFFF; border-radius: 16px; padding: 14px; margin-bottom: 20px; text-align: left; border: 1px solid #ECE4D8;">
+                <!-- Taqsimot foizlari -->
+                <div style="background: var(--bg-card); border-radius: 16px; padding: 14px; margin-bottom: 20px; text-align: left; border: 1.5px solid var(--border-color);">
                     <div class="budget-breakdown-row">
                         <span>🏰 To'yxona va dasturxon (50%):</span>
-                        <strong id="b-venue">56,000,000 so'm</strong>
+                        <strong id="b-venue" style="color: var(--gold-primary);">56,000,000 so'm</strong>
                     </div>
                     <div class="budget-breakdown-row">
                         <span>🎤 San'atkor va sozandalar (20%):</span>
-                        <strong id="b-music">22,400,000 so'm</strong>
+                        <strong id="b-music" style="color: var(--gold-primary);">22,400,000 so'm</strong>
                     </div>
                     <div class="budget-breakdown-row">
                         <span>📸 Foto va video studiya (12%):</span>
-                        <strong id="b-photo">13,440,000 so'm</strong>
+                        <strong id="b-photo" style="color: var(--gold-primary);">13,440,000 so'm</strong>
                     </div>
                     <div class="budget-breakdown-row">
                         <span>💐 Liboslar va gul bezaklari (10%):</span>
-                        <strong id="b-decor">11,200,000 so'm</strong>
+                        <strong id="b-decor" style="color: var(--gold-primary);">11,200,000 so'm</strong>
                     </div>
                     <div class="budget-breakdown-row" style="border-bottom: none;">
                         <span>🚗 Kortej va boshqa xarajatlar (8%):</span>
-                        <strong id="b-other">8,960,000 so'm</strong>
+                        <strong id="b-other" style="color: var(--gold-primary);">8,960,000 so'm</strong>
                     </div>
                 </div>
 
@@ -1325,12 +1462,12 @@
             </div>
         </section>
 
-        <!-- 4-SAHIFA: E'LON BERISH (JOY YOKI XIZMAT QO'SHISH) -->
+        <!-- 4-SAHIFA: E'LON BERISH -->
         <section id="tab-add" class="add-view-container">
             <div class="form-card">
-                <h3 class="section-title" style="margin-bottom: 6px;">E'lon Berish</h3>
+                <h3 class="section-title" style="margin-bottom: 6px;">E'lon Joylashtirish</h3>
                 <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
-                    Agar siz to'yxona, restoran egasi yoki san'atkor bo'lsangiz, xizmatingizni platformaga bepul qo'shing
+                    To'yxona, restoran egasi yoki san'atkor bo'lsangiz, xizmatingizni bepul e'lon qiling
                 </p>
 
                 <div class="form-group">
@@ -1339,7 +1476,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Xizmat Turi</label>
+                    <label class="form-label">Xizmat Yo'nalishi</label>
                     <select id="add-cat" class="form-control">
                         <option value="toyxonalar">To'yxona va Saroy</option>
                         <option value="restoranlar">Restoran va Osh</option>
@@ -1370,64 +1507,79 @@
             </div>
         </section>
 
-        <!-- 5-SAHIFA: ALOQA VA YORDAM -->
-        <section id="tab-contact" class="contact-view-container">
-            <div class="contact-hero">
-                <div style="width: 70px; height: 70px; border-radius: 50%; background: #F7EEDB; color: var(--gold-primary); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 12px;">
-                    <i class="fa-solid fa-headset"></i>
+        <!-- 5-SAHIFA: PROFIL VA REJIMLAR (DARK & LIGHT MODE) -->
+        <section id="tab-profile" class="profile-view-container">
+            <div class="profile-hero">
+                <div style="width: 72px; height: 72px; border-radius: 50%; background: var(--gold-gradient); color: #1A1200; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 12px; box-shadow: var(--gold-glow);">
+                    <i class="fa-solid fa-crown"></i>
                 </div>
-                <h3 class="section-title">TuyBox Yordam Markazi</h3>
-                <p style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">
-                    To'y tashkil qilish yoki xizmat tanlashda savolingiz bormi? Biz sizga bepul yordam beramiz!
-                </p>
+                <h3 class="section-title" id="user-display-name">Hurmatli Mehmon</h3>
+                <div style="font-size: 13px; color: var(--gold-primary); font-weight: 700; margin-top: 4px;">TuyBox Foydalanuvchisi</div>
             </div>
 
+            <!-- MAVZU SOZLAMALARI: KUNDUZGI VA TUNGI REJIM -->
+            <div class="theme-selector-box">
+                <div>
+                    <div style="font-size: 15px; font-weight: 700; color: var(--text-dark);">Ilova Mavzusi</div>
+                    <div style="font-size: 12px; color: var(--text-muted);" id="theme-status-text">Kunduzgi rejim (Yorug')</div>
+                </div>
+                <div class="theme-pills">
+                    <button class="theme-pill-btn active" id="pill-light" onclick="setThemeMode('light')">
+                        <i class="fa-solid fa-sun"></i> Yorug'
+                    </button>
+                    <button class="theme-pill-btn" id="pill-dark" onclick="setThemeMode('dark')">
+                        <i class="fa-solid fa-moon"></i> Tungi
+                    </button>
+                </div>
+            </div>
+
+            <!-- FOYDALI ALOQA VA HAVOLALAR -->
             <a href="tel:+998712000000" class="action-link-item">
                 <div class="action-link-left">
                     <div class="action-icon-circle"><i class="fa-solid fa-phone"></i></div>
                     <div>
-                        <div style="font-size: 15px; font-weight: 700;">To'g'ridan-to'g'ri Qo'ng'iroq</div>
+                        <div style="font-size: 15px; font-weight: 700;">24/7 Call Markaz</div>
                         <div style="font-size: 13px; color: var(--text-muted);">+998 (71) 200-00-00</div>
                     </div>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
+                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
             </a>
 
             <a href="https://t.me/asilbek_developer" target="_blank" class="action-link-item">
                 <div class="action-link-left">
                     <div class="action-icon-circle"><i class="fa-brands fa-telegram"></i></div>
                     <div>
-                        <div style="font-size: 15px; font-weight: 700;">Telegramdan Yozish</div>
-                        <div style="font-size: 13px; color: var(--text-muted);">Administrator bilan bog'lanish</div>
+                        <div style="font-size: 15px; font-weight: 700;">Telegramda Admin</div>
+                        <div style="font-size: 13px; color: var(--text-muted);">Savollar va takliflar uchun</div>
                     </div>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
+                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
             </a>
 
             <div class="action-link-item" onclick="shareInviteLink()">
                 <div class="action-link-left">
                     <div class="action-icon-circle"><i class="fa-solid fa-envelope-open-text"></i></div>
                     <div>
-                        <div style="font-size: 15px; font-weight: 700;">To'y Taklifnomasini Ulashish</div>
-                        <div style="font-size: 13px; color: var(--text-muted);">Qarindoshlarga Telegramdan yuborish</div>
+                        <div style="font-size: 15px; font-weight: 700;">To'y Taklifnomasi</div>
+                        <div style="font-size: 13px; color: var(--text-muted);">Telegram orqali ulashish</div>
                     </div>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
+                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
             </div>
 
             <a href="/admin" class="action-link-item">
                 <div class="action-link-left">
-                    <div class="action-icon-circle" style="background: #E8F5E9; color: #2E7D32;"><i class="fa-solid fa-sliders"></i></div>
+                    <div class="action-icon-circle" style="background: rgba(46, 125, 50, 0.15); color: #2E7D32;"><i class="fa-solid fa-sliders"></i></div>
                     <div>
                         <div style="font-size: 15px; font-weight: 700;">Boshqaruv Paneli (Admin)</div>
-                        <div style="font-size: 13px; color: var(--text-muted);">Statistika va buyurtmalar</div>
+                        <div style="font-size: 13px; color: var(--text-muted);">Buyurtmalar va statistika</div>
                     </div>
                 </div>
-                <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
+                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
             </a>
         </section>
 
-        <!-- PASTKI ASOSIY NAVIGATSIYA (5 TA ANIQ VA SODDA TUGMA) -->
+        <!-- PASTKI ASOSIY NAVIGATSIYA (5 TA SODDA O'ZBEK TUGMA) -->
         <nav class="bottom-nav">
             <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
                 <i class="fa-solid fa-house"></i>
@@ -1445,9 +1597,9 @@
                 <i class="fa-solid fa-circle-plus"></i>
                 <span>E'lon</span>
             </div>
-            <div class="nav-item" onclick="switchTab('contact')" id="nav-contact">
-                <i class="fa-solid fa-phone"></i>
-                <span>Aloqa</span>
+            <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
+                <i class="fa-solid fa-user"></i>
+                <span>Profil</span>
             </div>
         </nav>
 
@@ -1490,15 +1642,60 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // 1. Telegram WebApp Init
+        // 1. MAVZU (DARK / LIGHT MODE - DEFAULT: LIGHT)
+        let currentTheme = localStorage.getItem('tuybox_theme') || 'light';
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('tuybox_theme', theme);
+
+            const icon = document.getElementById('header-theme-icon');
+            const pillLight = document.getElementById('pill-light');
+            const pillDark = document.getElementById('pill-dark');
+            const statusText = document.getElementById('theme-status-text');
+
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+                if (icon) icon.className = 'fa-solid fa-sun';
+                if (pillLight) pillLight.classList.remove('active');
+                if (pillDark) pillDark.classList.add('active');
+                if (statusText) statusText.textContent = "Tungi rejim (Qorong'i)";
+                if (tg) {
+                    try {
+                        tg.setHeaderColor('#0D111A');
+                        tg.setBackgroundColor('#0D111A');
+                    } catch (e) {}
+                }
+            } else {
+                document.body.classList.remove('dark-mode');
+                if (icon) icon.className = 'fa-solid fa-moon';
+                if (pillLight) pillLight.classList.add('active');
+                if (pillDark) pillDark.classList.remove('active');
+                if (statusText) statusText.textContent = "Kunduzgi rejim (Yorug')";
+                if (tg) {
+                    try {
+                        tg.setHeaderColor('#FAF7F2');
+                        tg.setBackgroundColor('#FAF7F2');
+                    } catch (e) {}
+                }
+            }
+        }
+
+        function toggleTheme() {
+            triggerHaptic();
+            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        }
+
+        function setThemeMode(mode) {
+            triggerHaptic();
+            applyTheme(mode);
+        }
+
+        // 2. Telegram WebApp Init
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
             tg.expand();
-            try {
-                tg.setHeaderColor('#FAF7F2');
-                tg.setBackgroundColor('#FAF7F2');
-            } catch (e) {}
         }
 
         function triggerHaptic(type = 'light') {
@@ -1507,7 +1704,7 @@
             }
         }
 
-        // 2. VENUES DATA
+        // 3. VENUES DATA
         let VENUES_DATA = [
             {
                 id: 1,
@@ -1603,7 +1800,7 @@
 
         let selectedVenueForBooking = null;
 
-        // 3. FETCH LIVE SERVICES FROM SERVER
+        // 4. FETCH LIVE SERVICES FROM SERVER
         async function fetchLiveServices() {
             try {
                 const res = await fetch('/api/v1/services');
@@ -1633,7 +1830,7 @@
             renderVenues(VENUES_DATA);
         }
 
-        // 4. TAB SWITCHING (Asosiy, Xarita, Byudjet, E'lon, Aloqa)
+        // 5. TAB SWITCHING (Asosiy, Xarita, Byudjet, E'lon, Profil)
         function switchTab(tabName) {
             triggerHaptic();
 
@@ -1641,9 +1838,9 @@
             document.getElementById('tab-map').style.display = tabName === 'map' ? 'block' : 'none';
             document.getElementById('tab-budget').style.display = tabName === 'budget' ? 'block' : 'none';
             document.getElementById('tab-add').style.display = tabName === 'add' ? 'block' : 'none';
-            document.getElementById('tab-contact').style.display = tabName === 'contact' ? 'block' : 'none';
+            document.getElementById('tab-profile').style.display = tabName === 'profile' ? 'block' : 'none';
 
-            const tabs = ['home', 'map', 'budget', 'add', 'contact'];
+            const tabs = ['home', 'map', 'budget', 'add', 'profile'];
             tabs.forEach(t => {
                 const el = document.getElementById(`nav-${t}`);
                 if (el) {
@@ -1662,7 +1859,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 5. RENDER VENUE CARDS
+        // 6. RENDER VENUE CARDS
         function renderVenues(items) {
             const container = document.getElementById('venues-list-container');
             const countBadge = document.getElementById('venue-count-badge');
@@ -1676,7 +1873,7 @@
             if (items.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-                        <i class="fa-solid fa-magnifying-glass" style="font-size: 32px; color: #D6C8B5; margin-bottom: 10px;"></i>
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 32px; color: var(--border-color); margin-bottom: 10px;"></i>
                         <p style="font-weight: 600; font-size: 15px;">Hech qanday to'yxona topilmadi</p>
                     </div>
                 `;
@@ -1723,7 +1920,7 @@
             `).join('');
         }
 
-        // 6. FILTRLAR
+        // 7. FILTRLAR
         function filterByEvent(element, eventType) {
             triggerHaptic();
             document.querySelectorAll('.event-chip').forEach(c => c.classList.remove('active'));
@@ -1770,7 +1967,7 @@
             if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 7. TO'Y BYUDJETI KALKULYATORI
+        // 8. TO'Y BYUDJETI KALKULYATORI
         let guestCount = 400;
         let activeTier = 'std';
         const tierRates = { eco: 180000, std: 280000, vip: 450000 };
@@ -1796,7 +1993,6 @@
             document.getElementById('total-budget-sum').textContent = total.toLocaleString('uz-UZ') + " so'm";
             document.getElementById('per-guest-note').textContent = `Kishi boshiga ~${rate.toLocaleString('uz-UZ')} so'm to'g'ri keladi`;
 
-            // Taqsimot foizlari
             document.getElementById('b-venue').textContent = (total * 0.50).toLocaleString('uz-UZ') + " so'm";
             document.getElementById('b-music').textContent = (total * 0.20).toLocaleString('uz-UZ') + " so'm";
             document.getElementById('b-photo').textContent = (total * 0.12).toLocaleString('uz-UZ') + " so'm";
@@ -1804,7 +2000,7 @@
             document.getElementById('b-other').textContent = (total * 0.08).toLocaleString('uz-UZ') + " so'm";
         }
 
-        // 8. LEAFLET XARITA (TO'LIQ ISHLAYDI)
+        // 9. LEAFLET XARITA (TUMANLAR FILTRI VA NAVIGATSIYA BILAN)
         let mapInstance = null;
         let mapMarkers = [];
 
@@ -1828,7 +2024,6 @@
         }
 
         function loadMapMarkers(venues) {
-            // Avvalgi markerlarni tozalash
             mapMarkers.forEach(m => mapInstance.removeLayer(m));
             mapMarkers = [];
 
@@ -1836,7 +2031,7 @@
                 const icon = L.divIcon({
                     className: 'custom-pin',
                     html: `
-                        <div style="background: linear-gradient(135deg, #E5C383, #C4984F); width: 36px; height: 36px; border-radius: 50%; border: 2.5px solid #FFFFFF; box-shadow: 0 4px 14px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-size: 15px;">
+                        <div style="background: linear-gradient(135deg, #FFD54F, #FFA000); width: 36px; height: 36px; border-radius: 50%; border: 2.5px solid #FFFFFF; box-shadow: 0 4px 14px rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; color: #1A1200; font-size: 15px;">
                             <i class="fa-solid fa-archway"></i>
                         </div>
                     `,
@@ -1860,7 +2055,26 @@
             document.getElementById('map-card-location').innerHTML = `<i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> ${v.district} tumani`;
             document.getElementById('map-card-price').textContent = v.priceStr;
             document.getElementById('map-card-phone-btn').href = `tel:${v.phone}`;
+            document.getElementById('map-card-nav-btn').href = `https://yandex.com/maps/?rtext=~${v.lat},${v.lng}`;
             mapInstance.panTo([v.lat, v.lng], { animate: true });
+        }
+
+        function filterMapByDistrict(chip, district) {
+            triggerHaptic();
+            document.querySelectorAll('.district-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+
+            if (district === 'all') {
+                loadMapMarkers(VENUES_DATA);
+                mapInstance.setView([41.3050, 69.2650], 12);
+            } else {
+                const filtered = VENUES_DATA.filter(v => v.district.toLowerCase().includes(district.toLowerCase()));
+                loadMapMarkers(filtered);
+                if (filtered.length > 0) {
+                    selectVenueOnMap(filtered[0]);
+                    mapInstance.setView([filtered[0].lat, filtered[0].lng], 13);
+                }
+            }
         }
 
         function handleMapSearch(query) {
@@ -1888,14 +2102,14 @@
                         mapInstance.setView([latitude, longitude], 14);
                         L.circleMarker([latitude, longitude], {
                             radius: 8,
-                            color: '#2196F3',
-                            fillColor: '#2196F3',
+                            color: '#FFB300',
+                            fillColor: '#FFB300',
                             fillOpacity: 1
                         }).addTo(mapInstance);
-                        showToast("Sizning joylashuvingiz aniqlandi! 📍");
+                        showToast("Joylashuvingiz aniqlandi! 📍");
                     },
                     err => {
-                        showToast("GPS ruxsati berilmadi");
+                        showToast("GPS yoqilmadi");
                     }
                 );
             }
@@ -1909,7 +2123,7 @@
             }
         }
 
-        // 9. BAND QILISH OYNASI
+        // 10. BAND QILISH OYNASI
         function openBookingDrawer(venueId) {
             triggerHaptic('medium');
             const venue = VENUES_DATA.find(v => v.id === venueId) || VENUES_DATA[0];
@@ -1962,7 +2176,7 @@
             document.getElementById('book-phone').value = '';
         }
 
-        // 10. E'LON BERISH
+        // 11. E'LON BERISH
         async function submitNewVenuePublic() {
             const title = document.getElementById('add-title').value.trim();
             const category_slug = document.getElementById('add-cat').value;
@@ -2003,7 +2217,7 @@
             setTimeout(() => switchTab('home'), 1200);
         }
 
-        // 11. TAKLIFNOMA ULASHISH
+        // 12. TAKLIFNOMA ULASHISH
         function shareInviteLink() {
             triggerHaptic();
             const text = "Assalomu alaykum! Sizni to'yimizga samimiy taklif etamiz. To'liq tafsilotlar: 💍";
@@ -2017,7 +2231,7 @@
             }
         }
 
-        // 12. TOAST BILDIRISHNOMA
+        // 13. TOAST BILDIRISHNOMA
         function showToast(message) {
             triggerHaptic();
             const toast = document.getElementById('toast-element');
@@ -2029,8 +2243,9 @@
             }
         }
 
-        // 13. BOOT
+        // 14. INITIAL BOOT
         document.addEventListener('DOMContentLoaded', () => {
+            applyTheme(currentTheme);
             fetchLiveServices();
             updateBudgetDisplay();
         });
