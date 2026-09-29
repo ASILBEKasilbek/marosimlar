@@ -3,45 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TuyBox — To'y va Marosimlar Super-Ilovasi</title>
-    
+    <title>TuyBox — To'y va Marosimlar Ekotizimi</title>
+
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Playfair Display (Luxury Serif) & Plus Jakarta Sans (Modern UI) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome 6 Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Leaflet CSS & JS for Interactive Maps -->
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- Leaflet Maps CSS & JS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <style>
         :root {
-            /* Royal Champagne & Ivory Light Palette */
-            --bg-base: #FAF8F5;
+            /* Exactly matching luxury ivory & warm gold mockups */
+            --bg-page: #FAF7F2;
             --bg-card: #FFFFFF;
-            --bg-glass: rgba(255, 255, 255, 0.88);
-            --gold-50: #FCF9F2;
-            --gold-100: #F6ECCF;
-            --gold-300: #E5C87A;
-            --gold-500: #D4AF37;
-            --gold-600: #B89332;
-            --gold-700: #8C6D1F;
-            --charcoal-900: #1E232A;
-            --charcoal-700: #334155;
-            --charcoal-500: #64748B;
-            --charcoal-300: #94A3B8;
-            --border-subtle: rgba(212, 175, 55, 0.22);
-            --border-light: rgba(0, 0, 0, 0.06);
-            --shadow-soft: 0 4px 20px -2px rgba(184, 147, 50, 0.12);
-            --shadow-hover: 0 10px 28px -4px rgba(184, 147, 50, 0.22);
-            --radius-card: 20px;
-            --radius-pill: 30px;
+            --bg-card-soft: #FDFBF8;
+            --gold-gradient: linear-gradient(135deg, #E5C383 0%, #C4984F 100%);
+            --gold-gradient-hover: linear-gradient(135deg, #EDCF93 0%, #D3A75E 100%);
+            --gold-primary: #C4984F;
+            --gold-light: #F7EEDB;
+            --gold-border: rgba(196, 152, 79, 0.25);
+            --gold-glow: 0 10px 25px rgba(196, 152, 79, 0.22);
+            --text-dark: #2A2521;
+            --text-muted: #857B72;
+            --shadow-card: 0 10px 30px rgba(160, 130, 95, 0.08);
+            --shadow-elevated: 0 18px 45px rgba(160, 130, 95, 0.14);
+            --radius-card: 24px;
+            --radius-pill: 999px;
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
         * {
@@ -49,1841 +46,1797 @@
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            background-color: var(--bg-base);
-            color: var(--charcoal-900);
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            min-height: 100vh;
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            user-select: none;
-            padding-bottom: 90px;
+            display: flex;
+            justify-content: center;
         }
 
-        /* Top Luxury App Bar */
+        /* App Container constrained for desktop, 100% on mobile */
+        .app-shell {
+            width: 100%;
+            max-width: 440px;
+            min-height: 100vh;
+            background: var(--bg-page);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,0.06);
+            padding-bottom: calc(75px + var(--safe-bottom));
+        }
+
+        /* ============================================================
+           1. TOP HEADER (Matching Mockup 1-to-1)
+           ============================================================ */
         .app-header {
             position: sticky;
             top: 0;
-            z-index: 90;
-            background: var(--bg-glass);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border-bottom: 1px solid var(--border-subtle);
-            padding: 12px 18px;
+            z-index: 100;
+            background: rgba(250, 247, 242, 0.95);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 14px 20px 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 1px solid rgba(196, 152, 79, 0.12);
+        }
+
+        .header-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #E6D0B3, #C9A779);
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 4px 12px rgba(196, 152, 79, 0.2);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .header-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .header-brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            text-decoration: none;
         }
 
-        .header-logo-badge {
-            width: 38px;
-            height: 38px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #FFF9EB, #F2DC9B);
-            border: 1.5px solid var(--gold-500);
+        .brand-monogram {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-weight: 700;
+            font-size: 26px;
+            color: var(--gold-primary);
+            line-height: 1;
+        }
+
+        .brand-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 24px;
+            letter-spacing: -0.3px;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .header-notification {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--gold-border);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 3px 10px rgba(212, 175, 55, 0.25);
-        }
-
-        .header-title-box h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 19px;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            color: var(--charcoal-900);
-            line-height: 1.1;
-        }
-
-        .header-title-box p {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--gold-600);
-            letter-spacing: 0.3px;
-        }
-
-        .header-user-chip {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--gold-50);
-            border: 1px solid var(--border-subtle);
-            padding: 6px 12px;
-            border-radius: var(--radius-pill);
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--charcoal-900);
+            color: var(--gold-primary);
+            font-size: 17px;
+            box-shadow: var(--shadow-card);
             cursor: pointer;
+            position: relative;
         }
 
-        .header-user-chip i {
-            color: var(--gold-500);
+        .notification-dot {
+            position: absolute;
+            top: 9px;
+            right: 10px;
+            width: 7px;
+            height: 7px;
+            background: #E53935;
+            border-radius: 50%;
+            border: 1.5px solid #FFFFFF;
         }
 
-        /* Event Type Filter (Strategic Wedge: To'y + Banket + Tug'ilgan Kun + Korporativ) */
-        .event-types-scroller {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 12px 16px 4px;
-            scrollbar-width: none;
+        /* ============================================================
+           2. SEARCH & EVENT CHIPS
+           ============================================================ */
+        .search-section {
+            padding: 14px 20px 8px;
         }
-        .event-types-scroller::-webkit-scrollbar { display: none; }
 
-        .event-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
+        .search-pill-box {
+            position: relative;
             background: var(--bg-card);
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--gold-border);
             border-radius: var(--radius-pill);
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--charcoal-700);
-            white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .event-pill.active {
-            background: linear-gradient(135deg, #F9F1DC, #F0DBA0);
-            border-color: var(--gold-500);
-            color: var(--gold-700);
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
-            transform: translateY(-1px);
-        }
-
-        /* Search & Location Bar */
-        .search-container {
-            padding: 10px 16px;
-        }
-
-        .search-box {
+            padding: 5px 6px 5px 18px;
             display: flex;
             align-items: center;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 10px 14px;
-            gap: 10px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+            box-shadow: var(--shadow-card);
         }
 
-        .search-box i {
-            color: var(--gold-500);
-            font-size: 16px;
-        }
-
-        .search-input {
+        .search-pill-box input {
             flex: 1;
             border: none;
             outline: none;
             background: transparent;
-            font-family: inherit;
-            font-size: 13.5px;
-            color: var(--charcoal-900);
+            font-size: 14px;
             font-weight: 500;
+            color: var(--text-dark);
         }
-        .search-input::placeholder { color: var(--charcoal-300); }
 
-        /* District / Filter Chips */
-        .district-scroller {
+        .search-pill-box input::placeholder {
+            color: #A99E94;
+            font-weight: 400;
+        }
+
+        .search-circle-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--gold-gradient);
+            border: none;
+            color: #FFFFFF;
             display: flex;
-            gap: 6px;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: var(--gold-glow);
+            transition: transform 0.15s ease;
+        }
+
+        .search-circle-btn:active {
+            transform: scale(0.92);
+        }
+
+        /* Event type selector (Wedge strategic pills) */
+        .event-pills-row {
+            display: flex;
+            gap: 8px;
+            padding: 10px 20px 6px;
             overflow-x: auto;
-            padding: 2px 16px 10px;
             scrollbar-width: none;
         }
-        .district-scroller::-webkit-scrollbar { display: none; }
 
-        .district-chip {
-            padding: 6px 12px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            font-size: 11.5px;
-            font-weight: 600;
-            color: var(--charcoal-500);
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .district-chip.active {
-            background: var(--charcoal-900);
-            color: #FFFFFF;
-            border-color: var(--charcoal-900);
-        }
-
-        /* View Screens Container */
-        .screen-view {
+        .event-pills-row::-webkit-scrollbar {
             display: none;
-            animation: fadeIn 0.25s ease-out;
-        }
-        .screen-view.active { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* TAB 1: ASOSIY (Home Screen) */
-        /* Hero VIP Banner */
-        .hero-banner {
-            margin: 6px 16px 16px;
-            padding: 20px;
-            border-radius: 24px;
-            background: linear-gradient(135deg, #1C232E 0%, #0F141C 100%);
-            color: #FFFFFF;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px -5px rgba(15, 20, 28, 0.4);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .hero-banner::after {
-            content: '👑';
-            position: absolute;
-            right: 12px;
-            bottom: -15px;
-            font-size: 85px;
-            opacity: 0.12;
-            pointer-events: none;
-        }
-
-        .hero-tag {
-            display: inline-flex;
+        .event-chip {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            background: var(--bg-card);
+            border: 1px solid rgba(196, 152, 79, 0.2);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(212, 175, 55, 0.2);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.8px;
-            color: var(--gold-300);
-            margin-bottom: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 8px rgba(160, 130, 95, 0.04);
         }
 
-        .hero-title {
-            font-size: 21px;
-            font-weight: 900;
-            line-height: 1.25;
-            margin-bottom: 6px;
+        .event-chip.active {
+            background: var(--gold-gradient);
+            border-color: transparent;
+            color: #FFFFFF;
+            box-shadow: var(--gold-glow);
         }
 
-        .hero-desc {
-            font-size: 12px;
-            color: #CBD5E1;
-            line-height: 1.5;
-            max-width: 85%;
-            margin-bottom: 14px;
-        }
-
-        .hero-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89332 100%);
-            color: #070B14;
-            padding: 10px 18px;
-            border-radius: 14px;
-            font-size: 12.5px;
-            font-weight: 800;
-            text-decoration: none;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
-        }
-
-        /* Categories Section */
+        /* ============================================================
+           3. SECTION TITLES
+           ============================================================ */
         .section-header {
+            padding: 18px 20px 10px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0 18px 10px;
+            justify-content: space-between;
         }
 
         .section-title {
-            font-size: 15px;
-            font-weight: 800;
-            color: var(--charcoal-900);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .section-title i { color: var(--gold-500); }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 0 16px 18px;
-        }
-
-        .category-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 18px;
-            padding: 14px 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .category-card:active {
-            transform: scale(0.96);
-        }
-
-        .cat-icon-box {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            margin: 0 auto 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Playfair Display', serif;
             font-size: 20px;
-            background: var(--gold-50);
-            border: 1px solid var(--border-subtle);
-        }
-
-        .cat-name {
-            font-size: 11.5px;
             font-weight: 700;
-            color: var(--charcoal-900);
-            line-height: 1.25;
-        }
-
-        .cat-count {
-            font-size: 10px;
-            color: var(--charcoal-500);
-            margin-top: 2px;
-        }
-
-        /* Map Preview Shortcut Banner */
-        .map-shortcut-card {
-            margin: 0 16px 18px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 20px;
-            padding: 14px 16px;
+            color: #4A3C31;
+            letter-spacing: -0.2px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            box-shadow: var(--shadow-soft);
+            gap: 8px;
+        }
+
+        .section-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gold-primary);
+            text-decoration: none;
             cursor: pointer;
-            background-image: radial-gradient(circle at right, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
         }
 
-        .map-shortcut-left {
+        /* ============================================================
+           4. FEATURED WEDDING PALACES CAROUSEL (Mockup Match)
+           ============================================================ */
+        .featured-carousel {
             display: flex;
-            align-items: center;
-            gap: 12px;
+            gap: 16px;
+            padding: 4px 20px 14px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
         }
 
-        .map-pin-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
-            border: 1px solid #93C5FD;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #2563EB;
-            font-size: 18px;
+        .featured-carousel::-webkit-scrollbar {
+            display: none;
         }
 
-        .map-shortcut-title {
-            font-size: 13.5px;
-            font-weight: 800;
-            color: var(--charcoal-900);
-        }
-
-        .map-shortcut-sub {
-            font-size: 11.5px;
-            color: var(--charcoal-500);
-        }
-
-        .map-shortcut-btn {
-            background: var(--gold-500);
-            color: #070B14;
-            padding: 8px 14px;
-            border-radius: 12px;
-            font-size: 11.5px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Featured Venues & Services Cards */
-        .services-list {
-            padding: 0 16px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .service-card {
+        .palace-card {
+            flex: 0 0 280px;
+            scroll-snap-align: start;
             background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-card);
-            overflow: hidden;
-            box-shadow: var(--shadow-soft);
-            transition: transform 0.2s, box-shadow 0.2s;
+            padding: 12px;
+            border: 1px solid var(--gold-border);
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .service-img-wrapper {
+        .palace-card:active {
+            transform: scale(0.98);
+        }
+
+        .palace-img-wrap {
             position: relative;
             width: 100%;
-            height: 170px;
-            background: #E2E8F0;
+            height: 180px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #EAE5DE;
         }
 
-        .service-img {
+        .palace-img-wrap img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        .service-tag-badge {
+        .palace-badge {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(42, 37, 33, 0.75);
             backdrop-filter: blur(8px);
-            border: 1px solid var(--border-subtle);
+            color: #FFFFFF;
             padding: 4px 10px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--gold-700);
-            letter-spacing: 0.5px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
         }
 
-        .service-rating-badge {
+        .palace-heart {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(15, 20, 30, 0.85);
-            backdrop-filter: blur(8px);
-            color: #FFFFFF;
-            padding: 4px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 800;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            color: #C4984F;
             display: flex;
             align-items: center;
-            gap: 4px;
-        }
-        .service-rating-badge i { color: #FBBF24; font-size: 10px; }
-
-        .service-body {
-            padding: 14px 16px;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .service-title {
-            font-size: 15px;
-            font-weight: 800;
-            color: var(--charcoal-900);
-            margin-bottom: 4px;
+        .palace-info {
+            padding: 12px 6px 4px;
         }
 
-        .service-meta-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 12px;
-            color: var(--charcoal-500);
-            margin-bottom: 12px;
-        }
-
-        .service-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .service-footer {
+        .palace-top-line {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-top: 10px;
-            border-top: 1px solid var(--border-light);
+            margin-bottom: 4px;
         }
 
-        .service-price-box {
+        .palace-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .palace-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--gold-primary);
+        }
+
+        .palace-sub-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .palace-price {
+            font-weight: 700;
+            color: var(--gold-primary);
+        }
+
+        .palace-location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Carousel dots indicator */
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #D8CEBF;
+            transition: all 0.2s ease;
+        }
+
+        .dot.active {
+            width: 22px;
+            border-radius: 10px;
+            background: var(--gold-primary);
+        }
+
+        /* ============================================================
+           5. BANNER: "VENUES NEAR YOU" (Mockup Match)
+           ============================================================ */
+        .near-you-section {
+            padding: 10px 20px 14px;
+        }
+
+        .near-you-card {
+            background: linear-gradient(135deg, #FFFDF9 0%, #F5EDE0 100%);
+            border: 1px solid var(--gold-border);
+            border-radius: var(--radius-card);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.15s ease;
+        }
+
+        .near-you-card:active {
+            transform: scale(0.98);
+        }
+
+        .near-you-text h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #43362A;
+            margin-bottom: 4px;
+        }
+
+        .near-you-text p {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .near-you-map-preview {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pin-cluster {
+            display: flex;
+            gap: 4px;
+        }
+
+        .map-badge-btn {
+            background: var(--gold-gradient);
+            color: #FFFFFF;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: var(--gold-glow);
+        }
+
+        /* ============================================================
+           6. BROWSE CATEGORIES (2x2 Visual Grid matching mockup)
+           ============================================================ */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            padding: 4px 20px 20px;
+        }
+
+        .cat-card {
+            position: relative;
+            height: 140px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #E8E2D8;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(196, 152, 79, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .cat-card:active {
+            transform: scale(0.97);
+        }
+
+        .cat-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .cat-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .cat-card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(30, 24, 20, 0.72) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 12px;
+        }
+
+        .cat-icon-glass {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            color: var(--gold-primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .cat-badge-bottom {
+            background: var(--gold-gradient);
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.2px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* ============================================================
+           7. VENUE LIST CARDS (Simple, Clear & Not Complicated!)
+           ============================================================ */
+        .venue-list-section {
+            padding: 0 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .venue-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            overflow: hidden;
+            border: 1px solid var(--gold-border);
+            box-shadow: var(--shadow-card);
+            transition: transform 0.15s ease;
+        }
+
+        .venue-card-img {
+            position: relative;
+            width: 100%;
+            height: 190px;
+            background: #ECE6DE;
+        }
+
+        .venue-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .venue-card-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 5px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--gold-primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+        }
+
+        .venue-card-body {
+            padding: 16px;
+        }
+
+        .venue-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .venue-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.25;
+        }
+
+        .venue-rate {
+            background: #FDF7EC;
+            border: 1px solid rgba(196, 152, 79, 0.3);
+            color: var(--gold-primary);
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .venue-specs {
+            display: flex;
+            gap: 14px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .venue-spec-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .venue-footer-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid #F0EAE1;
+        }
+
+        .venue-price-box {
             display: flex;
             flex-direction: column;
         }
 
-        .service-price-label {
-            font-size: 10px;
-            color: var(--charcoal-500);
-            font-weight: 600;
+        .price-label {
+            font-size: 11px;
+            color: var(--text-muted);
             text-transform: uppercase;
+            font-weight: 600;
         }
 
-        .service-price-val {
-            font-size: 15px;
-            font-weight: 900;
-            color: var(--gold-700);
-        }
-
-        .service-actions-row {
-            display: flex;
-            gap: 6px;
-        }
-
-        .btn-view-details {
-            padding: 8px 12px;
-            background: var(--gold-50);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            font-size: 11.5px;
-            font-weight: 700;
-            color: var(--charcoal-900);
-            cursor: pointer;
-        }
-
-        .btn-book-now {
-            padding: 8px 14px;
-            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89332 100%);
-            border: none;
-            border-radius: 12px;
-            font-size: 11.5px;
+        .price-amount {
+            font-size: 18px;
             font-weight: 800;
-            color: #070B14;
+            color: var(--gold-primary);
+        }
+
+        .venue-action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-call {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #F3ECE1;
+            color: var(--gold-primary);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+            text-decoration: none;
         }
 
-        /* TAB 2: XARITA (Map Screen) */
-        .map-screen-wrapper {
+        .btn-book {
+            padding: 0 18px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--gold-gradient);
+            border: none;
+            color: #FFFFFF;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: var(--gold-glow);
+            transition: transform 0.15s ease;
+        }
+
+        .btn-book:active {
+            transform: scale(0.96);
+        }
+
+        /* ============================================================
+           8. MAP VIEW (Clean & Interactive)
+           ============================================================ */
+        .map-view-container {
+            display: none;
+            height: calc(100vh - 140px);
             position: relative;
-            width: 100%;
-            height: calc(100vh - 150px);
-            min-height: 480px;
         }
 
-        #leaflet-map {
+        #map-element {
             width: 100%;
             height: 100%;
             z-index: 10;
         }
 
-        .map-controls-floating {
+        .map-overlay-card {
             position: absolute;
-            top: 14px;
-            right: 14px;
-            z-index: 20;
+            bottom: 20px;
+            left: 16px;
+            right: 16px;
+            z-index: 999;
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 14px;
+            border: 1px solid var(--gold-border);
+            box-shadow: var(--shadow-elevated);
             display: flex;
-            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .map-overlay-thumb {
+            width: 70px;
+            height: 70px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+
+        .map-overlay-info {
+            flex: 1;
+        }
+
+        .map-overlay-info h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .map-overlay-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .map-overlay-price {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--gold-primary);
+            margin-top: 4px;
+        }
+
+        /* ============================================================
+           9. BUDGET CALCULATOR (Simple, intuitive for ordinary users)
+           ============================================================ */
+        .budget-view-container {
+            display: none;
+            padding: 16px 20px 30px;
+        }
+
+        .budget-hero-box {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--gold-border);
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 20px;
+        }
+
+        .budget-calc-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .budget-calc-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .stepper-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .guest-stepper-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .step-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #F4EDE2;
+            border: 1px solid var(--gold-border);
+            color: var(--gold-primary);
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(160, 130, 95, 0.08);
+            transition: transform 0.15s ease;
+        }
+
+        .step-btn:active {
+            transform: scale(0.9);
+        }
+
+        .step-value-display {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-dark);
+            min-width: 140px;
+        }
+
+        /* 3 Simple Preset Tiers */
+        .budget-tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .tier-card {
+            background: var(--bg-card-soft);
+            border: 1.5px solid #EAE3D5;
+            border-radius: 16px;
+            padding: 12px 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tier-card.active {
+            background: #FFFDF9;
+            border-color: var(--gold-primary);
+            box-shadow: var(--gold-glow);
+        }
+
+        .tier-emoji {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .tier-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .tier-rate {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .total-budget-display {
+            background: linear-gradient(135deg, #FFFDF9 0%, #F5ECE0 100%);
+            border: 1px solid var(--gold-border);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .total-budget-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .total-budget-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--gold-primary);
+            margin: 4px 0;
+        }
+
+        .total-budget-note {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .btn-find-venues {
+            width: 100%;
+            height: 50px;
+            border-radius: var(--radius-pill);
+            background: var(--gold-gradient);
+            border: none;
+            color: #FFFFFF;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--gold-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 8px;
         }
 
-        .map-floating-btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 8px 12px;
-            font-size: 11.5px;
-            font-weight: 800;
-            color: var(--charcoal-900);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .map-floating-btn.active {
-            background: var(--gold-500);
-            color: #070B14;
-        }
-
-        .map-venue-popup-card {
-            font-family: inherit;
-            width: 180px;
-            padding: 4px;
-        }
-        .map-venue-popup-img {
-            width: 100%;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-            margin-bottom: 6px;
-        }
-        .map-venue-popup-title {
-            font-size: 12.5px;
-            font-weight: 800;
-            color: var(--charcoal-900);
-        }
-        .map-venue-popup-price {
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--gold-700);
-            margin: 2px 0 6px;
-        }
-        .map-venue-popup-btn {
-            display: block;
-            text-align: center;
-            background: var(--gold-500);
-            color: #070B14;
-            padding: 5px 0;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 800;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* TAB 3: JOYLASH (Vendor Onboarding) */
-        .form-container {
-            padding: 10px 16px 20px;
+        /* ============================================================
+           10. ADD VENUE (Supply side - Vendor Onboarding)
+           ============================================================ */
+        .add-view-container {
+            display: none;
+            padding: 16px 20px 30px;
         }
 
         .form-card {
             background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-card);
-            padding: 20px;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .form-header-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--gold-50);
-            border: 1px solid var(--border-subtle);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 10.5px;
-            font-weight: 800;
-            color: var(--gold-700);
-            margin-bottom: 8px;
+            border: 1px solid var(--gold-border);
+            padding: 24px 20px;
+            box-shadow: var(--shadow-card);
         }
 
         .form-title {
-            font-size: 18px;
-            font-weight: 900;
-            color: var(--charcoal-900);
-            margin-bottom: 4px;
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
         }
 
-        .form-subtitle {
-            font-size: 12px;
-            color: var(--charcoal-500);
-            margin-bottom: 18px;
-            line-height: 1.4;
+        .form-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
         }
 
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
 
         .form-label {
             display: block;
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: 700;
-            color: var(--charcoal-700);
+            color: var(--text-dark);
             margin-bottom: 6px;
         }
 
         .form-control {
             width: 100%;
-            background: var(--bg-base);
-            border: 1px solid var(--border-light);
+            height: 46px;
             border-radius: 12px;
-            padding: 10px 14px;
-            font-family: inherit;
-            font-size: 13.5px;
-            color: var(--charcoal-900);
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .form-control:focus {
-            border-color: var(--gold-500);
-        }
-
-        .form-select {
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D4AF37' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            background-size: 16px;
-        }
-
-        .btn-submit-gold {
-            width: 100%;
-            background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89332 100%);
-            color: #070B14;
-            border: none;
-            border-radius: 14px;
-            padding: 14px;
+            border: 1px solid #E4DCD0;
+            background: #FDFBF8;
+            padding: 0 14px;
             font-size: 14px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.35);
-            cursor: pointer;
-            margin-top: 16px;
+            color: var(--text-dark);
+            outline: none;
         }
 
-        /* TAB 4: BYUDJET (Smart Budget Calculator) */
-        .budget-container {
-            padding: 10px 16px 20px;
+        .form-control:focus {
+            border-color: var(--gold-primary);
+            background: #FFFFFF;
         }
 
-        .budget-hero-box {
-            background: linear-gradient(135deg, #FAF4E3 0%, #F5E8C3 100%);
-            border: 1px solid var(--gold-300);
+        /* ============================================================
+           11. PROFILE / CONTACT
+           ============================================================ */
+        .profile-view-container {
+            display: none;
+            padding: 16px 20px 30px;
+        }
+
+        .profile-hero {
+            background: var(--bg-card);
             border-radius: var(--radius-card);
-            padding: 20px;
+            border: 1px solid var(--gold-border);
+            padding: 24px;
             text-align: center;
-            box-shadow: var(--shadow-soft);
+            box-shadow: var(--shadow-card);
             margin-bottom: 16px;
         }
 
-        .budget-hero-label {
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--gold-700);
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .budget-stepper-row {
+        .profile-avatar-big {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #EADBC8, #C9A779);
+            margin: 0 auto 12px;
+            border: 3px solid #FFFFFF;
+            box-shadow: 0 8px 20px rgba(196, 152, 79, 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 16px;
-            margin: 12px 0;
-        }
-
-        .budget-step-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            border: 1px solid var(--gold-500);
-            background: #FFFFFF;
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--gold-700);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .budget-number-display {
-            font-size: 34px;
-            font-weight: 900;
-            color: var(--charcoal-900);
-            line-height: 1;
-        }
-
-        .budget-currency-text {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--charcoal-500);
-        }
-
-        .budget-chips-row {
-            display: flex;
-            gap: 6px;
-            justify-content: center;
-            margin-top: 8px;
-        }
-
-        .budget-chip {
-            padding: 5px 10px;
-            border-radius: 10px;
-            background: #FFFFFF;
-            border: 1px solid var(--gold-300);
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--gold-700);
-            cursor: pointer;
-        }
-
-        .budget-chip.active {
-            background: var(--gold-700);
+            font-size: 32px;
             color: #FFFFFF;
-            border-color: var(--gold-700);
         }
 
-        /* Visual Progress Bar */
-        .progress-multi-bar {
-            height: 12px;
-            border-radius: 6px;
-            overflow: hidden;
-            display: flex;
-            margin: 16px 0;
-            background: #E2E8F0;
-        }
-        .progress-part-1 { flex: 45; background: #D4AF37; }
-        .progress-part-2 { flex: 20; background: #10B981; }
-        .progress-part-3 { flex: 12; background: #38BDF8; }
-        .progress-part-4 { flex: 10; background: #A855F7; }
-        .progress-part-5 { flex: 8;  background: #F43F5E; }
-        .progress-part-6 { flex: 5;  background: #F59E0B; }
-
-        .breakdown-items-col {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .profile-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
         }
 
-        .breakdown-item {
+        .profile-status {
+            font-size: 13px;
+            color: var(--gold-primary);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .action-link-item {
             background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
             border-radius: 16px;
-            padding: 12px 14px;
+            border: 1px solid var(--gold-border);
+            padding: 14px 18px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            text-decoration: none;
+            color: var(--text-dark);
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(160, 130, 95, 0.04);
         }
 
-        .breakdown-left {
+        .action-link-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
         }
 
-        .breakdown-icon {
+        .action-icon-circle {
             width: 36px;
             height: 36px;
-            border-radius: 10px;
+            border-radius: 50%;
+            background: #F7EEDB;
+            color: var(--gold-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 15px;
         }
 
-        .breakdown-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--charcoal-900);
-        }
-        .breakdown-pct {
-            font-size: 11px;
-            color: var(--charcoal-500);
-        }
-
-        .breakdown-amount {
-            font-size: 14px;
-            font-weight: 900;
-            color: var(--gold-700);
-        }
-
-        /* TAB 5: TAKLIFNOMA & PROFIL */
-        .invite-container {
-            padding: 10px 16px 20px;
-        }
-
-        .invite-card-preview {
-            background: linear-gradient(135deg, #FFFFFF 0%, #FAF6ED 100%);
-            border: 2px solid var(--gold-500);
-            border-radius: 24px;
-            padding: 24px 20px;
-            text-align: center;
-            box-shadow: var(--shadow-hover);
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .invite-seal {
-            width: 50px;
-            height: 50px;
-            border-radius: 25px;
-            background: linear-gradient(135deg, #F3E5AB, #D4AF37);
-            border: 2px solid #FFFFFF;
-            margin: 0 auto 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
-        }
-
-        .invite-ornament {
-            font-family: 'Cinzel', serif;
-            font-size: 12px;
-            letter-spacing: 2px;
-            color: var(--gold-600);
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .invite-couple-names {
-            font-family: 'Cinzel', serif;
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--charcoal-900);
-            margin-bottom: 8px;
-        }
-
-        .invite-date-badge {
-            display: inline-block;
-            background: var(--gold-50);
-            border: 1px solid var(--border-subtle);
-            padding: 5px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--gold-700);
-            margin-bottom: 12px;
-        }
-
-        .invite-venue-name {
-            font-size: 13.5px;
-            font-weight: 700;
-            color: var(--charcoal-700);
-        }
-
-        .invite-actions-row {
-            display: flex;
-            gap: 10px;
-            margin-top: 16px;
-        }
-
-        .btn-share-telegram {
-            flex: 1;
-            background: #229ED9;
-            color: #FFFFFF;
-            border: none;
-            border-radius: 14px;
-            padding: 12px;
-            font-size: 12.5px;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(34, 158, 217, 0.35);
-        }
-
-        .btn-open-demo {
-            padding: 12px 16px;
-            background: #FFFFFF;
-            border: 1px solid var(--border-subtle);
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--charcoal-900);
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        /* Bottom Floating App Navigation Dock (5 Buttons) */
-        .bottom-nav-dock {
+        /* ============================================================
+           12. BOTTOM NAVIGATION BAR (Matching Mockup 1-to-1)
+           ============================================================ */
+        .bottom-nav {
             position: fixed;
-            bottom: 12px;
-            left: 14px;
-            right: 14px;
-            z-index: 100;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 440px;
+            z-index: 1000;
             background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1.5px solid var(--border-subtle);
-            border-radius: 28px;
-            padding: 6px 8px;
+            border-top: 1px solid rgba(196, 152, 79, 0.18);
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 10px 30px rgba(184, 147, 50, 0.2);
+            justify-content: space-around;
+            padding: 8px 12px calc(8px + var(--safe-bottom));
+            box-shadow: 0 -8px 25px rgba(160, 130, 95, 0.08);
         }
 
-        .dock-item {
-            flex: 1;
+        .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 6px 0;
+            gap: 3px;
+            text-decoration: none;
+            color: #9E9388;
+            font-size: 11px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.18s ease;
             position: relative;
-            color: var(--charcoal-500);
-            transition: all 0.2s ease;
+            padding: 4px 10px;
+            border-radius: 12px;
         }
 
-        .dock-item i {
-            font-size: 18px;
-            margin-bottom: 3px;
+        .nav-item i {
+            font-size: 19px;
+            transition: transform 0.15s ease;
         }
 
-        .dock-label {
-            font-size: 9.5px;
-            font-weight: 700;
-            letter-spacing: 0.1px;
+        .nav-item.active {
+            color: var(--gold-primary);
         }
 
-        .dock-item.active {
-            color: var(--gold-700);
+        .nav-item.active i {
+            transform: translateY(-2px);
         }
 
-        .dock-item.active .dock-label {
-            font-weight: 900;
-        }
-
-        .dock-item.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0px;
-            width: 4px;
-            height: 4px;
-            border-radius: 2px;
-            background: var(--gold-600);
-        }
-
-        /* Center Elevated "Joylash" Button */
-        .dock-center-item {
-            flex: 1.1;
-            margin-top: -22px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .center-circle-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 25px;
-            background: linear-gradient(135deg, #F9F1DC 0%, #D4AF37 50%, #B89332 100%);
-            border: 3px solid #FFFFFF;
-            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.45);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #070B14;
-            font-size: 20px;
-            transition: transform 0.2s;
-        }
-
-        .center-circle-btn:active {
-            transform: scale(0.92);
-        }
-
-        .center-label {
-            font-size: 9.5px;
-            font-weight: 800;
-            color: var(--gold-700);
-            margin-top: 3px;
-        }
-
-        /* Detail Modal / Drawer */
-        .modal-overlay {
+        /* ============================================================
+           13. BOTTOM DRAWER / MODAL FOR BOOKING
+           ============================================================ */
+        .drawer-backdrop {
             position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 200;
-            background: rgba(0, 0, 0, 0.6);
+            inset: 0;
+            background: rgba(30, 24, 18, 0.6);
             backdrop-filter: blur(4px);
-            display: none;
-            align-items: flex-end;
-            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
         }
-        .modal-overlay.active { display: flex; }
 
-        .modal-drawer {
+        .drawer-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .drawer-container {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 100%);
             width: 100%;
-            max-width: 500px;
-            max-height: 85vh;
-            background: var(--bg-card);
+            max-width: 440px;
+            z-index: 2001;
+            background: #FFFFFF;
             border-radius: 28px 28px 0 0;
-            padding: 20px 20px 30px;
-            overflow-y: auto;
-            position: relative;
-            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 24px 20px calc(24px + var(--safe-bottom));
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        .drawer-container.active {
+            transform: translate(-50%, 0);
         }
 
-        .modal-drag-bar {
-            width: 40px;
+        .drawer-handle {
+            width: 44px;
             height: 4px;
-            border-radius: 2px;
-            background: #CBD5E1;
+            background: #E0D7CB;
+            border-radius: 10px;
             margin: 0 auto 16px;
         }
 
-        .modal-close-btn {
-            position: absolute;
-            top: 16px;
-            right: 18px;
-            width: 32px;
-            height: 32px;
-            border-radius: 16px;
-            background: var(--gold-50);
-            border: 1px solid var(--border-subtle);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--charcoal-900);
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        /* Success Toast */
+        /* Toast notification */
         .toast-msg {
             position: fixed;
-            top: 20px;
+            top: 24px;
             left: 50%;
-            transform: translateX(-50%) translateY(-50px);
-            background: #1E232A;
+            transform: translateX(-50%) translateY(-100px);
+            background: #2A2521;
             color: #FFFFFF;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: var(--radius-pill);
-            border: 1px solid var(--gold-500);
             font-size: 13px;
-            font-weight: 700;
-            z-index: 300;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            z-index: 3000;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            opacity: 0;
-            transition: all 0.3s ease;
-            pointer-events: none;
         }
-        .toast-msg.show {
+
+        .toast-msg.active {
             transform: translateX(-50%) translateY(0);
-            opacity: 1;
         }
     </style>
 </head>
 <body>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast-msg">
-        <i class="fa-solid fa-circle-check text-gold" style="color: #D4AF37;"></i>
-        <span id="toast-text">Amal muvaffaqiyatli bajarildi!</span>
-    </div>
+    <div class="app-shell">
 
-    <!-- Top App Bar -->
-    <header class="app-header">
-        <div class="header-brand">
-            <div class="header-logo-badge">💍</div>
-            <div class="header-title-box">
-                <h1>TuyBox</h1>
-                <p>Hashamatli To'ylar & Marosimlar</p>
+        <!-- ============================================================
+             TOP HEADER (Matching Mockup 1-to-1)
+             ============================================================ -->
+        <header class="app-header">
+            <div class="header-avatar" onclick="switchTab('profile')">
+                <img id="header-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200" alt="Avatar">
             </div>
-        </div>
-        <div class="header-user-chip" onclick="switchTab('profile')">
-            <i class="fa-solid fa-crown"></i>
-            <span id="header-user-name">Mening Kabinetim</span>
-        </div>
-    </header>
 
-    <!-- Event Types (Strategic Wedge: To'y + Banket + Tug'ilgan Kun + Korporativ) -->
-    <div class="event-types-scroller">
-        <div class="event-pill active" onclick="selectEventType('nikoh', this)">
-            <span>💍</span> Nikoh To'yi
-        </div>
-        <div class="event-pill" onclick="selectEventType('birthday', this)">
-            <span>🎂</span> Tug'ilgan Kun
-        </div>
-        <div class="event-pill" onclick="selectEventType('restaurant', this)">
-            <span>🍽️</span> Restoran & Banket
-        </div>
-        <div class="event-pill" onclick="selectEventType('corporate', this)">
-            <span>🏢</span> Korporativ
-        </div>
-        <div class="event-pill" onclick="selectEventType('fotiha', this)">
-            <span>💐</span> Fotiha Marosimi
-        </div>
-    </div>
+            <div class="header-brand">
+                <span class="brand-monogram">𝓣</span>
+                <span class="brand-title">TuyBox</span>
+            </div>
 
-    <!-- Search & Location Bar -->
-    <div class="search-container">
-        <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="main-search-input" class="search-input" placeholder="To'yxona, san'atkor, foto yoki tuman qidirish..." oninput="handleSearch(this.value)">
-            <i class="fa-solid fa-sliders" style="color: var(--charcoal-500); cursor: pointer;" onclick="toggleFilterDrawer()"></i>
-        </div>
-    </div>
+            <div class="header-notification" onclick="showToast('Sizda 1 ta yangi taklif mavjud! ✨')">
+                <i class="fa-regular fa-bell"></i>
+                <div class="notification-dot"></div>
+            </div>
+        </header>
 
-    <!-- District Chips -->
-    <div class="district-scroller">
-        <div class="district-chip active" onclick="selectDistrict('all', this)">Barchasi</div>
-        <div class="district-chip" onclick="selectDistrict('Yakkasaroy', this)">Yakkasaroy</div>
-        <div class="district-chip" onclick="selectDistrict('Chilonzor', this)">Chilonzor</div>
-        <div class="district-chip" onclick="selectDistrict('Mirzo Ulug‘bek', this)">Mirzo Ulug‘bek</div>
-        <div class="district-chip" onclick="selectDistrict('Yunusobod', this)">Yunusobod</div>
-        <div class="district-chip" onclick="selectDistrict('Mirobod', this)">Mirobod</div>
-        <div class="district-chip" onclick="selectDistrict('Samarqand', this)">Samarqand</div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- TAB 1: ASOSIY (Home / Katalog) -->
-    <!-- ========================================== -->
-    <div id="screen-home" class="screen-view active">
-        <!-- Hero VIP Banner -->
-        <div class="hero-banner">
-            <div class="hero-tag">✨ RASMIY TELEGRAM MINI APP</div>
-            <div class="hero-title">Orzuingizdagi To'y va Marosimlarni Rejalashtiring</div>
-            <div class="hero-desc">500+ hashamatli to'yxonalar, san'atkorlar va to'y jamoalarini 1-klikda toping va bepul so'rov yuboring!</div>
-            <div class="hero-btn" onclick="openBookingModal('Umumiy So‘rov')">
-                <i class="fa-solid fa-bolt"></i> Tezkor So'rov Yuborish
-            </div>
-        </div>
-
-        <!-- Categories Section -->
-        <div class="section-header">
-            <div class="section-title">
-                <i class="fa-solid fa-sparkles"></i> Asosiy Xizmat Turlari
-            </div>
-        </div>
-        <div class="categories-grid">
-            <div class="category-card" onclick="filterByCategory('venues')">
-                <div class="cat-icon-box">🏰</div>
-                <div class="cat-name">To'yxona & Saroylar</div>
-                <div class="cat-count">120+ zal</div>
-            </div>
-            <div class="category-card" onclick="filterByCategory('singers')">
-                <div class="cat-icon-box">🎤</div>
-                <div class="cat-name">San'atkor & Boshlovchi</div>
-                <div class="cat-count">85+ jamoa</div>
-            </div>
-            <div class="category-card" onclick="filterByCategory('photo')">
-                <div class="cat-icon-box">📸</div>
-                <div class="cat-name">Foto & Video Montaj</div>
-                <div class="cat-count">64+ studiya</div>
-            </div>
-            <div class="category-card" onclick="filterByCategory('decor')">
-                <div class="cat-icon-box">💐</div>
-                <div class="cat-name">Bezak & Floristika</div>
-                <div class="cat-count">48+ dekorator</div>
-            </div>
-            <div class="category-card" onclick="filterByCategory('cars')">
-                <div class="cat-icon-box">🚘</div>
-                <div class="cat-name">To'y Korteji & Avto</div>
-                <div class="cat-count">32+ avto</div>
-            </div>
-            <div class="category-card" onclick="filterByCategory('catering')">
-                <div class="cat-icon-box">🍽️</div>
-                <div class="cat-name">Katering & Tortlar</div>
-                <div class="cat-count">40+ xizmat</div>
-            </div>
-        </div>
-
-        <!-- Map Shortcut Card -->
-        <div class="map-shortcut-card" onclick="switchTab('map')">
-            <div class="map-shortcut-left">
-                <div class="map-pin-icon">
-                    <i class="fa-solid fa-map-location-dot"></i>
-                </div>
-                <div>
-                    <div class="map-shortcut-title">To'yxonalar Xaritasi (GPS)</div>
-                    <div class="map-shortcut-sub">Sizga eng yaqin hashamatli saroylarni ko'ring</div>
+        <!-- ============================================================
+             TAB 1: ASOSIY (HOME) - Exactly matching the luxury mockup
+             ============================================================ -->
+        <main id="tab-home">
+            <!-- Search Bar Pill -->
+            <div class="search-section">
+                <div class="search-pill-box">
+                    <input type="text" id="search-input" placeholder="To'yxona, restoran yoki xizmat qidirish..." oninput="handleSearch(this.value)">
+                    <button class="search-circle-btn" onclick="executeSearch()">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
                 </div>
             </div>
-            <div class="map-shortcut-btn">
-                Xaritaga <i class="fa-solid fa-arrow-right"></i>
+
+            <!-- Event Type Pills (Wedge Strategy: To'y + Restoran + Tug'ilgan kun + Korporativ) -->
+            <div class="event-pills-row">
+                <div class="event-chip active" onclick="filterByEvent(this, 'all')">
+                    <span>✨</span> Barchasi
+                </div>
+                <div class="event-chip" onclick="filterByEvent(this, 'wedding')">
+                    <span>💍</span> Nikoh to'yi
+                </div>
+                <div class="event-chip" onclick="filterByEvent(this, 'restaurant')">
+                    <span>🍽️</span> Restoran & Banket
+                </div>
+                <div class="event-chip" onclick="filterByEvent(this, 'birthday')">
+                    <span>🎂</span> Tug'ilgan kun
+                </div>
+                <div class="event-chip" onclick="filterByEvent(this, 'corporate')">
+                    <span>🏢</span> Korporativ
+                </div>
             </div>
-        </div>
 
-        <!-- Services List Header -->
-        <div class="section-header">
-            <div class="section-title">
-                <i class="fa-solid fa-gem"></i> Sara To'yxona va Xizmatlar
+            <!-- 1. FEATURED WEDDING PALACES CAROUSEL (Mockup Match) -->
+            <div class="section-header">
+                <h3 class="section-title">Sara To'yxonalar</h3>
+                <span class="section-link" onclick="scrollToVenues()">Hammasi &rarr;</span>
             </div>
-            <span style="font-size: 12px; color: var(--gold-600); font-weight: 700;" id="services-count">6 ta topildi</span>
-        </div>
 
-        <!-- Dynamic Services Cards Container -->
-        <div class="services-list" id="services-container">
-            <!-- Rendered by JavaScript -->
-        </div>
-    </div>
+            <div class="featured-carousel" id="featured-carousel">
+                <!-- Card 1 -->
+                <div class="palace-card" onclick="openBookingDrawer(1)">
+                    <div class="palace-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800" alt="Versal Grand Ballroom">
+                        <div class="palace-badge">PREMIUM VIP</div>
+                        <div class="palace-heart"><i class="fa-solid fa-heart"></i></div>
+                    </div>
+                    <div class="palace-info">
+                        <div class="palace-top-line">
+                            <span class="palace-name">Versal Grand Ballroom</span>
+                            <span class="palace-rating"><i class="fa-solid fa-star"></i> 5.0</span>
+                        </div>
+                        <div class="palace-sub-line">
+                            <span class="palace-price">48 mln so'mdan</span>
+                            <span class="palace-location"><i class="fa-solid fa-location-dot"></i> Yakkasaroy</span>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- ========================================== -->
-    <!-- TAB 2: XARITA (Map View) -->
-    <!-- ========================================== -->
-    <div id="screen-map" class="screen-view">
-        <div class="map-screen-wrapper">
-            <div id="leaflet-map"></div>
+                <!-- Card 2 -->
+                <div class="palace-card" onclick="openBookingDrawer(2)">
+                    <div class="palace-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1545232979-fbf6c8b91953?q=80&w=800" alt="Yakkasaroy Palace">
+                        <div class="palace-badge">SAROY</div>
+                        <div class="palace-heart"><i class="fa-solid fa-heart"></i></div>
+                    </div>
+                    <div class="palace-info">
+                        <div class="palace-top-line">
+                            <span class="palace-name">Yakkasaroy Palace</span>
+                            <span class="palace-rating"><i class="fa-solid fa-star"></i> 4.9</span>
+                        </div>
+                        <div class="palace-sub-line">
+                            <span class="palace-price">55 mln so'mdan</span>
+                            <span class="palace-location"><i class="fa-solid fa-location-dot"></i> Chilonzor</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="palace-card" onclick="openBookingDrawer(3)">
+                    <div class="palace-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800" alt="Osiyo Grand Hall">
+                        <div class="palace-badge">LYUKS</div>
+                        <div class="palace-heart"><i class="fa-solid fa-heart"></i></div>
+                    </div>
+                    <div class="palace-info">
+                        <div class="palace-top-line">
+                            <span class="palace-name">Osiyo Grand Hall</span>
+                            <span class="palace-rating"><i class="fa-solid fa-star"></i> 4.8</span>
+                        </div>
+                        <div class="palace-sub-line">
+                            <span class="palace-price">35 mln so'mdan</span>
+                            <span class="palace-location"><i class="fa-solid fa-location-dot"></i> Yunusobod</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dots Indicator -->
+            <div class="carousel-dots">
+                <div class="dot active"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+
+            <!-- 2. "VENUES NEAR YOU" BANNER (Mockup Match - Tapping switches to map) -->
+            <div class="near-you-section">
+                <div class="near-you-card" onclick="switchTab('map')">
+                    <div class="near-you-text">
+                        <h4>Yaqin Atrofdagi Joylar</h4>
+                        <p>Xaritada 48 ta to'yxona va restoranni ko'ring</p>
+                    </div>
+                    <div class="near-you-map-preview">
+                        <div class="map-badge-btn">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. BROWSE CATEGORIES (2x2 Visual Grid matching mockup) -->
+            <div class="section-header">
+                <h3 class="section-title">Bo'limlar</h3>
+            </div>
+
+            <div class="categories-grid">
+                <!-- Cat 1 -->
+                <div class="cat-card" onclick="filterByCategory('venue')">
+                    <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=500" alt="To'yxonalar">
+                    <div class="cat-card-overlay">
+                        <div class="cat-icon-glass"><i class="fa-solid fa-archway"></i></div>
+                        <div class="cat-badge-bottom">To'yxonalar</div>
+                    </div>
+                </div>
+
+                <!-- Cat 2 -->
+                <div class="cat-card" onclick="filterByCategory('singer')">
+                    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=500" alt="San'atkorlar">
+                    <div class="cat-card-overlay">
+                        <div class="cat-icon-glass"><i class="fa-solid fa-microphone-lines"></i></div>
+                        <div class="cat-badge-bottom">San'atkorlar</div>
+                    </div>
+                </div>
+
+                <!-- Cat 3 -->
+                <div class="cat-card" onclick="filterByCategory('restaurant')">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=500" alt="Restoranlar">
+                    <div class="cat-card-overlay">
+                        <div class="cat-icon-glass"><i class="fa-solid fa-utensils"></i></div>
+                        <div class="cat-badge-bottom">Restoranlar</div>
+                    </div>
+                </div>
+
+                <!-- Cat 4 -->
+                <div class="cat-card" onclick="filterByCategory('photo')">
+                    <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=500" alt="Foto & Video">
+                    <div class="cat-card-overlay">
+                        <div class="cat-icon-glass"><i class="fa-solid fa-camera"></i></div>
+                        <div class="cat-badge-bottom">Foto & Video</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. SIMPLE & CLEAN VENUE LIST (No clutter!) -->
+            <div class="section-header" id="all-venues-heading">
+                <h3 class="section-title">Barcha Joylar va Xizmatlar</h3>
+                <span class="section-link" id="venue-count-badge">6 ta joy</span>
+            </div>
+
+            <div class="venue-list-section" id="venues-list-container">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </main>
+
+        <!-- ============================================================
+             TAB 2: XARITA (INTERACTIVE LEAFLET MAP)
+             ============================================================ -->
+        <section id="tab-map" class="map-view-container">
+            <div id="map-element"></div>
             
-            <div class="map-controls-floating">
-                <div class="map-floating-btn active" id="layer-osm-btn" onclick="setMapBaseLayer('dark')">
-                    🌙 Tungi
+            <!-- Map selected venue floating card -->
+            <div class="map-overlay-card" id="map-selected-card">
+                <img id="map-card-img" class="map-overlay-thumb" src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=400" alt="Venue">
+                <div class="map-overlay-info">
+                    <h4 id="map-card-title">Versal Grand Ballroom</h4>
+                    <p id="map-card-location"><i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> Yakkasaroy tumani</p>
+                    <div id="map-card-price" class="map-overlay-price">48,000,000 so'm</div>
                 </div>
-                <div class="map-floating-btn" id="layer-sat-btn" onclick="setMapBaseLayer('satellite')">
-                    🛰️ Yo'ldosh
-                </div>
-                <div class="map-floating-btn" id="layer-street-btn" onclick="setMapBaseLayer('street')">
-                    ☀️ Kunduzgi
-                </div>
-                <div class="map-floating-btn" onclick="getUserGpsLocation()">
-                    📍 Joylashuvim
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- TAB 3: JOYLASH (Vendor Form) -->
-    <!-- ========================================== -->
-    <div id="screen-create" class="screen-view">
-        <div class="form-container">
-            <div class="form-card">
-                <div class="form-header-badge">
-                    <i class="fa-solid fa-crown"></i> HAMKORLIK DASTURI
-                </div>
-                <div class="form-title">Xizmatingizni Joylashtiring</div>
-                <div class="form-subtitle">To'yxona, san'atkor yoki xizmatingizni TuyBox platformasida minglab kelin-kuyovlarga bepul taqdim eting.</div>
-
-                <div class="form-group">
-                    <label class="form-label">Yo'nalish / Kategoriya *</label>
-                    <select id="create-category" class="form-control form-select">
-                        <option value="venues">🏰 To'yxonalar & Saroylar</option>
-                        <option value="singers">🎤 San'atkorlar & Guruhlar</option>
-                        <option value="photo">📸 Foto & Video Studiyalar</option>
-                        <option value="decor">💐 Bezak & Floristika</option>
-                        <option value="cars">🚘 To'y Korteji & Mashinalar</option>
-                        <option value="catering">🍽️ Katering & Shirinliklar</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Xizmat yoki Biznes Nomi *</label>
-                    <input type="text" id="create-title" class="form-control" placeholder="Masalan: Versal Grand Saroyi">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Hudud / Shahar *</label>
-                    <select id="create-region" class="form-control form-select">
-                        <option value="Toshkent shahri">Toshkent shahri</option>
-                        <option value="Samarqand">Samarqand</option>
-                        <option value="Buxoro">Buxoro</option>
-                        <option value="Farg'ona">Farg'ona</option>
-                        <option value="Andijon">Andijon</option>
-                        <option value="Namangan">Namangan</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Boshlang'ich Narx (so'mda) *</label>
-                    <input type="text" id="create-price" class="form-control" placeholder="Masalan: 35,000,000">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Telefon Raqamingiz *</label>
-                    <input type="tel" id="create-phone" class="form-control" placeholder="+998 90 123 45 67">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Telegram Profilingiz (@username)</label>
-                    <input type="text" id="create-telegram" class="form-control" placeholder="@username">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Xizmat Haqida Qisqacha Tavsif</label>
-                    <textarea id="create-desc" class="form-control" rows="3" placeholder="Zal imkoniyatlari, takliflar va afzalliklar..."></textarea>
-                </div>
-
-                <button class="btn-submit-gold" onclick="submitVendorService()">
-                    <i class="fa-solid fa-sparkles"></i> Xizmatni Joylashtirish
+                <button class="btn-book" onclick="openBookingDrawerFromMap()">
+                    Band Qilish
                 </button>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- ========================================== -->
-    <!-- TAB 4: BYUDJET (Smart Budget Calculator) -->
-    <!-- ========================================== -->
-    <div id="screen-budget" class="screen-view">
-        <div class="budget-container">
+        <!-- ============================================================
+             TAB 3: BYUDJET (ODDIY VA TUSHUNARLI KALKULYATOR)
+             ============================================================ -->
+        <section id="tab-budget" class="budget-view-container">
             <div class="budget-hero-box">
-                <div class="budget-hero-label">Jami To'y Byudjeti</div>
-                <div class="budget-stepper-row">
-                    <div class="budget-step-btn" onclick="adjustBudget(-10)">-</div>
-                    <div>
-                        <div class="budget-number-display" id="budget-million-text">80</div>
-                        <div class="budget-currency-text">million so'm jami</div>
+                <h3 class="budget-calc-title">To'y va Marosim Byudjeti</h3>
+                <p class="budget-calc-sub">Mehmonlar soniga qarab taxminiy xarajatni 1 soniyada hisoblang</p>
+
+                <div class="stepper-label">Mehmonlar Soni</div>
+                <div class="guest-stepper-box">
+                    <button class="step-btn" onclick="changeGuests(-50)"><i class="fa-solid fa-minus"></i></button>
+                    <div class="step-value-display" id="guest-count-label">300 kishi</div>
+                    <button class="step-btn" onclick="changeGuests(50)"><i class="fa-solid fa-plus"></i></button>
+                </div>
+
+                <div class="stepper-label">Xizmat Darajasi</div>
+                <div class="budget-tiers-grid">
+                    <div class="tier-card" id="tier-eco" onclick="setBudgetTier('eco')">
+                        <div class="tier-emoji">🟢</div>
+                        <div class="tier-name">Tejamkor</div>
+                        <div class="tier-rate">180 ming / kishi</div>
                     </div>
-                    <div class="budget-step-btn" onclick="adjustBudget(+10)">+</div>
-                </div>
-
-                <div class="budget-chips-row">
-                    <div class="budget-chip" onclick="setPresetBudget(40)">40M</div>
-                    <div class="budget-chip" onclick="setPresetBudget(60)">60M</div>
-                    <div class="budget-chip active" onclick="setPresetBudget(80)">80M</div>
-                    <div class="budget-chip" onclick="setPresetBudget(100)">100M</div>
-                    <div class="budget-chip" onclick="setPresetBudget(150)">150M</div>
-                </div>
-
-                <div style="margin-top: 14px; font-size: 12px; color: var(--charcoal-700); font-weight: 700;">
-                    👥 350 mehmon uchun ~<span id="cost-per-guest">228,000</span> so'mdan to'g'ri keladi
-                </div>
-            </div>
-
-            <!-- Visual Segmented Bar -->
-            <div class="section-title" style="margin-bottom: 6px;">
-                <i class="fa-solid fa-chart-pie"></i> Xarajatlar Taqsimoti (Foizda)
-            </div>
-            <div class="progress-multi-bar">
-                <div class="progress-part-1" title="To'yxona 45%"></div>
-                <div class="progress-part-2" title="San'atkor 20%"></div>
-                <div class="progress-part-3" title="Foto/Video 12%"></div>
-                <div class="progress-part-4" title="Sarpo 10%"></div>
-                <div class="progress-part-5" title="Bezak 8%"></div>
-                <div class="progress-part-6" title="Kortej 5%"></div>
-            </div>
-
-            <div class="breakdown-items-col">
-                <div class="breakdown-item">
-                    <div class="breakdown-left">
-                        <div class="breakdown-icon" style="background: rgba(212, 175, 55, 0.15); color: #D4AF37;">🏰</div>
-                        <div>
-                            <div class="breakdown-title">To'yxona & Dasturxon</div>
-                            <div class="breakdown-pct">45% ulush</div>
-                        </div>
+                    <div class="tier-card active" id="tier-std" onclick="setBudgetTier('std')">
+                        <div class="tier-emoji">🟡</div>
+                        <div class="tier-name">O'rtacha</div>
+                        <div class="tier-rate">280 ming / kishi</div>
                     </div>
-                    <div class="breakdown-amount" id="budget-venue">36 mln</div>
-                </div>
-
-                <div class="breakdown-item">
-                    <div class="breakdown-left">
-                        <div class="breakdown-icon" style="background: rgba(16, 185, 129, 0.15); color: #10B981;">🎤</div>
-                        <div>
-                            <div class="breakdown-title">San'atkor & Boshlovchi</div>
-                            <div class="breakdown-pct">20% ulush</div>
-                        </div>
+                    <div class="tier-card" id="tier-vip" onclick="setBudgetTier('vip')">
+                        <div class="tier-emoji">👑</div>
+                        <div class="tier-name">VIP Lyuks</div>
+                        <div class="tier-rate">450 ming / kishi</div>
                     </div>
-                    <div class="breakdown-amount" id="budget-singer">16 mln</div>
                 </div>
 
-                <div class="breakdown-item">
-                    <div class="breakdown-left">
-                        <div class="breakdown-icon" style="background: rgba(56, 189, 248, 0.15); color: #0284C7;">📸</div>
-                        <div>
-                            <div class="breakdown-title">Foto & Video Montaj</div>
-                            <div class="breakdown-pct">12% ulush</div>
-                        </div>
-                    </div>
-                    <div class="breakdown-amount" id="budget-photo">9.6 mln</div>
+                <div class="total-budget-display">
+                    <div class="total-budget-label">Jami Taxminiy Xarajat:</div>
+                    <div class="total-budget-value" id="total-budget-sum">84,000,000 so'm</div>
+                    <div class="total-budget-note" id="per-guest-note">Kishi boshiga ~280,000 so'm to'g'ri keladi</div>
                 </div>
 
-                <div class="breakdown-item">
-                    <div class="breakdown-left">
-                        <div class="breakdown-icon" style="background: rgba(168, 85, 247, 0.15); color: #9333EA;">👗</div>
-                        <div>
-                            <div class="breakdown-title">Kelin Sarposi & Libos</div>
-                            <div class="breakdown-pct">10% ulush</div>
-                        </div>
-                    </div>
-                    <div class="breakdown-amount" id="budget-dress">8 mln</div>
+                <button class="btn-find-venues" onclick="switchTab('home')">
+                    <i class="fa-solid fa-check"></i> Ushbu Byudjetga Joylarni Ko'rish
+                </button>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 4: JOYLASH (VENDOR ONBOARDING - SODDA VA TEZKOR)
+             ============================================================ -->
+        <section id="tab-add" class="add-view-container">
+            <div class="form-card">
+                <h3 class="form-title">Joy yoki Xizmat Qo'shish</h3>
+                <p class="form-sub">To'yxona, restoran yoki san'atkor bo'lsangiz, TuyBox platformasiga bepul e'lon bering</p>
+
+                <div class="form-group">
+                    <label class="form-label">To'yxona yoki Xizmat Nomi</label>
+                    <input type="text" id="add-title" class="form-control" placeholder="Masalan: Grand Royal Saroyi">
                 </div>
 
-                <div class="breakdown-item">
-                    <div class="breakdown-left">
-                        <div class="breakdown-icon" style="background: rgba(244, 63, 94, 0.15); color: #E11D48;">💐</div>
-                        <div>
-                            <div class="breakdown-title">Zal Bezagi & Gullar</div>
-                            <div class="breakdown-pct">8% ulush</div>
-                        </div>
-                    </div>
-                    <div class="breakdown-amount" id="budget-decor">6.4 mln</div>
+                <div class="form-group">
+                    <label class="form-label">Yo'nalishi</label>
+                    <select id="add-category" class="form-control">
+                        <option value="venue">To'yxona (Nikoh saroyi)</option>
+                        <option value="restaurant">Restoran / Kafe</option>
+                        <option value="singer">San'atkor / Boshlovchi</option>
+                        <option value="photo">Foto & Video</option>
+                        <option value="decor">Dekoratsiya</option>
+                    </select>
                 </div>
 
-                <div class="breakdown-item">
-                    <div class="breakdown-left">
-                        <div class="breakdown-icon" style="background: rgba(245, 158, 11, 0.15); color: #D97706;">🚘</div>
-                        <div>
-                            <div class="breakdown-title">To'y Korteji & Avto</div>
-                            <div class="breakdown-pct">5% ulush</div>
-                        </div>
-                    </div>
-                    <div class="breakdown-amount" id="budget-car">4 mln</div>
+                <div class="form-group">
+                    <label class="form-label">Boshlang'ich Narxi (so'mda)</label>
+                    <input type="text" id="add-price" class="form-control" placeholder="Masalan: 35,000,000 so'm">
                 </div>
+
+                <div class="form-group">
+                    <label class="form-label">Telefon Raqamingiz</label>
+                    <input type="tel" id="add-phone" class="form-control" placeholder="+998 90 123 45 67">
+                </div>
+
+                <button class="btn-find-venues" onclick="submitNewVenue()" style="margin-top: 10px;">
+                    <i class="fa-solid fa-paper-plane"></i> E'lonni Yuborish
+                </button>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 5: PROFIL & ALOQA
+             ============================================================ -->
+        <section id="tab-profile" class="profile-view-container">
+            <div class="profile-hero">
+                <div class="profile-avatar-big">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <h3 class="profile-name" id="user-display-name">Hurmatli Mehmon</h3>
+                <div class="profile-status">TuyBox Foydalanuvchisi</div>
             </div>
 
-            <!-- Savings Tip Card -->
-            <div style="margin-top: 16px; background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: 18px; padding: 16px;">
-                <div style="font-size: 13px; font-weight: 800; color: var(--gold-700); margin-bottom: 6px;">
-                    💡 Qanday qilib 15-20% tejash mumkin?
+            <!-- Action links -->
+            <div class="action-link-item" onclick="shareInviteLink()">
+                <div class="action-link-left">
+                    <div class="action-icon-circle"><i class="fa-solid fa-envelope-open-text"></i></div>
+                    <span>To'y Taklifnomasini Ulashish</span>
                 </div>
-                <div style="font-size: 12px; color: var(--charcoal-700); line-height: 1.6;">
-                    • To'yxonani qish yoki bahor mavsumida bron qilish narxni 20% gacha tushiradi.<br>
-                    • Foto va videoni bitta studiyadan "Paket" ko'rinishida olish alohida buyurtmadan 3-5 mln arzonroq tushadi.
+                <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
+            </div>
+
+            <a href="https://t.me/asilbek_developer" target="_blank" class="action-link-item">
+                <div class="action-link-left">
+                    <div class="action-icon-circle"><i class="fa-brands fa-telegram"></i></div>
+                    <span>TuyBox Admin bilan Bog'lanish</span>
                 </div>
-            </div>
-        </div>
-    </div>
+                <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
+            </a>
 
-    <!-- ========================================== -->
-    <!-- TAB 5: TAKLIFNOMA (RSVP & Profil) -->
-    <!-- ========================================== -->
-    <div id="screen-profile" class="screen-view">
-        <div class="invite-container">
-            <div class="invite-card-preview">
-                <div class="invite-seal">💌</div>
-                <div class="invite-ornament">SHOHONA TO'Y TAKLIFNOMASI</div>
-                <div class="invite-couple-names">Jasurbek & Madina</div>
-                <div class="invite-date-badge">📅 2026-yil 15-Oktyabr, 18:00</div>
-                <div class="invite-venue-name">🏰 Versal Grand Palace, Toshkent</div>
-                
-                <div class="invite-actions-row">
-                    <button class="btn-share-telegram" onclick="shareInviteOnTelegram()">
-                        <i class="fa-brands fa-telegram"></i> Telegramda Ulashish
-                    </button>
-                    <a href="/invite/demo" target="_blank" class="btn-open-demo">
-                        Ko'rish <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </a>
+            <a href="tel:+998901234567" class="action-link-item">
+                <div class="action-link-left">
+                    <div class="action-icon-circle"><i class="fa-solid fa-phone"></i></div>
+                    <span>24/7 Qo'ng'iroq Markazi</span>
                 </div>
-            </div>
+                <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
+            </a>
 
-            <!-- Quick Contacts & Support -->
-            <div style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: 20px; padding: 18px; box-shadow: var(--shadow-soft);">
-                <div style="font-size: 14px; font-weight: 800; color: var(--charcoal-900); margin-bottom: 12px;">
-                    📞 Yordam & Aloqa Markazi
+            <a href="/download" class="action-link-item">
+                <div class="action-link-left">
+                    <div class="action-icon-circle"><i class="fa-brands fa-android"></i></div>
+                    <span>Android Ilovani Yuklab Olish (APK)</span>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <a href="https://t.me/tuybox_support" target="_blank" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; padding: 10px 12px; background: var(--gold-50); border-radius: 12px; color: var(--charcoal-900);">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-brands fa-telegram" style="color: #229ED9; font-size: 18px;"></i>
-                            <span style="font-size: 13px; font-weight: 700;">Telegram Qo'llab-quvvatlash</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-right" style="color: var(--charcoal-500); font-size: 11px;"></i>
-                    </a>
+                <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
+            </a>
+        </section>
 
-                    <a href="tel:+998901112233" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; padding: 10px 12px; background: var(--gold-50); border-radius: 12px; color: var(--charcoal-900);">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-solid fa-phone" style="color: #10B981; font-size: 16px;"></i>
-                            <span style="font-size: 13px; font-weight: 700;">+998 90 111 22 33 (Call-markaz)</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-right" style="color: var(--charcoal-500); font-size: 11px;"></i>
-                    </a>
-
-                    <a href="/download" style="display: flex; align-items: center; justify-content: space-between; text-decoration: none; padding: 10px 12px; background: var(--gold-50); border-radius: 12px; color: var(--charcoal-900);">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <i class="fa-brands fa-android" style="color: #10B981; font-size: 18px;"></i>
-                            <span style="font-size: 13px; font-weight: 700;">Android APK Ilovasini Yuklash</span>
-                        </div>
-                        <i class="fa-solid fa-download" style="color: var(--charcoal-500); font-size: 12px;"></i>
-                    </a>
-                </div>
+        <!-- ============================================================
+             BOTTOM NAVIGATION BAR (Matching Mockup 1-to-1)
+             ============================================================ -->
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
+                <i class="fa-solid fa-house"></i>
+                <span>Asosiy</span>
             </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- SERVICE DETAIL DRAWER MODAL -->
-    <!-- ========================================== -->
-    <div id="detail-modal" class="modal-overlay" onclick="closeDetailModal(event)">
-        <div class="modal-drawer" onclick="event.stopPropagation()">
-            <div class="modal-drag-bar"></div>
-            <div class="modal-close-btn" onclick="closeDetailModal()">
-                <i class="fa-solid fa-xmark"></i>
+            <div class="nav-item" onclick="switchTab('map')" id="nav-map">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span>Xarita</span>
             </div>
-
-            <div id="modal-content">
-                <!-- Dynamically filled by JavaScript -->
+            <div class="nav-item" onclick="switchTab('budget')" id="nav-budget">
+                <i class="fa-solid fa-calculator"></i>
+                <span>Byudjet</span>
             </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- BOOKING REQUEST MODAL -->
-    <!-- ========================================== -->
-    <div id="booking-modal" class="modal-overlay" onclick="closeBookingModal(event)">
-        <div class="modal-drawer" onclick="event.stopPropagation()">
-            <div class="modal-drag-bar"></div>
-            <div class="modal-close-btn" onclick="closeBookingModal()">
-                <i class="fa-solid fa-xmark"></i>
+            <div class="nav-item" onclick="switchTab('add')" id="nav-add">
+                <i class="fa-solid fa-plus-circle"></i>
+                <span>Joylash</span>
             </div>
-
-            <div style="font-size: 18px; font-weight: 900; color: var(--charcoal-900); margin-bottom: 4px;">
-                📝 Bron So'rovi Qoldirish
+            <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
+                <i class="fa-solid fa-user"></i>
+                <span>Profil</span>
             </div>
-            <div style="font-size: 12px; color: var(--charcoal-500); margin-bottom: 16px;" id="booking-target-title">
-                Versal Grand Ballroom
+        </nav>
+
+        <!-- ============================================================
+             BOOKING DRAWER MODAL
+             ============================================================ -->
+        <div class="drawer-backdrop" id="drawer-backdrop" onclick="closeBookingDrawer()"></div>
+        <div class="drawer-container" id="drawer-container">
+            <div class="drawer-handle"></div>
+            <h3 class="form-title" id="drawer-venue-title">Band Qilish</h3>
+            <p class="form-sub" id="drawer-venue-sub">Ma'lumotlaringizni qoldiring, administrator 15 daqiqada bog'lanadi</p>
+
+            <div class="form-group">
+                <label class="form-label">Ismingiz</label>
+                <input type="text" id="book-name" class="form-control" placeholder="Ismingizni kiriting">
             </div>
 
             <div class="form-group">
-                <label class="form-label">Ism va Familiyangiz *</label>
-                <input type="text" id="book-name" class="form-control" placeholder="Masalan: Sardor Rahimov">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Telefon Raqamingiz *</label>
+                <label class="form-label">Telefon Raqamingiz</label>
                 <input type="tel" id="book-phone" class="form-control" placeholder="+998 90 123 45 67">
             </div>
 
             <div class="form-group">
-                <label class="form-label">Mo'ljallangan Tadbir Sanasi *</label>
+                <label class="form-label">To'y yoki Tadbir Sanasi</label>
                 <input type="date" id="book-date" class="form-control">
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Taxminiy Mehmonlar Soni</label>
-                <input type="number" id="book-guests" class="form-control" placeholder="Masalan: 400 kishi">
-            </div>
-
-            <button class="btn-submit-gold" onclick="submitBookingRequest()">
-                <i class="fa-solid fa-paper-plane"></i> So'rovni Yuborish
+            <button class="btn-find-venues" onclick="confirmBooking()">
+                <i class="fa-solid fa-check"></i> Tasdiqlash va Yuborish
             </button>
         </div>
+
+        <!-- Toast Feedback -->
+        <div class="toast-msg" id="toast-element">
+            <i class="fa-solid fa-circle-check" style="color: #4CAF50;"></i>
+            <span id="toast-text">Xabar yuborildi!</span>
+        </div>
+
     </div>
 
-    <!-- ========================================== -->
-    <!-- BOTTOM APP NAVIGATION DOCK (5 Buttons) -->
-    <!-- ========================================== -->
-    <nav class="bottom-nav-dock">
-        <div class="dock-item active" id="nav-home" onclick="switchTab('home')">
-            <i class="fa-solid fa-house"></i>
-            <span class="dock-label">Asosiy</span>
-        </div>
-        <div class="dock-item" id="nav-map" onclick="switchTab('map')">
-            <i class="fa-solid fa-map-location-dot"></i>
-            <span class="dock-label">Xarita</span>
-        </div>
-        <div class="dock-center-item" onclick="switchTab('create')">
-            <div class="center-circle-btn">
-                <i class="fa-solid fa-plus"></i>
-            </div>
-            <span class="center-label">Joylash</span>
-        </div>
-        <div class="dock-item" id="nav-budget" onclick="switchTab('budget')">
-            <i class="fa-solid fa-wallet"></i>
-            <span class="dock-label">Byudjet</span>
-        </div>
-        <div class="dock-item" id="nav-profile" onclick="switchTab('profile')">
-            <i class="fa-solid fa-envelope-open-text"></i>
-            <span class="dock-label">Taklifnoma</span>
-        </div>
-    </nav>
-
-    <!-- ========================================== -->
-    <!-- JAVASCRIPT LOGIC & REACTIVE STATE -->
-    <!-- ========================================== -->
+    <!-- ============================================================
+         JAVASCRIPT LOGIC (FAST, LIGHTWEIGHT & NATIVE TELEGRAM FEEL)
+         ============================================================ -->
     <script>
-        // 1. Telegram WebApp Initialization
+        // 1. TELEGRAM WEBAPP INITIALIZATION
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
             tg.expand();
             try {
-                tg.setHeaderColor('#FAF8F5');
-                tg.setBackgroundColor('#FAF8F5');
+                tg.setHeaderColor('#FAF7F2');
+                tg.setBackgroundColor('#FAF7F2');
             } catch (e) {}
 
-            // Set user name if available
             const user = tg.initDataUnsafe?.user;
             if (user && user.first_name) {
-                document.getElementById('header-user-name').textContent = user.first_name;
+                document.getElementById('user-display-name').textContent = user.first_name + (user.last_name ? ' ' + user.last_name : '');
             }
         }
 
-        // Haptic feedback helper
         function triggerHaptic(type = 'light') {
             if (tg?.HapticFeedback) {
                 tg.HapticFeedback.impactOccurred(type);
             }
         }
 
-        // Toast Helper
-        function showToast(text) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-text').textContent = text;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3500);
-        }
-
-        // 2. Mock Luxury Services Data
-        const SERVICES_DATA = [
+        // 2. VENUE DATA (Simple, beautiful & realistic)
+        const VENUES = [
             {
                 id: 1,
-                name: "Versal Grand Ballroom",
-                category: "venues",
-                catName: "🏰 TO'YXONA & SAROY",
-                image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800",
-                city: "Toshkent",
+                title: "Versal Grand Ballroom",
+                category: "venue",
+                tag: "PREMIUM SAROY",
+                price: "48,000,000 so'm",
+                priceNum: 48000000,
+                capacity: "500 - 700 kishi",
                 district: "Yakkasaroy",
-                capacity: "500 kishi",
-                rating: 4.95,
-                reviews: 184,
-                price: 45000000,
-                priceFormatted: "45,000,000 so'm",
-                lat: 41.2856,
-                lng: 69.2432,
-                desc: "Kristal qandillar, og'ir tutun, shohona prezidium va panoramali akustika tizimi bilan jihozlangan O'zbekistondagi eng mashhur to'ylar zali.",
-                features: ["VIP Mehmonxona", "Bepul Avtoturargoh (150 mashina)", "Kelinsarpo xonasi", "Light & Sound shou"]
+                rating: 5.0,
+                reviews: 148,
+                phone: "+998712000001",
+                lat: 41.2825,
+                lng: 69.2435,
+                image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800"
             },
             {
                 id: 2,
-                name: "Mumtoz Shohona Saroyi",
-                category: "venues",
-                catName: "🏰 TO'YXONA & SAROY",
-                image: "https://images.unsplash.com/photo-1545232979-fbf68fe9ec41?q=80&w=800",
-                city: "Toshkent",
+                title: "Yakkasaroy Palace",
+                category: "venue",
+                tag: "HASHAMATLI TO'Y",
+                price: "55,000,000 so'm",
+                priceNum: 55000000,
+                capacity: "600 - 800 kishi",
                 district: "Chilonzor",
-                capacity: "600 kishi",
-                rating: 4.92,
-                reviews: 142,
-                price: 40000000,
-                priceFormatted: "40,000,000 so'm",
-                lat: 41.2721,
-                lng: 69.2045,
-                desc: "600 nafar mehmonga mo'ljallangan ulkan hashamatli zal. Milliy va yevropa taomlari uchun mo'ljallangan qirollik dasturxoni.",
-                features: ["Zamonaviy LED ekranlar", "Jonli orkestr sahnasi", "Bolalar maydonchasi"]
+                rating: 4.9,
+                reviews: 124,
+                phone: "+998712000002",
+                lat: 41.2750,
+                lng: 69.2310,
+                image: "https://images.unsplash.com/photo-1545232979-fbf6c8b91953?q=80&w=800"
             },
             {
                 id: 3,
-                name: "Ezidiyor Banquet Hall",
-                category: "venues",
-                catName: "🏰 TO'YXONA & RESTORAN",
-                image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800",
-                city: "Toshkent",
-                district: "Mirzo Ulug‘bek",
-                capacity: "450 kishi",
-                rating: 4.88,
+                title: "Osiyo Grand Hall",
+                category: "venue",
+                tag: "ENG MASHHUR",
+                price: "35,000,000 so'm",
+                priceNum: 35000000,
+                capacity: "400 - 550 kishi",
+                district: "Yunusobod",
+                rating: 4.8,
                 reviews: 98,
-                price: 38000000,
-                priceFormatted: "38,000,000 so'm",
-                lat: 41.3289,
-                lng: 69.3345,
-                desc: "Sharqona nafislik va zamonaviy arxitektura uyg'unligi. Ochiq terassa va sharshara maydoni mavjud.",
-                features: ["Ochiq terassa", "Fotosessiya hududi", "Qizil gilam yo'lakchasi"]
+                phone: "+998712000003",
+                lat: 41.3650,
+                lng: 69.2880,
+                image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800"
             },
             {
                 id: 4,
-                name: "Jasurbek Jonli Ansambli & Boshlovchi",
-                category: "singers",
-                catName: "🎤 SAN'ATKOR & GURUH",
-                image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800",
-                city: "Toshkent",
-                district: "Mirobod",
-                capacity: "Butun to'y dasturi",
-                rating: 4.98,
-                reviews: 215,
-                price: 20000000,
-                priceFormatted: "20,000,000 so'm",
-                lat: 41.2980,
-                lng: 69.2780,
-                desc: "Xalq sevgan xonandalar, professional boshlovchi, karnay-surnay va unutilmas shodiyona raqslar to'liq xizmatda.",
-                features: ["Jonli ijro", "Boshlovchilik (o'zbek/rus)", "Karnay-surnay guruhi", "Maxsus to'y ssenariysi"]
+                title: "Ezidiyor Marosimlar Uyi",
+                category: "venue",
+                tag: "MILLIY VA ZAMONAVIY",
+                price: "42,000,000 so'm",
+                priceNum: 42000000,
+                capacity: "450 - 650 kishi",
+                district: "Shayxontohur",
+                rating: 4.9,
+                reviews: 110,
+                phone: "+998712000004",
+                lat: 41.3280,
+                lng: 69.2290,
+                image: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=800"
             },
             {
                 id: 5,
-                name: "Love Story VIP Foto-Video Studiya",
-                category: "photo",
-                catName: "📸 FOTO & VIDEO STUDIYA",
-                image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=800",
-                city: "Toshkent",
-                district: "Yunusobod",
-                capacity: "Hammasi ichida",
-                rating: 4.94,
-                reviews: 167,
-                price: 12000000,
-                priceFormatted: "12,000,000 so'm",
-                lat: 41.3450,
-                lng: 69.2890,
-                desc: "4K Dron syomka, 3 kamerali to'y montaji, pre-wedding Love Story filmi va hashamatli charm foto-albom.",
-                features: ["4K Dron syomka", "3 ta operator", "Charm to'y albomi", "Tezkor 7 kunda tayyor"]
+                title: "Simurg Lounge & Restaurant",
+                category: "restaurant",
+                tag: "BANKET & PARTY",
+                price: "180,000 so'm / kishi",
+                priceNum: 18000000,
+                capacity: "80 - 200 kishi",
+                district: "Mirobod",
+                rating: 4.7,
+                reviews: 64,
+                phone: "+998712000005",
+                lat: 41.3000,
+                lng: 69.2700,
+                image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800"
             },
             {
                 id: 6,
-                name: "Shohona Mercedes Maybach Korteji",
-                category: "cars",
-                catName: "🚘 TO'Y KORTEJI",
-                image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800",
-                city: "Toshkent",
-                district: "Mirobod",
-                capacity: "Bosh mashina + 2 ta S-Class",
-                rating: 4.91,
-                reviews: 84,
-                price: 10000000,
-                priceFormatted: "10,000,000 so'm",
-                lat: 41.2950,
-                lng: 69.2720,
-                desc: "Oppoq Mercedes Maybach va kuzatuvchi avtomobillar. Professional haydovchilar va bayramona gul bezaklari bilan.",
-                features: ["Professional haydovchi", "Jonli gullar bilan bezak", "Yoqilg'i narx ichida"]
+                title: "Ziyo Stars Live Band",
+                category: "singer",
+                tag: "JONLI IJRO GURUHI",
+                price: "15,000,000 so'm",
+                priceNum: 15000000,
+                capacity: "Barcha tadbirlar",
+                district: "Toshkent",
+                rating: 5.0,
+                reviews: 82,
+                phone: "+998901234567",
+                lat: 41.3110,
+                lng: 69.2790,
+                image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800"
             }
         ];
 
-        let currentCategoryFilter = 'all';
-        let currentDistrictFilter = 'all';
-        let currentSearchQuery = '';
+        let activeTab = 'home';
+        let currentFilter = 'all';
+        let selectedVenueForBooking = null;
 
-        // 3. Render Services Function
-        function renderServices() {
-            const container = document.getElementById('services-container');
-            const filtered = SERVICES_DATA.filter(item => {
-                const matchesCat = currentCategoryFilter === 'all' || item.category === currentCategoryFilter;
-                const matchesDist = currentDistrictFilter === 'all' || item.district === currentDistrictFilter;
-                const q = currentSearchQuery.toLowerCase().trim();
-                const matchesSearch = !q || item.name.toLowerCase().includes(q) || item.district.toLowerCase().includes(q) || item.city.toLowerCase().includes(q);
-                return matchesCat && matchesDist && matchesSearch;
+        // 3. TAB SWITCHING
+        function switchTab(tabName) {
+            triggerHaptic();
+            activeTab = tabName;
+
+            // Hide all tab views
+            document.getElementById('tab-home').style.display = tabName === 'home' ? 'block' : 'none';
+            document.getElementById('tab-map').style.display = tabName === 'map' ? 'block' : 'none';
+            document.getElementById('tab-budget').style.display = tabName === 'budget' ? 'block' : 'none';
+            document.getElementById('tab-add').style.display = tabName === 'add' ? 'block' : 'none';
+            document.getElementById('tab-profile').style.display = tabName === 'profile' ? 'block' : 'none';
+
+            // Update bottom nav active state
+            const tabs = ['home', 'map', 'budget', 'add', 'profile'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`nav-${t}`);
+                if (el) {
+                    if (t === tabName) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                }
             });
 
-            document.getElementById('services-count').textContent = `${filtered.length} ta topildi`;
+            // If map is opened, trigger leaflet map resize
+            if (tabName === 'map') {
+                setTimeout(initMapIfNeeded, 150);
+            }
 
-            if (filtered.length === 0) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 4. RENDER VENUE CARDS (Simple, clean, beautiful)
+        function renderVenues(items) {
+            const container = document.getElementById('venues-list-container');
+            const countBadge = document.getElementById('venue-count-badge');
+            
+            if (countBadge) {
+                countBadge.textContent = `${items.length} ta joy`;
+            }
+
+            if (!container) return;
+
+            if (items.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px; background: #FFFFFF; border-radius: 20px; border: 1px solid var(--border-subtle);">
-                        <div style="font-size: 40px; margin-bottom: 10px;">🔍</div>
-                        <div style="font-size: 15px; font-weight: 800; color: var(--charcoal-900);">Hech qanday xizmat topilmadi</div>
-                        <div style="font-size: 12px; color: var(--charcoal-500); margin-top: 4px;">Qidiruv so'zini yoki tanlangan tumanni o'zgartirib ko'ring</div>
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 32px; color: #D6C8B5; margin-bottom: 10px;"></i>
+                        <p style="font-weight: 600;">Hech qanday to'yxona topilmadi</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = filtered.map(item => `
-                <div class="service-card">
-                    <div class="service-img-wrapper" onclick="openDetailModal(${item.id})">
-                        <img src="${item.image}" alt="${item.name}" class="service-img" loading="lazy">
-                        <div class="service-tag-badge">${item.catName}</div>
-                        <div class="service-rating-badge">
-                            <i class="fa-solid fa-star"></i> ${item.rating}
-                        </div>
+            container.innerHTML = items.map(venue => `
+                <div class="venue-card">
+                    <div class="venue-card-img" onclick="openBookingDrawer(${venue.id})">
+                        <img src="${venue.image}" alt="${venue.title}">
+                        <div class="venue-card-tag">${venue.tag}</div>
                     </div>
-                    <div class="service-body">
-                        <div class="service-title" onclick="openDetailModal(${item.id})">${item.name}</div>
-                        <div class="service-meta-row">
-                            <span class="service-meta-item">
-                                <i class="fa-solid fa-location-dot" style="color: var(--gold-600);"></i> ${item.city}, ${item.district}
-                            </span>
-                            <span class="service-meta-item">
-                                <i class="fa-solid fa-users" style="color: var(--charcoal-500);"></i> ${item.capacity}
-                            </span>
+                    <div class="venue-card-body">
+                        <div class="venue-header-row">
+                            <h4 class="venue-title">${venue.title}</h4>
+                            <div class="venue-rate"><i class="fa-solid fa-star"></i> ${venue.rating}</div>
                         </div>
-                        <div class="service-footer">
-                            <div class="service-price-box">
-                                <span class="service-price-label">Narxi:</span>
-                                <span class="service-price-val">${item.priceFormatted}</span>
+                        <div class="venue-specs">
+                            <div class="venue-spec-item">
+                                <i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i>
+                                <span>${venue.district}</span>
                             </div>
-                            <div class="service-actions-row">
-                                <button class="btn-view-details" onclick="openDetailModal(${item.id})">Batafsil</button>
-                                <button class="btn-book-now" onclick="openBookingModal('${item.name}')">Tezkor Bron</button>
+                            <div class="venue-spec-item">
+                                <i class="fa-solid fa-users" style="color: var(--gold-primary);"></i>
+                                <span>${venue.capacity}</span>
+                            </div>
+                        </div>
+                        <div class="venue-footer-row">
+                            <div class="venue-price-box">
+                                <span class="price-label">Narxi</span>
+                                <span class="price-amount">${venue.price}</span>
+                            </div>
+                            <div class="venue-action-buttons">
+                                <a href="tel:${venue.phone}" class="btn-call" title="Qo'ng'iroq qilish">
+                                    <i class="fa-solid fa-phone"></i>
+                                </a>
+                                <button class="btn-book" onclick="openBookingDrawer(${venue.id})">
+                                    <i class="fa-solid fa-calendar-check"></i> Band Qilish
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1891,245 +1844,183 @@
             `).join('');
         }
 
-        // 4. Filtering Helpers
+        // 5. EVENT TYPE FILTER
+        function filterByEvent(element, eventType) {
+            triggerHaptic();
+            document.querySelectorAll('.event-chip').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+
+            if (eventType === 'all') {
+                renderVenues(VENUES);
+            } else if (eventType === 'wedding') {
+                renderVenues(VENUES.filter(v => v.category === 'venue'));
+            } else if (eventType === 'restaurant') {
+                renderVenues(VENUES.filter(v => v.category === 'restaurant'));
+            } else {
+                renderVenues(VENUES);
+            }
+        }
+
         function filterByCategory(cat) {
             triggerHaptic();
-            currentCategoryFilter = (currentCategoryFilter === cat) ? 'all' : cat;
-            renderServices();
-        }
-
-        function selectEventType(type, el) {
-            triggerHaptic();
-            document.querySelectorAll('.event-pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            if (type === 'restaurant') {
-                currentCategoryFilter = 'venues';
+            scrollToVenues();
+            if (cat === 'venue') {
+                renderVenues(VENUES.filter(v => v.category === 'venue'));
+            } else if (cat === 'restaurant') {
+                renderVenues(VENUES.filter(v => v.category === 'restaurant'));
+            } else if (cat === 'singer') {
+                renderVenues(VENUES.filter(v => v.category === 'singer'));
             } else {
-                currentCategoryFilter = 'all';
+                renderVenues(VENUES);
             }
-            renderServices();
         }
 
-        function selectDistrict(dist, el) {
+        function handleSearch(query) {
+            const q = query.toLowerCase().trim();
+            if (!q) {
+                renderVenues(VENUES);
+                return;
+            }
+            const filtered = VENUES.filter(v => 
+                v.title.toLowerCase().includes(q) ||
+                v.district.toLowerCase().includes(q) ||
+                v.tag.toLowerCase().includes(q)
+            );
+            renderVenues(filtered);
+        }
+
+        function executeSearch() {
             triggerHaptic();
-            document.querySelectorAll('.district-chip').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            currentDistrictFilter = dist;
-            renderServices();
+            scrollToVenues();
         }
 
-        function handleSearch(val) {
-            currentSearchQuery = val;
-            renderServices();
-        }
-
-        // 5. Tab Switching Logic
-        function switchTab(tabId) {
-            triggerHaptic('medium');
-            document.querySelectorAll('.screen-view').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.dock-item').forEach(d => d.classList.remove('active'));
-
-            const targetScreen = document.getElementById('screen-' + tabId);
-            const targetNav = document.getElementById('nav-' + tabId);
-
-            if (targetScreen) targetScreen.classList.add('active');
-            if (targetNav) targetNav.classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            if (tabId === 'map') {
-                setTimeout(initLeafletMap, 150);
+        function scrollToVenues() {
+            const el = document.getElementById('all-venues-heading');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        // 6. Interactive Leaflet Map
-        let leafletMapInstance = null;
-        let activeBaseLayer = null;
-        let mapMarkers = {};
+        // 6. BUDGET CALCULATOR LOGIC
+        let guestCount = 300;
+        let activeTier = 'std';
+        const tierRates = {
+            eco: 180000,
+            std: 280000,
+            vip: 450000
+        };
 
-        function initLeafletMap() {
-            if (leafletMapInstance) {
-                leafletMapInstance.invalidateSize();
+        function changeGuests(delta) {
+            triggerHaptic();
+            guestCount = Math.max(50, Math.min(1200, guestCount + delta));
+            updateBudgetDisplay();
+        }
+
+        function setBudgetTier(tier) {
+            triggerHaptic();
+            activeTier = tier;
+            document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('active'));
+            document.getElementById(`tier-${tier}`)?.classList.add('active');
+            updateBudgetDisplay();
+        }
+
+        function updateBudgetDisplay() {
+            const guestLabel = document.getElementById('guest-count-label');
+            const totalSum = document.getElementById('total-budget-sum');
+            const perGuest = document.getElementById('per-guest-note');
+
+            if (guestLabel) guestLabel.textContent = `${guestCount} kishi`;
+
+            const rate = tierRates[activeTier] || 280000;
+            const total = guestCount * rate;
+
+            if (totalSum) totalSum.textContent = total.toLocaleString('uz-UZ') + " so'm";
+            if (perGuest) perGuest.textContent = `Kishi boshiga ~${rate.toLocaleString('uz-UZ')} so'm to'g'ri keladi`;
+        }
+
+        // 7. LEAFLET MAP LOGIC
+        let mapInstance = null;
+        let markers = [];
+
+        function initMapIfNeeded() {
+            if (mapInstance) {
+                mapInstance.invalidateSize();
                 return;
             }
 
-            leafletMapInstance = L.map('leaflet-map', {
+            const mapEl = document.getElementById('map-element');
+            if (!mapEl) return;
+
+            mapInstance = L.map('map-element', {
                 zoomControl: false,
                 attributionControl: false
             }).setView([41.3050, 69.2650], 12);
 
-            // Default OpenStreetMap Layer (Works 100% everywhere in UZ)
-            activeBaseLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            // OpenStreetMap luxury clear tiles
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19
-            }).addTo(leafletMapInstance);
+            }).addTo(mapInstance);
 
-            // Add Markers
-            SERVICES_DATA.forEach(v => {
-                if (v.lat && v.lng) {
-                    const icon = L.divIcon({
-                        className: 'custom-map-pin',
-                        html: `<div style="background: linear-gradient(135deg, #FAF4E3, #D4AF37); border: 2px solid #070B14; color: #070B14; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); white-space: nowrap; cursor: pointer;">🏰 ${v.name.split(' ')[0]} • ${(v.price/1000000).toFixed(0)}M</div>`,
-                        iconSize: [100, 24],
-                        iconAnchor: [50, 24]
-                    });
-
-                    const marker = L.marker([v.lat, v.lng], { icon: icon }).addTo(leafletMapInstance);
-                    
-                    const popupHtml = `
-                        <div class="map-venue-popup-card">
-                            <img src="${v.image}" class="map-venue-popup-img" />
-                            <div class="map-venue-popup-title">${v.name}</div>
-                            <div class="map-venue-popup-price">${v.priceFormatted}</div>
-                            <div class="map-venue-popup-btn" onclick="openDetailModal(${v.id})">Tafsilotlar & Bron</div>
+            // Add venue markers
+            VENUES.forEach(v => {
+                const customIcon = L.divIcon({
+                    className: 'custom-leaflet-pin',
+                    html: `
+                        <div style="background: linear-gradient(135deg, #E5C383, #C4984F); width: 34px; height: 34px; border-radius: 50%; border: 2.5px solid #FFFFFF; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-size: 14px;">
+                            <i class="fa-solid fa-archway"></i>
                         </div>
-                    `;
-                    marker.bindPopup(popupHtml, { offset: [0, -18] });
-                    mapMarkers[v.id] = marker;
-                }
-            });
-        }
-
-        function setMapBaseLayer(layerType) {
-            triggerHaptic();
-            if (!leafletMapInstance) return;
-
-            document.querySelectorAll('.map-floating-btn').forEach(b => b.classList.remove('active'));
-
-            if (activeBaseLayer) leafletMapInstance.removeLayer(activeBaseLayer);
-
-            if (layerType === 'satellite') {
-                document.getElementById('layer-sat-btn').classList.add('active');
-                activeBaseLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-                    maxZoom: 20
-                }).addTo(leafletMapInstance);
-            } else if (layerType === 'street') {
-                document.getElementById('layer-street-btn').classList.add('active');
-                activeBaseLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19
-                }).addTo(leafletMapInstance);
-            } else {
-                document.getElementById('layer-osm-btn').classList.add('active');
-                activeBaseLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19
-                }).addTo(leafletMapInstance);
-            }
-        }
-
-        function getUserGpsLocation() {
-            triggerHaptic();
-            if (navigator.geolocation) {
-                showToast("GPS joylashuv aniqlanmoqda...");
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    if (leafletMapInstance) {
-                        leafletMapInstance.flyTo([lat, lng], 15, { duration: 1.2 });
-                        const userMarker = L.marker([lat, lng]).addTo(leafletMapInstance);
-                        userMarker.bindPopup('<div style="font-weight: 800; color: #2563EB;">📍 Siz shu yerdasiz</div>').openPopup();
-                        showToast("Joylashuvingiz topildi!");
-                    }
-                }, () => {
-                    showToast("GPS joylashuv ruxsati berilmadi.");
+                    `,
+                    iconSize: [34, 34],
+                    iconAnchor: [17, 17]
                 });
+
+                const marker = L.marker([v.lat, v.lng], { icon: customIcon }).addTo(mapInstance);
+                marker.on('click', () => {
+                    triggerHaptic();
+                    selectVenueOnMap(v);
+                });
+                markers.push(marker);
+            });
+        }
+
+        function selectVenueOnMap(v) {
+            selectedVenueForBooking = v;
+            document.getElementById('map-card-img').src = v.image;
+            document.getElementById('map-card-title').textContent = v.title;
+            document.getElementById('map-card-location').innerHTML = `<i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> ${v.district} tumani`;
+            document.getElementById('map-card-price').textContent = v.price;
+        }
+
+        function openBookingDrawerFromMap() {
+            if (selectedVenueForBooking) {
+                openBookingDrawer(selectedVenueForBooking.id);
+            } else {
+                openBookingDrawer(1);
             }
         }
 
-        // 7. Smart Budget Calculator Logic
-        let currentBudgetMln = 80;
+        // 8. BOOKING DRAWER
+        function openBookingDrawer(venueId) {
+            triggerHaptic('medium');
+            const venue = VENUES.find(v => v.id === venueId) || VENUES[0];
+            selectedVenueForBooking = venue;
 
-        function adjustBudget(diff) {
-            triggerHaptic();
-            currentBudgetMln = Math.max(20, Math.min(500, currentBudgetMln + diff));
-            updateBudgetUI();
+            document.getElementById('drawer-venue-title').textContent = `${venue.title} — Band Qilish`;
+            document.getElementById('drawer-venue-sub').textContent = `Narxi: ${venue.price} | Sig'imi: ${venue.capacity}`;
+
+            document.getElementById('drawer-backdrop').classList.add('active');
+            document.getElementById('drawer-container').classList.add('active');
         }
 
-        function setPresetBudget(val) {
-            triggerHaptic();
-            currentBudgetMln = val;
-            document.querySelectorAll('.budget-chip').forEach(c => {
-                c.classList.toggle('active', c.textContent === val + 'M');
-            });
-            updateBudgetUI();
+        function closeBookingDrawer() {
+            document.getElementById('drawer-backdrop').classList.remove('active');
+            document.getElementById('drawer-container').classList.remove('active');
         }
 
-        function updateBudgetUI() {
-            document.getElementById('budget-million-text').textContent = currentBudgetMln;
-            const total = currentBudgetMln * 1000000;
-
-            const costPerGuest = Math.round(total / 350);
-            document.getElementById('cost-per-guest').textContent = costPerGuest.toLocaleString('uz-UZ');
-
-            document.getElementById('budget-venue').textContent = (currentBudgetMln * 0.45).toFixed(1) + " mln";
-            document.getElementById('budget-singer').textContent = (currentBudgetMln * 0.20).toFixed(1) + " mln";
-            document.getElementById('budget-photo').textContent = (currentBudgetMln * 0.12).toFixed(1) + " mln";
-            document.getElementById('budget-dress').textContent = (currentBudgetMln * 0.10).toFixed(1) + " mln";
-            document.getElementById('budget-decor').textContent = (currentBudgetMln * 0.08).toFixed(1) + " mln";
-            document.getElementById('budget-car').textContent = (currentBudgetMln * 0.05).toFixed(1) + " mln";
-        }
-
-        // 8. Service Detail Drawer
-        function openDetailModal(id) {
-            triggerHaptic();
-            const s = SERVICES_DATA.find(item => item.id === id);
-            if (!s) return;
-
-            const content = document.getElementById('modal-content');
-            content.innerHTML = `
-                <img src="${s.image}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 18px; margin-bottom: 14px;" />
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
-                    <span style="font-size: 11px; font-weight: 800; color: var(--gold-700); background: var(--gold-50); padding: 4px 10px; border-radius: 8px;">${s.catName}</span>
-                    <span style="font-size: 12px; font-weight: 800; color: var(--charcoal-900);"><i class="fa-solid fa-star" style="color: #FBBF24;"></i> ${s.rating} (${s.reviews} sharh)</span>
-                </div>
-                <div style="font-size: 19px; font-weight: 900; color: var(--charcoal-900); margin-bottom: 4px;">${s.name}</div>
-                <div style="font-size: 12.5px; color: var(--charcoal-500); margin-bottom: 12px;">
-                    <i class="fa-solid fa-location-dot" style="color: var(--gold-600);"></i> ${s.city}, ${s.district} • 👥 ${s.capacity}
-                </div>
-                <div style="font-size: 13px; color: var(--charcoal-700); line-height: 1.6; margin-bottom: 16px;">
-                    ${s.desc}
-                </div>
-
-                <div style="font-size: 13px; font-weight: 800; color: var(--charcoal-900); margin-bottom: 8px;">Afzalliklar va Qulayliklar:</div>
-                <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px;">
-                    ${s.features.map(f => `
-                        <div style="font-size: 12px; color: var(--charcoal-700); display: flex; align-items: center; gap: 6px;">
-                            <i class="fa-solid fa-check" style="color: #10B981;"></i> ${f}
-                        </div>
-                    `).join('')}
-                </div>
-
-                <div style="display: flex; gap: 8px; margin-top: 14px;">
-                    <a href="tel:+998901112233" style="flex: 1; background: var(--gold-50); border: 1px solid var(--border-subtle); color: var(--charcoal-900); padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 800; text-align: center; text-decoration: none;">
-                        <i class="fa-solid fa-phone" style="color: #10B981;"></i> Qo'ng'iroq
-                    </a>
-                    <button class="btn-submit-gold" style="flex: 1.5; margin: 0; padding: 12px;" onclick="openBookingModal('${s.name}')">
-                        <i class="fa-solid fa-calendar-check"></i> Bron So'rovi
-                    </button>
-                </div>
-            `;
-
-            document.getElementById('detail-modal').classList.add('active');
-        }
-
-        function closeDetailModal(e) {
-            document.getElementById('detail-modal').classList.remove('active');
-        }
-
-        // 9. Booking Modal
-        function openBookingModal(targetTitle) {
-            triggerHaptic();
-            closeDetailModal();
-            document.getElementById('booking-target-title').textContent = targetTitle || "Umumiy So'rov";
-            document.getElementById('booking-modal').classList.add('active');
-        }
-
-        function closeBookingModal() {
-            document.getElementById('booking-modal').classList.remove('active');
-        }
-
-        function submitBookingRequest() {
+        function confirmBooking() {
             const name = document.getElementById('book-name').value.trim();
             const phone = document.getElementById('book-phone').value.trim();
-            const target = document.getElementById('booking-target-title').textContent;
+            const date = document.getElementById('book-date').value;
 
             if (!name || !phone) {
                 alert("Iltimos, ismingiz va telefon raqamingizni kiriting!");
@@ -2137,59 +2028,66 @@
             }
 
             triggerHaptic('heavy');
-            closeBookingModal();
-            showToast("So'rovingiz qabul qilindi! Tez orada bog'lanamiz. ✅");
+            closeBookingDrawer();
+            showToast("Buyurtmangiz qabul qilindi! Tez orada aloqaga chiqamiz. ✨");
 
-            // If inside Telegram, we can send notification or data
-            if (tg) {
-                try {
-                    tg.sendData(JSON.stringify({ type: 'BOOKING_REQUEST', name, phone, target }));
-                } catch(e) {}
-            }
+            document.getElementById('book-name').value = '';
+            document.getElementById('book-phone').value = '';
         }
 
-        // 10. Vendor Service Submission
-        function submitVendorService() {
-            const title = document.getElementById('create-title').value.trim();
-            const phone = document.getElementById('create-phone').value.trim();
-            const price = document.getElementById('create-price').value.trim();
+        // 9. SUBMIT NEW VENUE
+        function submitNewVenue() {
+            const title = document.getElementById('add-title').value.trim();
+            const phone = document.getElementById('add-phone').value.trim();
+            const price = document.getElementById('add-price').value.trim();
 
-            if (!title || !phone || !price) {
-                alert("Iltimos, xizmat nomi, narxi va telefon raqamini to'ldiring!");
+            if (!title || !phone) {
+                alert("Iltimos, joy nomini va telefon raqamingizni to'ldiring!");
                 return;
             }
 
             triggerHaptic('heavy');
-            showToast("Xizmatingiz qabul qilindi va tekshiruvga yuborildi! ✨");
+            showToast("E'loningiz qabul qilindi va tekshiruvga yuborildi! 💎");
 
-            // Reset inputs
-            document.getElementById('create-title').value = '';
-            document.getElementById('create-phone').value = '';
-            document.getElementById('create-price').value = '';
-            document.getElementById('create-telegram').value = '';
-            document.getElementById('create-desc').value = '';
+            document.getElementById('add-title').value = '';
+            document.getElementById('add-phone').value = '';
+            document.getElementById('add-price').value = '';
 
             setTimeout(() => switchTab('home'), 1200);
         }
 
-        // 11. Share Invite on Telegram
-        function shareInviteOnTelegram() {
+        // 10. SHARE INVITE LINK
+        function shareInviteLink() {
             triggerHaptic();
-            const url = "https://tuybox.asilbek.tech/invite/demo";
-            const text = "Hurmatli mehmon! Sizni to'yimizga samimiy taklif etamiz. Ushbu havola orqali manzil, vaqt va tafsilotlarni ko'rishingiz mumkin: 💍";
-            const tgShareUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
-            
+            const text = "Assalomu alaykum! Sizni to'yimizga taklif etamiz. To'liq tafsilotlar: 💍";
+            const url = "https://tuybox.asilbek.tech";
+            const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+
             if (tg?.openTelegramLink) {
-                tg.openTelegramLink(tgShareUrl);
+                tg.openTelegramLink(tgUrl);
             } else {
-                window.open(tgShareUrl, '_blank');
+                window.open(tgUrl, '_blank');
             }
         }
 
-        // Initial Boot
+        // 11. TOAST HELPER
+        function showToast(message) {
+            triggerHaptic();
+            const toast = document.getElementById('toast-element');
+            const text = document.getElementById('toast-text');
+            if (toast && text) {
+                text.textContent = message;
+                toast.classList.add('active');
+                setTimeout(() => {
+                    toast.classList.remove('active');
+                }, 3000);
+            }
+        }
+
+        // 12. INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
-            renderServices();
-            updateBudgetUI();
+            renderVenues(VENUES);
+            updateBudgetDisplay();
         });
     </script>
 </body>
