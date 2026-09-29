@@ -69,6 +69,8 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         ws_manager.disconnect(websocket)
 
+from app.api.v1.admin import router as admin_router
+
 # Routerni ulash
 app.include_router(auth_router, prefix=settings.API_V1_STR)
 app.include_router(services_router, prefix=settings.API_V1_STR)
@@ -81,6 +83,7 @@ app.include_router(payments_router, prefix=settings.API_V1_STR)
 app.include_router(social_router, prefix=settings.API_V1_STR)
 app.include_router(seating_router, prefix=settings.API_V1_STR)
 app.include_router(checklist_router, prefix=settings.API_V1_STR)
+app.include_router(admin_router, prefix=settings.API_V1_STR)
 
 @app.on_event("startup")
 async def on_startup():
@@ -141,6 +144,14 @@ async def pitch_landing():
         with open(pitch_path, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read(), status_code=200)
     return HTMLResponse("<h1>TuyBox Pitch Deck</h1>", status_code=200)
+
+@app.api_route("/admin", methods=["GET", "HEAD"], response_class=HTMLResponse)
+async def admin_dashboard():
+    admin_path = os.path.join(os.path.dirname(__file__), "templates", "admin.html")
+    if os.path.exists(admin_path):
+        with open(admin_path, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read(), status_code=200)
+    return HTMLResponse("<h1>TuyBox Admin Panel</h1>", status_code=200)
 
 @app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def root():

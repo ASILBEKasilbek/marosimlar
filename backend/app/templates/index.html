@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>TuyBox — To'y va Marosimlar Ekotizimi</title>
+    <title>TuyBox — To'y va Marosimlar Super-Ilovasi</title>
 
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -22,7 +22,7 @@
 
     <style>
         :root {
-            /* Exactly matching luxury ivory & warm gold mockups */
+            /* 100% Matching Luxury Champagne & Ivory Mockup */
             --bg-page: #FAF7F2;
             --bg-card: #FFFFFF;
             --bg-card-soft: #FDFBF8;
@@ -58,7 +58,6 @@
             justify-content: center;
         }
 
-        /* App Container constrained for desktop, 100% on mobile */
         .app-shell {
             width: 100%;
             max-width: 440px;
@@ -71,9 +70,7 @@
             padding-bottom: calc(75px + var(--safe-bottom));
         }
 
-        /* ============================================================
-           1. TOP HEADER (Matching Mockup 1-to-1)
-           ============================================================ */
+        /* 1. TOP HEADER (Exact Mockup Match) */
         .app-header {
             position: sticky;
             top: 0;
@@ -113,6 +110,7 @@
             align-items: center;
             gap: 8px;
             text-decoration: none;
+            cursor: pointer;
         }
 
         .brand-monogram {
@@ -160,9 +158,7 @@
             border: 1.5px solid #FFFFFF;
         }
 
-        /* ============================================================
-           2. SEARCH & EVENT CHIPS
-           ============================================================ */
+        /* 2. SEARCH & EVENT CHIPS */
         .search-section {
             padding: 14px 20px 8px;
         }
@@ -213,7 +209,6 @@
             transform: scale(0.92);
         }
 
-        /* Event type selector (Wedge strategic pills) */
         .event-pills-row {
             display: flex;
             gap: 8px;
@@ -250,9 +245,7 @@
             box-shadow: var(--gold-glow);
         }
 
-        /* ============================================================
-           3. SECTION TITLES
-           ============================================================ */
+        /* 3. SECTION HEADERS */
         .section-header {
             padding: 18px 20px 10px;
             display: flex;
@@ -266,9 +259,6 @@
             font-weight: 700;
             color: #4A3C31;
             letter-spacing: -0.2px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .section-link {
@@ -279,9 +269,7 @@
             cursor: pointer;
         }
 
-        /* ============================================================
-           4. FEATURED WEDDING PALACES CAROUSEL (Mockup Match)
-           ============================================================ */
+        /* 4. FEATURED CAROUSEL */
         .featured-carousel {
             display: flex;
             gap: 16px;
@@ -304,7 +292,7 @@
             border: 1px solid var(--gold-border);
             box-shadow: var(--shadow-card);
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease;
         }
 
         .palace-card:active {
@@ -337,23 +325,6 @@
             border-radius: var(--radius-pill);
             font-size: 11px;
             font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-
-        .palace-heart {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
-            color: #C4984F;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .palace-info {
@@ -400,13 +371,6 @@
             color: var(--gold-primary);
         }
 
-        .palace-location {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Carousel dots indicator */
         .carousel-dots {
             display: flex;
             justify-content: center;
@@ -428,9 +392,7 @@
             background: var(--gold-primary);
         }
 
-        /* ============================================================
-           5. BANNER: "VENUES NEAR YOU" (Mockup Match)
-           ============================================================ */
+        /* 5. VENUES NEAR YOU BANNER */
         .near-you-section {
             padding: 10px 20px 14px;
         }
@@ -445,8 +407,6 @@
             justify-content: space-between;
             box-shadow: var(--shadow-card);
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
             transition: transform 0.15s ease;
         }
 
@@ -468,17 +428,6 @@
             color: var(--text-muted);
         }
 
-        .near-you-map-preview {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .pin-cluster {
-            display: flex;
-            gap: 4px;
-        }
-
         .map-badge-btn {
             background: var(--gold-gradient);
             color: #FFFFFF;
@@ -492,9 +441,7 @@
             box-shadow: var(--gold-glow);
         }
 
-        /* ============================================================
-           6. BROWSE CATEGORIES (2x2 Visual Grid matching mockup)
-           ============================================================ */
+        /* 6. BROWSE CATEGORIES (2x2 Grid) */
         .categories-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -550,7 +497,6 @@
             justify-content: center;
             font-size: 15px;
             color: var(--gold-primary);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
         .cat-badge-bottom {
@@ -561,13 +507,9 @@
             font-size: 12px;
             font-weight: 700;
             text-align: center;
-            letter-spacing: 0.2px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
-        /* ============================================================
-           7. VENUE LIST CARDS (Simple, Clear & Not Complicated!)
-           ============================================================ */
+        /* 7. ALL VENUES LIST */
         .venue-list-section {
             padding: 0 20px 24px;
             display: flex;
@@ -581,7 +523,6 @@
             overflow: hidden;
             border: 1px solid var(--gold-border);
             box-shadow: var(--shadow-card);
-            transition: transform 0.15s ease;
         }
 
         .venue-card-img {
@@ -589,6 +530,7 @@
             width: 100%;
             height: 190px;
             background: #ECE6DE;
+            cursor: pointer;
         }
 
         .venue-card-img img {
@@ -607,7 +549,6 @@
             font-size: 11px;
             font-weight: 800;
             color: var(--gold-primary);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
         }
 
         .venue-card-body {
@@ -648,12 +589,6 @@
             font-size: 13px;
             color: var(--text-muted);
             margin-bottom: 14px;
-        }
-
-        .venue-spec-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
         .venue-footer-row {
@@ -723,9 +658,7 @@
             transform: scale(0.96);
         }
 
-        /* ============================================================
-           8. MAP VIEW (Clean & Interactive)
-           ============================================================ */
+        /* 8. MAP VIEW */
         .map-view-container {
             display: none;
             height: calc(100vh - 140px);
@@ -735,7 +668,6 @@
         #map-element {
             width: 100%;
             height: 100%;
-            z-index: 10;
         }
 
         .map-overlay-card {
@@ -773,11 +705,6 @@
             margin-bottom: 2px;
         }
 
-        .map-overlay-info p {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
         .map-overlay-price {
             font-size: 14px;
             font-weight: 800;
@@ -785,9 +712,7 @@
             margin-top: 4px;
         }
 
-        /* ============================================================
-           9. BUDGET CALCULATOR (Simple, intuitive for ordinary users)
-           ============================================================ */
+        /* 9. BUDGET VIEW */
         .budget-view-container {
             display: none;
             padding: 16px 20px 30px;
@@ -800,29 +725,6 @@
             padding: 24px 20px;
             text-align: center;
             box-shadow: var(--shadow-card);
-            margin-bottom: 20px;
-        }
-
-        .budget-calc-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 6px;
-        }
-
-        .budget-calc-sub {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-
-        .stepper-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-bottom: 8px;
         }
 
         .guest-stepper-box {
@@ -830,7 +732,7 @@
             align-items: center;
             justify-content: center;
             gap: 18px;
-            margin-bottom: 24px;
+            margin: 16px 0 24px;
         }
 
         .step-btn {
@@ -845,12 +747,6 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(160, 130, 95, 0.08);
-            transition: transform 0.15s ease;
-        }
-
-        .step-btn:active {
-            transform: scale(0.9);
         }
 
         .step-value-display {
@@ -860,7 +756,6 @@
             min-width: 140px;
         }
 
-        /* 3 Simple Preset Tiers */
         .budget-tiers-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -883,24 +778,6 @@
             box-shadow: var(--gold-glow);
         }
 
-        .tier-emoji {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-
-        .tier-name {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 2px;
-        }
-
-        .tier-rate {
-            font-size: 10px;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
         .total-budget-display {
             background: linear-gradient(135deg, #FFFDF9 0%, #F5ECE0 100%);
             border: 1px solid var(--gold-border);
@@ -909,24 +786,12 @@
             margin-bottom: 20px;
         }
 
-        .total-budget-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
         .total-budget-value {
             font-family: 'Playfair Display', serif;
             font-size: 30px;
             font-weight: 800;
             color: var(--gold-primary);
             margin: 4px 0;
-        }
-
-        .total-budget-note {
-            font-size: 12px;
-            color: var(--text-muted);
         }
 
         .btn-find-venues {
@@ -946,9 +811,7 @@
             gap: 8px;
         }
 
-        /* ============================================================
-           10. ADD VENUE (Supply side - Vendor Onboarding)
-           ============================================================ */
+        /* 10. ADD VENUE */
         .add-view-container {
             display: none;
             padding: 16px 20px 30px;
@@ -960,20 +823,6 @@
             border: 1px solid var(--gold-border);
             padding: 24px 20px;
             box-shadow: var(--shadow-card);
-        }
-
-        .form-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 6px;
-        }
-
-        .form-sub {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
         }
 
         .form-group {
@@ -1005,9 +854,7 @@
             background: #FFFFFF;
         }
 
-        /* ============================================================
-           11. PROFILE / CONTACT
-           ============================================================ */
+        /* 11. PROFILE */
         .profile-view-container {
             display: none;
             padding: 16px 20px 30px;
@@ -1036,20 +883,6 @@
             justify-content: center;
             font-size: 32px;
             color: #FFFFFF;
-        }
-
-        .profile-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .profile-status {
-            font-size: 13px;
-            color: var(--gold-primary);
-            font-weight: 600;
-            margin-top: 2px;
         }
 
         .action-link-item {
@@ -1087,9 +920,7 @@
             font-size: 15px;
         }
 
-        /* ============================================================
-           12. BOTTOM NAVIGATION BAR (Matching Mockup 1-to-1)
-           ============================================================ */
+        /* 12. BOTTOM NAV (Exact Mockup Match: Home, Search, Bookings, Account) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -1119,8 +950,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.18s ease;
-            position: relative;
-            padding: 4px 10px;
+            padding: 4px 14px;
             border-radius: 12px;
         }
 
@@ -1137,9 +967,7 @@
             transform: translateY(-2px);
         }
 
-        /* ============================================================
-           13. BOTTOM DRAWER / MODAL FOR BOOKING
-           ============================================================ */
+        /* 13. DRAWER MODAL */
         .drawer-backdrop {
             position: fixed;
             inset: 0;
@@ -1183,7 +1011,6 @@
             margin: 0 auto 16px;
         }
 
-        /* Toast notification */
         .toast-msg {
             position: fixed;
             top: 24px;
@@ -1212,40 +1039,36 @@
 
     <div class="app-shell">
 
-        <!-- ============================================================
-             TOP HEADER (Matching Mockup 1-to-1)
-             ============================================================ -->
+        <!-- TOP HEADER (Exact Mockup Match) -->
         <header class="app-header">
-            <div class="header-avatar" onclick="switchTab('profile')">
+            <div class="header-avatar" onclick="switchTab('account')">
                 <img id="header-avatar-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=200" alt="Avatar">
             </div>
 
-            <div class="header-brand">
+            <div class="header-brand" onclick="switchTab('home')">
                 <span class="brand-monogram">𝓣</span>
                 <span class="brand-title">TuyBox</span>
             </div>
 
-            <div class="header-notification" onclick="showToast('Sizda 1 ta yangi taklif mavjud! ✨')">
+            <div class="header-notification" onclick="showToast('Sizda 1 ta yangi to\'y taklifnomasi bor! ✨')">
                 <i class="fa-regular fa-bell"></i>
                 <div class="notification-dot"></div>
             </div>
         </header>
 
-        <!-- ============================================================
-             TAB 1: ASOSIY (HOME) - Exactly matching the luxury mockup
-             ============================================================ -->
+        <!-- TAB 1: ASOSIY (HOME) -->
         <main id="tab-home">
             <!-- Search Bar Pill -->
             <div class="search-section">
                 <div class="search-pill-box">
-                    <input type="text" id="search-input" placeholder="To'yxona, restoran yoki xizmat qidirish..." oninput="handleSearch(this.value)">
+                    <input type="text" id="search-input" placeholder="Search Venues, Singers, Planning..." oninput="handleSearch(this.value)">
                     <button class="search-circle-btn" onclick="executeSearch()">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Event Type Pills (Wedge Strategy: To'y + Restoran + Tug'ilgan kun + Korporativ) -->
+            <!-- Event Type Pills -->
             <div class="event-pills-row">
                 <div class="event-chip active" onclick="filterByEvent(this, 'all')">
                     <span>✨</span> Barchasi
@@ -1264,19 +1087,18 @@
                 </div>
             </div>
 
-            <!-- 1. FEATURED WEDDING PALACES CAROUSEL (Mockup Match) -->
+            <!-- 1. FEATURED WEDDING PALACES CAROUSEL -->
             <div class="section-header">
-                <h3 class="section-title">Sara To'yxonalar</h3>
+                <h3 class="section-title">Featured Wedding Palaces</h3>
                 <span class="section-link" onclick="scrollToVenues()">Hammasi &rarr;</span>
             </div>
 
             <div class="featured-carousel" id="featured-carousel">
-                <!-- Card 1 -->
+                <!-- Dynamically rendered or pre-populated with top palaces -->
                 <div class="palace-card" onclick="openBookingDrawer(1)">
                     <div class="palace-img-wrap">
                         <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800" alt="Versal Grand Ballroom">
                         <div class="palace-badge">PREMIUM VIP</div>
-                        <div class="palace-heart"><i class="fa-solid fa-heart"></i></div>
                     </div>
                     <div class="palace-info">
                         <div class="palace-top-line">
@@ -1284,18 +1106,16 @@
                             <span class="palace-rating"><i class="fa-solid fa-star"></i> 5.0</span>
                         </div>
                         <div class="palace-sub-line">
-                            <span class="palace-price">48 mln so'mdan</span>
-                            <span class="palace-location"><i class="fa-solid fa-location-dot"></i> Yakkasaroy</span>
+                            <span class="palace-price">48,000,000 so'mdan</span>
+                            <span><i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> Yakkasaroy</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 2 -->
                 <div class="palace-card" onclick="openBookingDrawer(2)">
                     <div class="palace-img-wrap">
                         <img src="https://images.unsplash.com/photo-1545232979-fbf6c8b91953?q=80&w=800" alt="Yakkasaroy Palace">
                         <div class="palace-badge">SAROY</div>
-                        <div class="palace-heart"><i class="fa-solid fa-heart"></i></div>
                     </div>
                     <div class="palace-info">
                         <div class="palace-top-line">
@@ -1303,18 +1123,16 @@
                             <span class="palace-rating"><i class="fa-solid fa-star"></i> 4.9</span>
                         </div>
                         <div class="palace-sub-line">
-                            <span class="palace-price">55 mln so'mdan</span>
-                            <span class="palace-location"><i class="fa-solid fa-location-dot"></i> Chilonzor</span>
+                            <span class="palace-price">55,000,000 so'mdan</span>
+                            <span><i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> Chilonzor</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Card 3 -->
                 <div class="palace-card" onclick="openBookingDrawer(3)">
                     <div class="palace-img-wrap">
                         <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800" alt="Osiyo Grand Hall">
-                        <div class="palace-badge">LYUKS</div>
-                        <div class="palace-heart"><i class="fa-solid fa-heart"></i></div>
+                        <div class="palace-badge">ENG MASHHUR</div>
                     </div>
                     <div class="palace-info">
                         <div class="palace-top-line">
@@ -1322,8 +1140,8 @@
                             <span class="palace-rating"><i class="fa-solid fa-star"></i> 4.8</span>
                         </div>
                         <div class="palace-sub-line">
-                            <span class="palace-price">35 mln so'mdan</span>
-                            <span class="palace-location"><i class="fa-solid fa-location-dot"></i> Yunusobod</span>
+                            <span class="palace-price">35,000,000 so'mdan</span>
+                            <span><i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> Yunusobod</span>
                         </div>
                     </div>
                 </div>
@@ -1336,82 +1154,73 @@
                 <div class="dot"></div>
             </div>
 
-            <!-- 2. "VENUES NEAR YOU" BANNER (Mockup Match - Tapping switches to map) -->
+            <!-- 2. VENUES NEAR YOU BANNER -->
             <div class="near-you-section">
-                <div class="near-you-card" onclick="switchTab('map')">
+                <div class="near-you-card" onclick="switchTab('search')">
                     <div class="near-you-text">
-                        <h4>Yaqin Atrofdagi Joylar</h4>
-                        <p>Xaritada 48 ta to'yxona va restoranni ko'ring</p>
+                        <h4>Venues Near You</h4>
+                        <p>Explore 48 Locations in Tashkent</p>
                     </div>
-                    <div class="near-you-map-preview">
-                        <div class="map-badge-btn">
-                            <i class="fa-solid fa-map-location-dot"></i>
-                        </div>
+                    <div class="map-badge-btn">
+                        <i class="fa-solid fa-map-location-dot"></i>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. BROWSE CATEGORIES (2x2 Visual Grid matching mockup) -->
+            <!-- 3. BROWSE CATEGORIES (2x2 Grid) -->
             <div class="section-header">
-                <h3 class="section-title">Bo'limlar</h3>
+                <h3 class="section-title">Browse Categories</h3>
             </div>
 
             <div class="categories-grid">
-                <!-- Cat 1 -->
-                <div class="cat-card" onclick="filterByCategory('venue')">
-                    <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=500" alt="To'yxonalar">
+                <div class="cat-card" onclick="filterByCategory('toyxonalar')">
+                    <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=500" alt="Wedding Venues">
                     <div class="cat-card-overlay">
                         <div class="cat-icon-glass"><i class="fa-solid fa-archway"></i></div>
-                        <div class="cat-badge-bottom">To'yxonalar</div>
+                        <div class="cat-badge-bottom">Wedding Venues</div>
                     </div>
                 </div>
 
-                <!-- Cat 2 -->
-                <div class="cat-card" onclick="filterByCategory('singer')">
-                    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=500" alt="San'atkorlar">
+                <div class="cat-card" onclick="filterByCategory('sanatkorlar')">
+                    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=500" alt="Wedding Singers">
                     <div class="cat-card-overlay">
                         <div class="cat-icon-glass"><i class="fa-solid fa-microphone-lines"></i></div>
-                        <div class="cat-badge-bottom">San'atkorlar</div>
+                        <div class="cat-badge-bottom">Wedding Singers</div>
                     </div>
                 </div>
 
-                <!-- Cat 3 -->
-                <div class="cat-card" onclick="filterByCategory('restaurant')">
-                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=500" alt="Restoranlar">
+                <div class="cat-card" onclick="filterByCategory('restoranlar')">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=500" alt="Caterers & Restoran">
                     <div class="cat-card-overlay">
                         <div class="cat-icon-glass"><i class="fa-solid fa-utensils"></i></div>
-                        <div class="cat-badge-bottom">Restoranlar</div>
+                        <div class="cat-badge-bottom">Caterers & Dining</div>
                     </div>
                 </div>
 
-                <!-- Cat 4 -->
-                <div class="cat-card" onclick="filterByCategory('photo')">
-                    <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=500" alt="Foto & Video">
+                <div class="cat-card" onclick="filterByCategory('foto-video')">
+                    <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=500" alt="Decorators & Photo">
                     <div class="cat-card-overlay">
                         <div class="cat-icon-glass"><i class="fa-solid fa-camera"></i></div>
-                        <div class="cat-badge-bottom">Foto & Video</div>
+                        <div class="cat-badge-bottom">Photo & Decor</div>
                     </div>
                 </div>
             </div>
 
-            <!-- 4. SIMPLE & CLEAN VENUE LIST (No clutter!) -->
+            <!-- 4. ALL SERVICES LIST (Simple, Beautiful & Direct) -->
             <div class="section-header" id="all-venues-heading">
                 <h3 class="section-title">Barcha Joylar va Xizmatlar</h3>
-                <span class="section-link" id="venue-count-badge">6 ta joy</span>
+                <span class="section-link" id="venue-count-badge">Yuklanmoqda...</span>
             </div>
 
             <div class="venue-list-section" id="venues-list-container">
-                <!-- Dynamically populated via JS -->
+                <!-- Populated dynamically via API / Local cache -->
             </div>
         </main>
 
-        <!-- ============================================================
-             TAB 2: XARITA (INTERACTIVE LEAFLET MAP)
-             ============================================================ -->
-        <section id="tab-map" class="map-view-container">
+        <!-- TAB 2: SEARCH & XARITA (Leaflet Interactive Map) -->
+        <section id="tab-search" class="map-view-container">
             <div id="map-element"></div>
             
-            <!-- Map selected venue floating card -->
             <div class="map-overlay-card" id="map-selected-card">
                 <img id="map-card-img" class="map-overlay-thumb" src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=400" alt="Venue">
                 <div class="map-overlay-info">
@@ -1425,44 +1234,44 @@
             </div>
         </section>
 
-        <!-- ============================================================
-             TAB 3: BYUDJET (ODDIY VA TUSHUNARLI KALKULYATOR)
-             ============================================================ -->
-        <section id="tab-budget" class="budget-view-container">
+        <!-- TAB 3: BOOKINGS & BYUDJET -->
+        <section id="tab-bookings" class="budget-view-container">
             <div class="budget-hero-box">
-                <h3 class="budget-calc-title">To'y va Marosim Byudjeti</h3>
-                <p class="budget-calc-sub">Mehmonlar soniga qarab taxminiy xarajatni 1 soniyada hisoblang</p>
+                <h3 class="section-title" style="margin-bottom: 6px;">AI To'y Byudjeti</h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                    Mehmonlar soniga qarab rejalashtiring va to'g'ri keluvchi joylarni toping
+                </p>
 
-                <div class="stepper-label">Mehmonlar Soni</div>
+                <div style="font-size: 12px; text-transform: uppercase; font-weight: 700; color: var(--text-muted);">Mehmonlar Soni</div>
                 <div class="guest-stepper-box">
                     <button class="step-btn" onclick="changeGuests(-50)"><i class="fa-solid fa-minus"></i></button>
                     <div class="step-value-display" id="guest-count-label">300 kishi</div>
                     <button class="step-btn" onclick="changeGuests(50)"><i class="fa-solid fa-plus"></i></button>
                 </div>
 
-                <div class="stepper-label">Xizmat Darajasi</div>
+                <div style="font-size: 12px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">To'y Darajasi</div>
                 <div class="budget-tiers-grid">
                     <div class="tier-card" id="tier-eco" onclick="setBudgetTier('eco')">
-                        <div class="tier-emoji">🟢</div>
-                        <div class="tier-name">Tejamkor</div>
-                        <div class="tier-rate">180 ming / kishi</div>
+                        <div style="font-size: 20px;">🟢</div>
+                        <div style="font-size: 12px; font-weight: 700;">Tejamkor</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">180 ming / kishi</div>
                     </div>
                     <div class="tier-card active" id="tier-std" onclick="setBudgetTier('std')">
-                        <div class="tier-emoji">🟡</div>
-                        <div class="tier-name">O'rtacha</div>
-                        <div class="tier-rate">280 ming / kishi</div>
+                        <div style="font-size: 20px;">🟡</div>
+                        <div style="font-size: 12px; font-weight: 700;">O'rtacha</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">280 ming / kishi</div>
                     </div>
                     <div class="tier-card" id="tier-vip" onclick="setBudgetTier('vip')">
-                        <div class="tier-emoji">👑</div>
-                        <div class="tier-name">VIP Lyuks</div>
-                        <div class="tier-rate">450 ming / kishi</div>
+                        <div style="font-size: 20px;">👑</div>
+                        <div style="font-size: 12px; font-weight: 700;">VIP Lyuks</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">450 ming / kishi</div>
                     </div>
                 </div>
 
                 <div class="total-budget-display">
-                    <div class="total-budget-label">Jami Taxminiy Xarajat:</div>
+                    <div style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Jami Taxminiy Xarajat:</div>
                     <div class="total-budget-value" id="total-budget-sum">84,000,000 so'm</div>
-                    <div class="total-budget-note" id="per-guest-note">Kishi boshiga ~280,000 so'm to'g'ri keladi</div>
+                    <div style="font-size: 12px; color: var(--text-muted);" id="per-guest-note">Kishi boshiga ~280,000 so'm</div>
                 </div>
 
                 <button class="btn-find-venues" onclick="switchTab('home')">
@@ -1471,13 +1280,20 @@
             </div>
         </section>
 
-        <!-- ============================================================
-             TAB 4: JOYLASH (VENDOR ONBOARDING - SODDA VA TEZKOR)
-             ============================================================ -->
-        <section id="tab-add" class="add-view-container">
-            <div class="form-card">
-                <h3 class="form-title">Joy yoki Xizmat Qo'shish</h3>
-                <p class="form-sub">To'yxona, restoran yoki san'atkor bo'lsangiz, TuyBox platformasiga bepul e'lon bering</p>
+        <!-- TAB 4: ACCOUNT / PROFIL & JOYLASH -->
+        <section id="tab-account" class="profile-view-container">
+            <div class="profile-hero">
+                <div class="profile-avatar-big">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <h3 class="section-title" id="user-display-name">Hurmatli Mehmon</h3>
+                <div style="font-size: 13px; color: var(--gold-primary); font-weight: 600; margin-top: 2px;">TuyBox VIP Foydalanuvchisi</div>
+            </div>
+
+            <!-- Vendor Joylash Accordion / Form -->
+            <div class="form-card" style="margin-bottom: 16px;">
+                <h4 style="font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 6px;">Joy yoki Xizmat Qo'shish (E'lon)</h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">To'yxona, restoran yoki san'atkor bo'lsangiz, platformaga bepul qo'shiling</p>
 
                 <div class="form-group">
                     <label class="form-label">To'yxona yoki Xizmat Nomi</label>
@@ -1485,45 +1301,21 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Yo'nalishi</label>
-                    <select id="add-category" class="form-control">
-                        <option value="venue">To'yxona (Nikoh saroyi)</option>
-                        <option value="restaurant">Restoran / Kafe</option>
-                        <option value="singer">San'atkor / Boshlovchi</option>
-                        <option value="photo">Foto & Video</option>
-                        <option value="decor">Dekoratsiya</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Boshlang'ich Narxi (so'mda)</label>
-                    <input type="text" id="add-price" class="form-control" placeholder="Masalan: 35,000,000 so'm">
-                </div>
-
-                <div class="form-group">
                     <label class="form-label">Telefon Raqamingiz</label>
                     <input type="tel" id="add-phone" class="form-control" placeholder="+998 90 123 45 67">
                 </div>
 
-                <button class="btn-find-venues" onclick="submitNewVenue()" style="margin-top: 10px;">
-                    <i class="fa-solid fa-paper-plane"></i> E'lonni Yuborish
+                <div class="form-group">
+                    <label class="form-label">Narxi (so'm)</label>
+                    <input type="text" id="add-price" class="form-control" placeholder="45000000">
+                </div>
+
+                <button class="btn-find-venues" onclick="submitNewVenuePublic()">
+                    <i class="fa-solid fa-paper-plane"></i> E'lonni Saqlash
                 </button>
             </div>
-        </section>
 
-        <!-- ============================================================
-             TAB 5: PROFIL & ALOQA
-             ============================================================ -->
-        <section id="tab-profile" class="profile-view-container">
-            <div class="profile-hero">
-                <div class="profile-avatar-big">
-                    <i class="fa-solid fa-crown"></i>
-                </div>
-                <h3 class="profile-name" id="user-display-name">Hurmatli Mehmon</h3>
-                <div class="profile-status">TuyBox Foydalanuvchisi</div>
-            </div>
-
-            <!-- Action links -->
+            <!-- Quick Action Links -->
             <div class="action-link-item" onclick="shareInviteLink()">
                 <div class="action-link-left">
                     <div class="action-icon-circle"><i class="fa-solid fa-envelope-open-text"></i></div>
@@ -1532,18 +1324,18 @@
                 <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
             </div>
 
-            <a href="https://t.me/asilbek_developer" target="_blank" class="action-link-item">
+            <a href="/admin" class="action-link-item">
                 <div class="action-link-left">
-                    <div class="action-icon-circle"><i class="fa-brands fa-telegram"></i></div>
-                    <span>TuyBox Admin bilan Bog'lanish</span>
+                    <div class="action-icon-circle" style="background: #E8F5E9; color: #2E7D32;"><i class="fa-solid fa-sliders"></i></div>
+                    <span>TuyBox Boshqaruv Paneli (Admin)</span>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
             </a>
 
-            <a href="tel:+998901234567" class="action-link-item">
+            <a href="https://t.me/asilbek_developer" target="_blank" class="action-link-item">
                 <div class="action-link-left">
-                    <div class="action-icon-circle"><i class="fa-solid fa-phone"></i></div>
-                    <span>24/7 Qo'ng'iroq Markazi</span>
+                    <div class="action-icon-circle"><i class="fa-brands fa-telegram"></i></div>
+                    <span>Telegramda Admin bilan Bog'lanish</span>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color: #C2B6A6;"></i>
             </a>
@@ -1557,40 +1349,34 @@
             </a>
         </section>
 
-        <!-- ============================================================
-             BOTTOM NAVIGATION BAR (Matching Mockup 1-to-1)
-             ============================================================ -->
+        <!-- BOTTOM NAVIGATION BAR (Exact Mockup Match: Home, Search, Bookings, Account) -->
         <nav class="bottom-nav">
             <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
                 <i class="fa-solid fa-house"></i>
-                <span>Asosiy</span>
+                <span>Home</span>
             </div>
-            <div class="nav-item" onclick="switchTab('map')" id="nav-map">
-                <i class="fa-solid fa-map-location-dot"></i>
-                <span>Xarita</span>
+            <div class="nav-item" onclick="switchTab('search')" id="nav-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Search</span>
             </div>
-            <div class="nav-item" onclick="switchTab('budget')" id="nav-budget">
-                <i class="fa-solid fa-calculator"></i>
-                <span>Byudjet</span>
+            <div class="nav-item" onclick="switchTab('bookings')" id="nav-bookings">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Bookings</span>
             </div>
-            <div class="nav-item" onclick="switchTab('add')" id="nav-add">
-                <i class="fa-solid fa-plus-circle"></i>
-                <span>Joylash</span>
-            </div>
-            <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
+            <div class="nav-item" onclick="switchTab('account')" id="nav-account">
                 <i class="fa-solid fa-user"></i>
-                <span>Profil</span>
+                <span>Account</span>
             </div>
         </nav>
 
-        <!-- ============================================================
-             BOOKING DRAWER MODAL
-             ============================================================ -->
+        <!-- BOOKING DRAWER MODAL -->
         <div class="drawer-backdrop" id="drawer-backdrop" onclick="closeBookingDrawer()"></div>
         <div class="drawer-container" id="drawer-container">
             <div class="drawer-handle"></div>
-            <h3 class="form-title" id="drawer-venue-title">Band Qilish</h3>
-            <p class="form-sub" id="drawer-venue-sub">Ma'lumotlaringizni qoldiring, administrator 15 daqiqada bog'lanadi</p>
+            <h3 class="section-title" id="drawer-venue-title">Band Qilish</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;" id="drawer-venue-sub">
+                Ma'lumotlaringizni qoldiring, administrator 15 daqiqada bog'lanadi
+            </p>
 
             <div class="form-group">
                 <label class="form-label">Ismingiz</label>
@@ -1607,7 +1393,7 @@
                 <input type="date" id="book-date" class="form-control">
             </div>
 
-            <button class="btn-find-venues" onclick="confirmBooking()">
+            <button class="btn-find-venues" onclick="confirmBookingApi()">
                 <i class="fa-solid fa-check"></i> Tasdiqlash va Yuborish
             </button>
         </div>
@@ -1620,11 +1406,9 @@
 
     </div>
 
-    <!-- ============================================================
-         JAVASCRIPT LOGIC (FAST, LIGHTWEIGHT & NATIVE TELEGRAM FEEL)
-         ============================================================ -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // 1. TELEGRAM WEBAPP INITIALIZATION
+        // 1. Telegram WebApp Init
         const tg = window.Telegram?.WebApp;
         if (tg) {
             tg.ready();
@@ -1646,19 +1430,18 @@
             }
         }
 
-        // 2. VENUE DATA (Simple, beautiful & realistic)
-        const VENUES = [
+        // 2. VENUES REPOSITORY (Defaults + Live API data)
+        let VENUES_DATA = [
             {
                 id: 1,
                 title: "Versal Grand Ballroom",
-                category: "venue",
-                tag: "PREMIUM SAROY",
-                price: "48,000,000 so'm",
-                priceNum: 48000000,
+                category_slug: "toyxonalar",
+                tag: "PREMIUM VIP",
+                price: 48000000,
+                priceStr: "48,000,000 so'm",
                 capacity: "500 - 700 kishi",
                 district: "Yakkasaroy",
                 rating: 5.0,
-                reviews: 148,
                 phone: "+998712000001",
                 lat: 41.2825,
                 lng: 69.2435,
@@ -1667,14 +1450,13 @@
             {
                 id: 2,
                 title: "Yakkasaroy Palace",
-                category: "venue",
-                tag: "HASHAMATLI TO'Y",
-                price: "55,000,000 so'm",
-                priceNum: 55000000,
+                category_slug: "toyxonalar",
+                tag: "SAROY",
+                price: 55000000,
+                priceStr: "55,000,000 so'm",
                 capacity: "600 - 800 kishi",
                 district: "Chilonzor",
                 rating: 4.9,
-                reviews: 124,
                 phone: "+998712000002",
                 lat: 41.2750,
                 lng: 69.2310,
@@ -1683,14 +1465,13 @@
             {
                 id: 3,
                 title: "Osiyo Grand Hall",
-                category: "venue",
+                category_slug: "toyxonalar",
                 tag: "ENG MASHHUR",
-                price: "35,000,000 so'm",
-                priceNum: 35000000,
+                price: 35000000,
+                priceStr: "35,000,000 so'm",
                 capacity: "400 - 550 kishi",
                 district: "Yunusobod",
                 rating: 4.8,
-                reviews: 98,
                 phone: "+998712000003",
                 lat: 41.3650,
                 lng: 69.2880,
@@ -1699,14 +1480,13 @@
             {
                 id: 4,
                 title: "Ezidiyor Marosimlar Uyi",
-                category: "venue",
-                tag: "MILLIY VA ZAMONAVIY",
-                price: "42,000,000 so'm",
-                priceNum: 42000000,
+                category_slug: "toyxonalar",
+                tag: "MILLIY VA LYUKS",
+                price: 42000000,
+                priceStr: "42,000,000 so'm",
                 capacity: "450 - 650 kishi",
                 district: "Shayxontohur",
                 rating: 4.9,
-                reviews: 110,
                 phone: "+998712000004",
                 lat: 41.3280,
                 lng: 69.2290,
@@ -1715,14 +1495,13 @@
             {
                 id: 5,
                 title: "Simurg Lounge & Restaurant",
-                category: "restaurant",
-                tag: "BANKET & PARTY",
-                price: "180,000 so'm / kishi",
-                priceNum: 18000000,
+                category_slug: "restoranlar",
+                tag: "BANKET & LOUNGE",
+                price: 18000000,
+                priceStr: "18,000,000 so'm",
                 capacity: "80 - 200 kishi",
                 district: "Mirobod",
-                rating: 4.7,
-                reviews: 64,
+                rating: 4.8,
                 phone: "+998712000005",
                 lat: 41.3000,
                 lng: 69.2700,
@@ -1730,15 +1509,14 @@
             },
             {
                 id: 6,
-                title: "Ziyo Stars Live Band",
-                category: "singer",
-                tag: "JONLI IJRO GURUHI",
-                price: "15,000,000 so'm",
-                priceNum: 15000000,
-                capacity: "Barcha tadbirlar",
+                title: "Ziyo Stars Jonli Ijro Ansambli",
+                category_slug: "sanatkorlar",
+                tag: "JONLI IJRO",
+                price: 15000000,
+                priceStr: "15,000,000 so'm",
+                capacity: "Barcha to'ylar",
                 district: "Toshkent",
                 rating: 5.0,
-                reviews: 82,
                 phone: "+998901234567",
                 lat: 41.3110,
                 lng: 69.2790,
@@ -1746,24 +1524,48 @@
             }
         ];
 
-        let activeTab = 'home';
-        let currentFilter = 'all';
         let selectedVenueForBooking = null;
 
-        // 3. TAB SWITCHING
+        // 3. FETCH LIVE SERVICES FROM API
+        async function fetchLiveServices() {
+            try {
+                const res = await fetch('/api/v1/services');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.length > 0) {
+                        VENUES_DATA = data.map(s => ({
+                            id: s.id,
+                            title: s.title,
+                            category_slug: s.category_name?.toLowerCase().includes('restoran') ? 'restoranlar' : (s.category_name?.toLowerCase().includes('sanatkor') ? 'sanatkorlar' : 'toyxonalar'),
+                            tag: "SARALANGAN",
+                            price: s.base_price,
+                            priceStr: `${s.base_price.toLocaleString('uz-UZ')} so'm`,
+                            capacity: "400 - 600 kishi",
+                            district: s.district || "Toshkent",
+                            rating: s.rating_avg || 5.0,
+                            phone: "+998712000001",
+                            lat: 41.2995,
+                            lng: 69.2401,
+                            image: s.cover_image || "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800"
+                        }));
+                    }
+                }
+            } catch (e) {
+                console.log("Using cached venues data");
+            }
+            renderVenues(VENUES_DATA);
+        }
+
+        // 4. TAB SWITCHING (Home, Search, Bookings, Account)
         function switchTab(tabName) {
             triggerHaptic();
-            activeTab = tabName;
 
-            // Hide all tab views
             document.getElementById('tab-home').style.display = tabName === 'home' ? 'block' : 'none';
-            document.getElementById('tab-map').style.display = tabName === 'map' ? 'block' : 'none';
-            document.getElementById('tab-budget').style.display = tabName === 'budget' ? 'block' : 'none';
-            document.getElementById('tab-add').style.display = tabName === 'add' ? 'block' : 'none';
-            document.getElementById('tab-profile').style.display = tabName === 'profile' ? 'block' : 'none';
+            document.getElementById('tab-search').style.display = tabName === 'search' ? 'block' : 'none';
+            document.getElementById('tab-bookings').style.display = tabName === 'bookings' ? 'block' : 'none';
+            document.getElementById('tab-account').style.display = tabName === 'account' ? 'block' : 'none';
 
-            // Update bottom nav active state
-            const tabs = ['home', 'map', 'budget', 'add', 'profile'];
+            const tabs = ['home', 'search', 'bookings', 'account'];
             tabs.forEach(t => {
                 const el = document.getElementById(`nav-${t}`);
                 if (el) {
@@ -1775,15 +1577,14 @@
                 }
             });
 
-            // If map is opened, trigger leaflet map resize
-            if (tabName === 'map') {
+            if (tabName === 'search') {
                 setTimeout(initMapIfNeeded, 150);
             }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 4. RENDER VENUE CARDS (Simple, clean, beautiful)
+        // 5. RENDER VENUE CARDS
         function renderVenues(items) {
             const container = document.getElementById('venues-list-container');
             const countBadge = document.getElementById('venue-count-badge');
@@ -1804,37 +1605,37 @@
                 return;
             }
 
-            container.innerHTML = items.map(venue => `
+            container.innerHTML = items.map(v => `
                 <div class="venue-card">
-                    <div class="venue-card-img" onclick="openBookingDrawer(${venue.id})">
-                        <img src="${venue.image}" alt="${venue.title}">
-                        <div class="venue-card-tag">${venue.tag}</div>
+                    <div class="venue-card-img" onclick="openBookingDrawer(${v.id})">
+                        <img src="${v.image}" alt="${v.title}">
+                        <div class="venue-card-tag">${v.tag}</div>
                     </div>
                     <div class="venue-card-body">
                         <div class="venue-header-row">
-                            <h4 class="venue-title">${venue.title}</h4>
-                            <div class="venue-rate"><i class="fa-solid fa-star"></i> ${venue.rating}</div>
+                            <h4 class="venue-title">${v.title}</h4>
+                            <div class="venue-rate"><i class="fa-solid fa-star"></i> ${v.rating}</div>
                         </div>
                         <div class="venue-specs">
-                            <div class="venue-spec-item">
+                            <div style="display: flex; align-items: center; gap: 5px;">
                                 <i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i>
-                                <span>${venue.district}</span>
+                                <span>${v.district}</span>
                             </div>
-                            <div class="venue-spec-item">
+                            <div style="display: flex; align-items: center; gap: 5px;">
                                 <i class="fa-solid fa-users" style="color: var(--gold-primary);"></i>
-                                <span>${venue.capacity}</span>
+                                <span>${v.capacity}</span>
                             </div>
                         </div>
                         <div class="venue-footer-row">
                             <div class="venue-price-box">
                                 <span class="price-label">Narxi</span>
-                                <span class="price-amount">${venue.price}</span>
+                                <span class="price-amount">${v.priceStr}</span>
                             </div>
                             <div class="venue-action-buttons">
-                                <a href="tel:${venue.phone}" class="btn-call" title="Qo'ng'iroq qilish">
+                                <a href="tel:${v.phone}" class="btn-call" title="Qo'ng'iroq qilish">
                                     <i class="fa-solid fa-phone"></i>
                                 </a>
-                                <button class="btn-book" onclick="openBookingDrawer(${venue.id})">
+                                <button class="btn-book" onclick="openBookingDrawer(${v.id})">
                                     <i class="fa-solid fa-calendar-check"></i> Band Qilish
                                 </button>
                             </div>
@@ -1844,47 +1645,39 @@
             `).join('');
         }
 
-        // 5. EVENT TYPE FILTER
+        // 6. FILTERING
         function filterByEvent(element, eventType) {
             triggerHaptic();
             document.querySelectorAll('.event-chip').forEach(c => c.classList.remove('active'));
             element.classList.add('active');
 
             if (eventType === 'all') {
-                renderVenues(VENUES);
+                renderVenues(VENUES_DATA);
             } else if (eventType === 'wedding') {
-                renderVenues(VENUES.filter(v => v.category === 'venue'));
+                renderVenues(VENUES_DATA.filter(v => v.category_slug === 'toyxonalar'));
             } else if (eventType === 'restaurant') {
-                renderVenues(VENUES.filter(v => v.category === 'restaurant'));
+                renderVenues(VENUES_DATA.filter(v => v.category_slug === 'restoranlar'));
             } else {
-                renderVenues(VENUES);
+                renderVenues(VENUES_DATA);
             }
         }
 
         function filterByCategory(cat) {
             triggerHaptic();
             scrollToVenues();
-            if (cat === 'venue') {
-                renderVenues(VENUES.filter(v => v.category === 'venue'));
-            } else if (cat === 'restaurant') {
-                renderVenues(VENUES.filter(v => v.category === 'restaurant'));
-            } else if (cat === 'singer') {
-                renderVenues(VENUES.filter(v => v.category === 'singer'));
-            } else {
-                renderVenues(VENUES);
-            }
+            const filtered = VENUES_DATA.filter(v => v.category_slug === cat);
+            renderVenues(filtered.length > 0 ? filtered : VENUES_DATA);
         }
 
         function handleSearch(query) {
             const q = query.toLowerCase().trim();
             if (!q) {
-                renderVenues(VENUES);
+                renderVenues(VENUES_DATA);
                 return;
             }
-            const filtered = VENUES.filter(v => 
+            const filtered = VENUES_DATA.filter(v => 
                 v.title.toLowerCase().includes(q) ||
-                v.district.toLowerCase().includes(q) ||
-                v.tag.toLowerCase().includes(q)
+                v.district.toLowerCase().includes(q)
             );
             renderVenues(filtered);
         }
@@ -1896,19 +1689,13 @@
 
         function scrollToVenues() {
             const el = document.getElementById('all-venues-heading');
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth' });
-            }
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 6. BUDGET CALCULATOR LOGIC
+        // 7. BUDGET CALCULATOR
         let guestCount = 300;
         let activeTier = 'std';
-        const tierRates = {
-            eco: 180000,
-            std: 280000,
-            vip: 450000
-        };
+        const tierRates = { eco: 180000, std: 280000, vip: 450000 };
 
         function changeGuests(delta) {
             triggerHaptic();
@@ -1925,46 +1712,31 @@
         }
 
         function updateBudgetDisplay() {
-            const guestLabel = document.getElementById('guest-count-label');
-            const totalSum = document.getElementById('total-budget-sum');
-            const perGuest = document.getElementById('per-guest-note');
-
-            if (guestLabel) guestLabel.textContent = `${guestCount} kishi`;
-
             const rate = tierRates[activeTier] || 280000;
             const total = guestCount * rate;
-
-            if (totalSum) totalSum.textContent = total.toLocaleString('uz-UZ') + " so'm";
-            if (perGuest) perGuest.textContent = `Kishi boshiga ~${rate.toLocaleString('uz-UZ')} so'm to'g'ri keladi`;
+            document.getElementById('guest-count-label').textContent = `${guestCount} kishi`;
+            document.getElementById('total-budget-sum').textContent = total.toLocaleString('uz-UZ') + " so'm";
+            document.getElementById('per-guest-note').textContent = `Kishi boshiga ~${rate.toLocaleString('uz-UZ')} so'm`;
         }
 
-        // 7. LEAFLET MAP LOGIC
+        // 8. LEAFLET MAP
         let mapInstance = null;
-        let markers = [];
-
         function initMapIfNeeded() {
             if (mapInstance) {
                 mapInstance.invalidateSize();
                 return;
             }
 
-            const mapEl = document.getElementById('map-element');
-            if (!mapEl) return;
-
             mapInstance = L.map('map-element', {
                 zoomControl: false,
                 attributionControl: false
             }).setView([41.3050, 69.2650], 12);
 
-            // OpenStreetMap luxury clear tiles
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19
-            }).addTo(mapInstance);
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapInstance);
 
-            // Add venue markers
-            VENUES.forEach(v => {
-                const customIcon = L.divIcon({
-                    className: 'custom-leaflet-pin',
+            VENUES_DATA.forEach(v => {
+                const icon = L.divIcon({
+                    className: 'custom-pin',
                     html: `
                         <div style="background: linear-gradient(135deg, #E5C383, #C4984F); width: 34px; height: 34px; border-radius: 50%; border: 2.5px solid #FFFFFF; box-shadow: 0 4px 12px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-size: 14px;">
                             <i class="fa-solid fa-archway"></i>
@@ -1974,21 +1746,16 @@
                     iconAnchor: [17, 17]
                 });
 
-                const marker = L.marker([v.lat, v.lng], { icon: customIcon }).addTo(mapInstance);
-                marker.on('click', () => {
+                const m = L.marker([v.lat, v.lng], { icon }).addTo(mapInstance);
+                m.on('click', () => {
                     triggerHaptic();
-                    selectVenueOnMap(v);
+                    selectedVenueForBooking = v;
+                    document.getElementById('map-card-img').src = v.image;
+                    document.getElementById('map-card-title').textContent = v.title;
+                    document.getElementById('map-card-location').innerHTML = `<i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> ${v.district} tumani`;
+                    document.getElementById('map-card-price').textContent = v.priceStr;
                 });
-                markers.push(marker);
             });
-        }
-
-        function selectVenueOnMap(v) {
-            selectedVenueForBooking = v;
-            document.getElementById('map-card-img').src = v.image;
-            document.getElementById('map-card-title').textContent = v.title;
-            document.getElementById('map-card-location').innerHTML = `<i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> ${v.district} tumani`;
-            document.getElementById('map-card-price').textContent = v.price;
         }
 
         function openBookingDrawerFromMap() {
@@ -1999,14 +1766,14 @@
             }
         }
 
-        // 8. BOOKING DRAWER
+        // 9. BOOKING DRAWER & API CALL
         function openBookingDrawer(venueId) {
             triggerHaptic('medium');
-            const venue = VENUES.find(v => v.id === venueId) || VENUES[0];
+            const venue = VENUES_DATA.find(v => v.id === venueId) || VENUES_DATA[0];
             selectedVenueForBooking = venue;
 
             document.getElementById('drawer-venue-title').textContent = `${venue.title} — Band Qilish`;
-            document.getElementById('drawer-venue-sub').textContent = `Narxi: ${venue.price} | Sig'imi: ${venue.capacity}`;
+            document.getElementById('drawer-venue-sub').textContent = `Narxi: ${venue.priceStr} | Sig'imi: ${venue.capacity}`;
 
             document.getElementById('drawer-backdrop').classList.add('active');
             document.getElementById('drawer-container').classList.add('active');
@@ -2017,7 +1784,7 @@
             document.getElementById('drawer-container').classList.remove('active');
         }
 
-        function confirmBooking() {
+        async function confirmBookingApi() {
             const name = document.getElementById('book-name').value.trim();
             const phone = document.getElementById('book-phone').value.trim();
             const date = document.getElementById('book-date').value;
@@ -2029,25 +1796,59 @@
 
             triggerHaptic('heavy');
             closeBookingDrawer();
-            showToast("Buyurtmangiz qabul qilindi! Tez orada aloqaga chiqamiz. ✨");
+            showToast("Buyurtmangiz qabul qilindi! Tez orada bog'lanamiz. ✨");
+
+            try {
+                await fetch('/api/v1/bookings/quick', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        phone,
+                        service_id: selectedVenueForBooking ? selectedVenueForBooking.id : 1,
+                        event_date: date || null,
+                        guest_count: guestCount,
+                        notes: `TuyBox Web App orqali buyurtma`
+                    })
+                });
+            } catch (e) {
+                console.error(e);
+            }
 
             document.getElementById('book-name').value = '';
             document.getElementById('book-phone').value = '';
         }
 
-        // 9. SUBMIT NEW VENUE
-        function submitNewVenue() {
+        // 10. SUBMIT NEW VENUE API
+        async function submitNewVenuePublic() {
             const title = document.getElementById('add-title').value.trim();
             const phone = document.getElementById('add-phone').value.trim();
             const price = document.getElementById('add-price').value.trim();
 
             if (!title || !phone) {
-                alert("Iltimos, joy nomini va telefon raqamingizni to'ldiring!");
+                alert("Iltimos, nom va telefon raqamini to'ldiring!");
                 return;
             }
 
             triggerHaptic('heavy');
             showToast("E'loningiz qabul qilindi va tekshiruvga yuborildi! 💎");
+
+            try {
+                await fetch('/api/v1/admin/services', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title,
+                        phone,
+                        price: price ? parseFloat(price) : 35000000,
+                        district: 'Toshkent',
+                        category_slug: 'toyxonalar',
+                        image_url: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800'
+                    })
+                });
+            } catch (e) {
+                console.error(e);
+            }
 
             document.getElementById('add-title').value = '';
             document.getElementById('add-phone').value = '';
@@ -2056,10 +1857,10 @@
             setTimeout(() => switchTab('home'), 1200);
         }
 
-        // 10. SHARE INVITE LINK
+        // 11. SHARE INVITE
         function shareInviteLink() {
             triggerHaptic();
-            const text = "Assalomu alaykum! Sizni to'yimizga taklif etamiz. To'liq tafsilotlar: 💍";
+            const text = "Assalomu alaykum! Sizni to'yimizga samimiy taklif etamiz. To'liq tafsilotlar: 💍";
             const url = "https://tuybox.asilbek.tech";
             const tgUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
 
@@ -2070,7 +1871,7 @@
             }
         }
 
-        // 11. TOAST HELPER
+        // 12. TOAST HELPER
         function showToast(message) {
             triggerHaptic();
             const toast = document.getElementById('toast-element');
@@ -2078,15 +1879,13 @@
             if (toast && text) {
                 text.textContent = message;
                 toast.classList.add('active');
-                setTimeout(() => {
-                    toast.classList.remove('active');
-                }, 3000);
+                setTimeout(() => toast.classList.remove('active'), 3200);
             }
         }
 
-        // 12. INITIALIZATION
+        // 13. INITIAL BOOT
         document.addEventListener('DOMContentLoaded', () => {
-            renderVenues(VENUES);
+            fetchLiveServices();
             updateBudgetDisplay();
         });
     </script>

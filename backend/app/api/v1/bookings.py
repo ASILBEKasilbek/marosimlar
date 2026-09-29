@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from typing import List
 import uuid
+from datetime import datetime, date, timedelta
 
 from app.db.database import get_db
 from app.models.booking import Booking
@@ -155,3 +156,71 @@ async def pay_booking_deposit(
         "payment_method": payment_method,
         "payment_url": pay_url
     }
+
+@router.post("/quick")
+async def quick_booking_public(
+    payload: dict,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Telegram Mini App yoki Web Appdan to'g'ridan-to'g'ri tezkor bron so'rovi yuborish.
+    """
+    name = payload.get("name", "Mehmon").strip()
+    phone = payload.get("phone", "").strip()
+    service_id = int(payload.get("service_id", 1))
+    event_date_str = payload.get("event_date")
+    guest_count = int(payload.get("guest_count", 300))
+    notes = payload.get("notes", "")
+
+    if not phone:
+        raise HTTPException(status_code=400, detail="Telefon raqami kiritilishi shart")
+
+    # Sana aniqlash
+    if event_date_str:
+        try:
+            event_d = datetime.strptime(event_date_str, "%Y-%m-%d").date()
+        except Exception:
+            event_d = date.today() + timedelta(days=30)
+    else:
+        event_d = date.today() + timedelta(days=30)
+
+    # Foydalanuvchini topish yoki yaratish
+    user_res = await db.execute(select(User).where(User.phone == phone))
+    user = user_res.scalars().first()
+    if not user:
+        user = User(phone=phone, first_name=name, role="customer", is_phone_verified=True)
+        db.add(user)
+        await db.flush()
+
+    # Xizmatni tekshirish
+    srv_res = await db.execute(select(Service).where(Service.id == service_id))
+    srv = srv_res.scalars().first()
+    if not srv:
+        # Birinchi xizmatni olish
+        srv_res = await db.execute(select(Service))
+        srv = srv_res.scalars().first()
+
+    price = float(srv.base_price) if srv else 45000000.0
+    code = f"TX-{uuid.uuid4().hex[:6].upper()}"
+
+    new_booking = Booking(
+        booking_code=code,
+        customer_id=user.id,
+        service_id=srv.id if srv else 1,
+        event_date=event_d,
+        time_slot="evening_party",
+        guest_count=guest_count,
+        total_price=price,
+        deposit_amount=round(price * 0.10, 2),
+        status="pending",
+        customer_notes=f"Ism: {name}. {notes}"
+    )
+    db.add(new_booking)
+    await db.commit()
+
+    return {
+        "status": "success",
+        "booking_code": code,
+        "message": "Buyurtmangiz muvaffaqiyatli qabul qilindi! Tez orada aloqaga chiqamiz. ✨"
+    }
+
