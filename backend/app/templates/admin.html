@@ -70,6 +70,15 @@
             color: var(--gold-primary);
         }
 
+        .brand-crest {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 2px 6px rgba(212, 175, 55, 0.35));
+        }
+
         .brand-title {
             font-family: 'Playfair Display', serif;
             font-weight: 700;
@@ -441,7 +450,23 @@
     <!-- Top Bar -->
     <nav class="admin-nav">
         <a href="/admin" class="nav-brand">
-            <span class="brand-monogram">𝓣</span>
+            <div class="brand-crest">
+                <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="18" cy="18" r="16.5" fill="#141419" stroke="url(#goldGradAdm)" stroke-width="1.8"/>
+                    <path d="M12 14.5L14.5 17.5L18 13.5L21.5 17.5L24 14.5L22.5 20.5H13.5L12 14.5Z" fill="url(#goldGradAdm)"/>
+                    <path d="M13 22.5H23V23.8C23 24.6 22.3 25.2 21.5 25.2H14.5C13.7 25.2 13 24.6 13 23.8V22.5Z" fill="url(#goldGradAdm)"/>
+                    <circle cx="18" cy="12" r="1.3" fill="#FFF8E7"/>
+                    <circle cx="12" cy="13" r="1.1" fill="#FFF8E7"/>
+                    <circle cx="24" cy="13" r="1.1" fill="#FFF8E7"/>
+                    <defs>
+                        <linearGradient id="goldGradAdm" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#FCEABB"/>
+                            <stop offset="50%" stop-color="#D4AF37"/>
+                            <stop offset="100%" stop-color="#996515"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
             <span class="brand-title">TuyBox</span>
             <span class="brand-badge">Boshqaruv Paneli</span>
         </a>
@@ -461,7 +486,7 @@
         <!-- KPI Grid -->
         <div class="kpi-grid">
             <div class="kpi-card">
-                <div class="kpi-icon"><i class="fa-solid fa-archway"></i></div>
+                <div class="kpi-icon"><i class="fa-solid fa-landmark-dome"></i></div>
                 <div class="kpi-info">
                     <h4>Jami Joylar & Xizmatlar</h4>
                     <div class="kpi-value" id="stat-services">--</div>
@@ -477,7 +502,7 @@
             </div>
 
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: #FFF3E0; color: #EF6C00;"><i class="fa-solid fa-clock"></i></div>
+                <div class="kpi-icon" style="background: rgba(245, 158, 11, 0.15); color: #D97706;"><i class="fa-solid fa-clock-rotate-left"></i></div>
                 <div class="kpi-info">
                     <h4>Kutilayotgan Arizalar</h4>
                     <div class="kpi-value" id="stat-pending">--</div>
@@ -485,7 +510,7 @@
             </div>
 
             <div class="kpi-card">
-                <div class="kpi-icon" style="background: #E8F5E9; color: #2E7D32;"><i class="fa-solid fa-coins"></i></div>
+                <div class="kpi-icon" style="background: rgba(16, 185, 129, 0.15); color: #059669;"><i class="fa-solid fa-vault"></i></div>
                 <div class="kpi-info">
                     <h4>Tasdiqlangan Byudjet</h4>
                     <div class="kpi-value" id="stat-revenue">--</div>
@@ -496,10 +521,10 @@
         <!-- Navigation Tabs -->
         <div class="admin-tabs">
             <button class="tab-btn active" onclick="switchAdminTab('services')" id="tab-btn-services">
-                <i class="fa-solid fa-archway"></i> To'yxona va Xizmatlar
+                <i class="fa-solid fa-landmark-dome"></i> To'yxona va Xizmatlar
             </button>
             <button class="tab-btn" onclick="switchAdminTab('bookings')" id="tab-btn-bookings">
-                <i class="fa-solid fa-envelope-open-text"></i> Mijozlar Bronlari
+                <i class="fa-solid fa-clipboard-list"></i> Mijozlar Bronlari
             </button>
             <button class="tab-btn" onclick="switchAdminTab('database')" id="tab-btn-database">
                 <i class="fa-solid fa-database"></i> Baza va Tizim Sozlamalari
@@ -777,7 +802,7 @@
             try {
                 const res = await fetch('/api/v1/admin/reset-database', { method: 'POST' });
                 const data = await res.json();
-                showToast(data.message || "Baza muvaffaqiyatli yangilandi! ✨");
+                showToast(data.message || "Baza muvaffaqiyatli yangilandi!");
                 loadStats();
                 loadServices();
                 loadBookings();

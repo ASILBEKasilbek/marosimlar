@@ -158,6 +158,20 @@
             line-height: 1;
         }
 
+        .brand-crest {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.4));
+            transition: transform 0.25s ease;
+        }
+
+        .header-brand:hover .brand-crest {
+            transform: scale(1.06);
+        }
+
         .brand-title {
             font-family: 'Playfair Display', serif;
             font-weight: 700;
@@ -282,6 +296,16 @@
             border-color: transparent;
             color: #1A1200;
             box-shadow: var(--gold-glow);
+        }
+
+        .icon-chip {
+            font-size: 13px;
+            color: var(--gold-primary);
+            transition: all 0.2s ease;
+        }
+
+        .event-chip.active .icon-chip {
+            color: #1A1200;
         }
 
         /* 3. SARLAVHALAR */
@@ -855,14 +879,47 @@
             background: var(--bg-card-soft);
             border: 1.5px solid var(--border-color);
             border-radius: 16px;
-            padding: 12px 6px;
+            padding: 14px 6px 12px;
             cursor: pointer;
+            transition: all 0.25s ease;
         }
 
         .tier-card.active {
             background: var(--gold-light);
             border-color: var(--gold-primary);
             box-shadow: var(--gold-glow);
+            transform: translateY(-2px);
+        }
+
+        .tier-icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 18px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tier-eco {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.25));
+            color: #059669;
+            border: 1.5px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .tier-std {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(184, 134, 11, 0.3));
+            color: var(--gold-primary);
+            border: 1.5px solid rgba(212, 175, 55, 0.35);
+        }
+
+        .tier-vip {
+            background: linear-gradient(135deg, #FCEABB, #D4AF37 55%, #996515);
+            color: #1A1200;
+            border: 1.5px solid #FCEABB;
+            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
         }
 
         .total-budget-display {
@@ -884,11 +941,54 @@
         .budget-breakdown-row {
             display: flex;
             justify-content: space-between;
-            padding: 9px 0;
+            align-items: center;
+            padding: 10px 0;
             border-bottom: 1px dashed var(--border-color);
             font-size: 13px;
             font-weight: 600;
             color: var(--text-dark);
+        }
+
+        .breakdown-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .breakdown-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .badge-gold {
+            background: rgba(212, 175, 55, 0.15);
+            color: #B8860B;
+        }
+
+        .badge-purple {
+            background: rgba(147, 51, 234, 0.15);
+            color: #9333EA;
+        }
+
+        .badge-blue {
+            background: rgba(37, 99, 235, 0.15);
+            color: #2563EB;
+        }
+
+        .badge-rose {
+            background: rgba(225, 29, 72, 0.15);
+            color: #E11D48;
+        }
+
+        .badge-amber {
+            background: rgba(217, 119, 6, 0.15);
+            color: #D97706;
         }
 
         .btn-find-venues {
@@ -1057,6 +1157,7 @@
             -webkit-backdrop-filter: blur(20px);
             border-top: 1px solid var(--border-color);
             display: flex;
+            align-items: flex-end;
             justify-content: space-around;
             padding: 8px 8px calc(8px + var(--safe-bottom));
             box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.08);
@@ -1066,7 +1167,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
+            gap: 4px;
             text-decoration: none;
             color: var(--text-muted);
             font-size: 11px;
@@ -1074,10 +1175,12 @@
             cursor: pointer;
             padding: 4px 10px;
             border-radius: 12px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .nav-item i {
-            font-size: 20px;
+            font-size: 19px;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .nav-item.active {
@@ -1085,7 +1188,33 @@
         }
 
         .nav-item.active i {
-            transform: translateY(-2px);
+            transform: translateY(-2px) scale(1.1);
+            filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.45));
+        }
+
+        .nav-item-add {
+            position: relative;
+            margin-bottom: 2px;
+        }
+
+        .nav-center-bubble {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--gold-gradient);
+            color: #1A1200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.45);
+            border: 3px solid var(--bg-card);
+            margin-top: -18px;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-item-add:active .nav-center-bubble {
+            transform: scale(0.92);
         }
 
         /* 13. BAND QILISH OYNASI */
@@ -1169,7 +1298,23 @@
             </div>
 
             <div class="header-brand" onclick="switchTab('home')">
-                <span class="brand-monogram">𝓣</span>
+                <div class="brand-crest">
+                    <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="18" cy="18" r="16.5" fill="#141419" stroke="url(#goldGradEmblem)" stroke-width="1.8"/>
+                        <path d="M12 14.5L14.5 17.5L18 13.5L21.5 17.5L24 14.5L22.5 20.5H13.5L12 14.5Z" fill="url(#goldGradEmblem)"/>
+                        <path d="M13 22.5H23V23.8C23 24.6 22.3 25.2 21.5 25.2H14.5C13.7 25.2 13 24.6 13 23.8V22.5Z" fill="url(#goldGradEmblem)"/>
+                        <circle cx="18" cy="12" r="1.3" fill="#FFF8E7"/>
+                        <circle cx="12" cy="13" r="1.1" fill="#FFF8E7"/>
+                        <circle cx="24" cy="13" r="1.1" fill="#FFF8E7"/>
+                        <defs>
+                            <linearGradient id="goldGradEmblem" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#FCEABB"/>
+                                <stop offset="50%" stop-color="#D4AF37"/>
+                                <stop offset="100%" stop-color="#996515"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
                 <span class="brand-title">TuyBox</span>
             </div>
 
@@ -1178,7 +1323,7 @@
                     <i class="fa-solid fa-moon" id="header-theme-icon"></i>
                 </button>
                 <a href="tel:+998712000000" class="header-call-btn">
-                    <i class="fa-solid fa-phone"></i> Aloqa
+                    <i class="fa-solid fa-phone-volume"></i> Aloqa
                 </a>
             </div>
         </header>
@@ -1198,25 +1343,25 @@
             <!-- Marosim turlari filtri -->
             <div class="event-pills-row">
                 <div class="event-chip active" onclick="filterByEvent(this, 'all')">
-                    <span>✨</span> Barchasi
+                    <i class="fa-solid fa-crown icon-chip"></i> Barchasi
                 </div>
                 <div class="event-chip" onclick="filterByEvent(this, 'wedding')">
-                    <span>💍</span> Nikoh to'yi
+                    <i class="fa-solid fa-ring icon-chip"></i> Nikoh to'yi
                 </div>
                 <div class="event-chip" onclick="filterByEvent(this, 'restaurant')">
-                    <span>🍽️</span> Restoran & Osh
+                    <i class="fa-solid fa-utensils icon-chip"></i> Restoran & Osh
                 </div>
                 <div class="event-chip" onclick="filterByEvent(this, 'birthday')">
-                    <span>🎂</span> Tug'ilgan kun
+                    <i class="fa-solid fa-cake-candles icon-chip"></i> Tug'ilgan kun
                 </div>
                 <div class="event-chip" onclick="filterByEvent(this, 'corporate')">
-                    <span>🏢</span> Korporativ
+                    <i class="fa-solid fa-champagne-glasses icon-chip"></i> Korporativ
                 </div>
             </div>
 
             <!-- 1. ENG SARA TO'YXONALAR -->
             <div class="section-header">
-                <h3 class="section-title">⭐ Sara To'yxonalar</h3>
+                <h3 class="section-title"><i class="fa-solid fa-gem" style="color: var(--gold-primary); margin-right: 6px;"></i> Sara To'yxonalar</h3>
                 <span class="section-link" onclick="scrollToVenues()">Barchasi &rarr;</span>
             </div>
 
@@ -1277,7 +1422,7 @@
             <div class="near-you-section">
                 <div class="near-you-card" onclick="switchTab('map')">
                     <div class="near-you-text">
-                        <h4>📍 Yaqin Atrofdagi Joylar</h4>
+                        <h4><i class="fa-solid fa-compass" style="color: var(--gold-primary); margin-right: 6px;"></i> Yaqin Atrofdagi Joylar</h4>
                         <p>Xaritadan tumanlar bo'yicha to'yxonalarni topish</p>
                     </div>
                     <div class="map-badge-btn">
@@ -1288,14 +1433,14 @@
 
             <!-- 3. TO'Y XIZMATLARI BO'LIMLARI (2x2 Grid) -->
             <div class="section-header">
-                <h3 class="section-title">Xizmat Bo'limlari</h3>
+                <h3 class="section-title"><i class="fa-solid fa-shapes" style="color: var(--gold-primary); margin-right: 6px;"></i> Xizmat Bo'limlari</h3>
             </div>
 
             <div class="categories-grid">
                 <div class="cat-card" onclick="filterByCategory('toyxonalar')">
                     <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=500" alt="To'yxonalar">
                     <div class="cat-card-overlay">
-                        <div class="cat-icon-glass"><i class="fa-solid fa-archway"></i></div>
+                        <div class="cat-icon-glass"><i class="fa-solid fa-landmark-dome"></i></div>
                         <div class="cat-badge-bottom">To'yxonalar</div>
                     </div>
                 </div>
@@ -1311,7 +1456,7 @@
                 <div class="cat-card" onclick="filterByCategory('restoranlar')">
                     <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=500" alt="Restoranlar">
                     <div class="cat-card-overlay">
-                        <div class="cat-icon-glass"><i class="fa-solid fa-utensils"></i></div>
+                        <div class="cat-icon-glass"><i class="fa-solid fa-champagne-glasses"></i></div>
                         <div class="cat-badge-bottom">Restoran & Osh</div>
                     </div>
                 </div>
@@ -1319,7 +1464,7 @@
                 <div class="cat-card" onclick="filterByCategory('foto-video')">
                     <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=500" alt="Foto & Video">
                     <div class="cat-card-overlay">
-                        <div class="cat-icon-glass"><i class="fa-solid fa-camera"></i></div>
+                        <div class="cat-icon-glass"><i class="fa-solid fa-camera-retro"></i></div>
                         <div class="cat-badge-bottom">Foto & Video</div>
                     </div>
                 </div>
@@ -1327,7 +1472,7 @@
 
             <!-- 4. TO'YXONALAR VA XIZMATLAR RO'YXATI -->
             <div class="section-header" id="all-venues-heading">
-                <h3 class="section-title">Barcha To'yxona va Xizmatlar</h3>
+                <h3 class="section-title"><i class="fa-solid fa-layer-group" style="color: var(--gold-primary); margin-right: 6px;"></i> Barcha To'yxona va Xizmatlar</h3>
                 <span class="section-link" id="venue-count-badge">Yuklanmoqda...</span>
             </div>
 
@@ -1409,17 +1554,17 @@
                 </div>
                 <div class="budget-tiers-grid">
                     <div class="tier-card" id="tier-eco" onclick="setBudgetTier('eco')">
-                        <div style="font-size: 22px;">🟢</div>
+                        <div class="tier-icon-circle tier-eco"><i class="fa-solid fa-leaf"></i></div>
                         <div style="font-size: 13px; font-weight: 700; color: var(--text-dark);">Kamxarj</div>
                         <div style="font-size: 11px; color: var(--text-muted);">180 ming / kishi</div>
                     </div>
                     <div class="tier-card active" id="tier-std" onclick="setBudgetTier('std')">
-                        <div style="font-size: 22px;">🟡</div>
+                        <div class="tier-icon-circle tier-std"><i class="fa-solid fa-gem"></i></div>
                         <div style="font-size: 13px; font-weight: 700; color: var(--text-dark);">O'rtacha</div>
                         <div style="font-size: 11px; color: var(--text-muted);">280 ming / kishi</div>
                     </div>
                     <div class="tier-card" id="tier-vip" onclick="setBudgetTier('vip')">
-                        <div style="font-size: 22px;">👑</div>
+                        <div class="tier-icon-circle tier-vip"><i class="fa-solid fa-crown"></i></div>
                         <div style="font-size: 13px; font-weight: 700; color: var(--text-dark);">VIP Dabdaba</div>
                         <div style="font-size: 11px; color: var(--text-muted);">450 ming / kishi</div>
                     </div>
@@ -1435,23 +1580,38 @@
                 <!-- Taqsimot foizlari -->
                 <div style="background: var(--bg-card); border-radius: 16px; padding: 14px; margin-bottom: 20px; text-align: left; border: 1.5px solid var(--border-color);">
                     <div class="budget-breakdown-row">
-                        <span>🏰 To'yxona va dasturxon (50%):</span>
+                        <span class="breakdown-label">
+                            <span class="breakdown-badge badge-gold"><i class="fa-solid fa-landmark-dome"></i></span>
+                            To'yxona va dasturxon (50%):
+                        </span>
                         <strong id="b-venue" style="color: var(--gold-primary);">56,000,000 so'm</strong>
                     </div>
                     <div class="budget-breakdown-row">
-                        <span>🎤 San'atkor va sozandalar (20%):</span>
+                        <span class="breakdown-label">
+                            <span class="breakdown-badge badge-purple"><i class="fa-solid fa-microphone-lines"></i></span>
+                            San'atkor va sozandalar (20%):
+                        </span>
                         <strong id="b-music" style="color: var(--gold-primary);">22,400,000 so'm</strong>
                     </div>
                     <div class="budget-breakdown-row">
-                        <span>📸 Foto va video studiya (12%):</span>
+                        <span class="breakdown-label">
+                            <span class="breakdown-badge badge-blue"><i class="fa-solid fa-camera-retro"></i></span>
+                            Foto va video studiya (12%):
+                        </span>
                         <strong id="b-photo" style="color: var(--gold-primary);">13,440,000 so'm</strong>
                     </div>
                     <div class="budget-breakdown-row">
-                        <span>💐 Liboslar va gul bezaklari (10%):</span>
+                        <span class="breakdown-label">
+                            <span class="breakdown-badge badge-rose"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+                            Liboslar va gul bezaklari (10%):
+                        </span>
                         <strong id="b-decor" style="color: var(--gold-primary);">11,200,000 so'm</strong>
                     </div>
                     <div class="budget-breakdown-row" style="border-bottom: none;">
-                        <span>🚗 Kortej va boshqa xarajatlar (8%):</span>
+                        <span class="breakdown-label">
+                            <span class="breakdown-badge badge-amber"><i class="fa-solid fa-car-side"></i></span>
+                            Kortej va boshqa xarajatlar (8%):
+                        </span>
                         <strong id="b-other" style="color: var(--gold-primary);">8,960,000 so'm</strong>
                     </div>
                 </div>
@@ -1579,26 +1739,28 @@
             </a>
         </section>
 
-        <!-- PASTKI ASOSIY NAVIGATSIYA (5 TA SODDA O'ZBEK TUGMA) -->
+        <!-- PASTKI ASOSIY NAVIGATSIYA -->
         <nav class="bottom-nav">
             <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
                 <i class="fa-solid fa-house"></i>
                 <span>Asosiy</span>
             </div>
             <div class="nav-item" onclick="switchTab('map')" id="nav-map">
-                <i class="fa-solid fa-map-location-dot"></i>
+                <i class="fa-solid fa-compass"></i>
                 <span>Xarita</span>
+            </div>
+            <div class="nav-item nav-item-add" onclick="switchTab('add')" id="nav-add">
+                <div class="nav-center-bubble">
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <span>E'lon</span>
             </div>
             <div class="nav-item" onclick="switchTab('budget')" id="nav-budget">
                 <i class="fa-solid fa-calculator"></i>
                 <span>Byudjet</span>
             </div>
-            <div class="nav-item" onclick="switchTab('add')" id="nav-add">
-                <i class="fa-solid fa-circle-plus"></i>
-                <span>E'lon</span>
-            </div>
             <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
-                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-user-tie"></i>
                 <span>Profil</span>
             </div>
         </nav>
@@ -1884,12 +2046,12 @@
                 <div class="venue-card">
                     <div class="venue-card-img" onclick="openBookingDrawer(${v.id})">
                         <img src="${v.image}" alt="${v.title}">
-                        <div class="venue-card-tag">${v.tag}</div>
+                        <div class="venue-card-tag"><i class="fa-solid fa-crown" style="font-size: 10px; margin-right: 4px;"></i>${v.tag}</div>
                     </div>
                     <div class="venue-card-body">
                         <div class="venue-header-row">
                             <h4 class="venue-title">${v.title}</h4>
-                            <div class="venue-rate"><i class="fa-solid fa-star"></i> ${v.rating}</div>
+                            <div class="venue-rate"><i class="fa-solid fa-star" style="color: #F59E0B; margin-right: 3px;"></i>${v.rating}</div>
                         </div>
                         <div class="venue-specs">
                             <div style="display: flex; align-items: center; gap: 6px;">
@@ -1908,7 +2070,7 @@
                             </div>
                             <div class="venue-action-buttons">
                                 <a href="tel:${v.phone}" class="btn-call">
-                                    <i class="fa-solid fa-phone"></i> Qo'ng'iroq
+                                    <i class="fa-solid fa-phone-volume"></i> Qo'ng'iroq
                                 </a>
                                 <button class="btn-book" onclick="openBookingDrawer(${v.id})">
                                     <i class="fa-solid fa-calendar-check"></i> Band Qilish
@@ -2031,12 +2193,12 @@
                 const icon = L.divIcon({
                     className: 'custom-pin',
                     html: `
-                        <div style="background: linear-gradient(135deg, #FFD54F, #FFA000); width: 36px; height: 36px; border-radius: 50%; border: 2.5px solid #FFFFFF; box-shadow: 0 4px 14px rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; color: #1A1200; font-size: 15px;">
-                            <i class="fa-solid fa-archway"></i>
+                        <div style="background: linear-gradient(135deg, #FCEABB, #D4AF37 60%, #996515); width: 38px; height: 38px; border-radius: 50%; border: 2.5px solid #FFFFFF; box-shadow: 0 4px 14px rgba(212, 175, 55, 0.45); display: flex; align-items: center; justify-content: center; color: #1A1200; font-size: 15px;">
+                            <i class="fa-solid fa-crown"></i>
                         </div>
                     `,
-                    iconSize: [36, 36],
-                    iconAnchor: [18, 18]
+                    iconSize: [38, 38],
+                    iconAnchor: [19, 19]
                 });
 
                 const m = L.marker([v.lat, v.lng], { icon }).addTo(mapInstance);
@@ -2106,7 +2268,7 @@
                             fillColor: '#FFB300',
                             fillOpacity: 1
                         }).addTo(mapInstance);
-                        showToast("Joylashuvingiz aniqlandi! 📍");
+                        showToast("Joylashuvingiz aniqlandi!");
                     },
                     err => {
                         showToast("GPS yoqilmadi");
@@ -2153,7 +2315,7 @@
 
             triggerHaptic('heavy');
             closeBookingDrawer();
-            showToast("Buyurtmangiz qabul qilindi! Tez orada bog'lanamiz. ✨");
+            showToast("Buyurtmangiz qabul qilindi! Tez orada bog'lanamiz.");
 
             try {
                 await fetch('/api/v1/bookings/quick', {
@@ -2190,7 +2352,7 @@
             }
 
             triggerHaptic('heavy');
-            showToast("E'loningiz qabul qilindi va tekshiruvga yuborildi! 💎");
+            showToast("E'loningiz qabul qilindi va tekshiruvga yuborildi!");
 
             try {
                 await fetch('/api/v1/admin/services', {
