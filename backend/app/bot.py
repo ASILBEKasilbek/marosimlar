@@ -8,7 +8,8 @@ logger = logging.getLogger("TuyxonaBot")
 BOT_TOKEN = "8643800096:AAFRH_zRmRouQOWDHt0Q18DBi0w-iCPyG3c"
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 WEB_APP_URL = "https://tuybox.asilbek.tech"
-APK_DOWNLOAD_URL = "https://tuybox.asilbek.tech/static/TuyBox.apk"
+LANDING_PAGE_URL = "https://tuybox.asilbek.tech/pitch"
+APK_DOWNLOAD_URL = "https://tuybox.asilbek.tech/download"
 LOGO_URL = "https://tuybox.asilbek.tech/static/logo.jpg"
 
 async def setup_bot_menu():
@@ -20,7 +21,7 @@ async def setup_bot_menu():
         payload = {
             "menu_button": {
                 "type": "web_app",
-                "text": "💍 TuyBox Ilovasi",
+                "text": "TuyBox",
                 "web_app": {
                     "url": WEB_APP_URL
                 }
@@ -31,43 +32,27 @@ async def setup_bot_menu():
 
 async def send_welcome_message(chat_id: int):
     caption = (
-        "Assalomu alaykum! 💍 **TuyBox** — O‘zbekistondagi eng zamonaviy to‘y va marosimlar super-ilovasiga xush kelibsiz!\n\n"
+        "Assalomu alaykum! 💍 **TuyBox** — O‘zbekistondagi eng qulay to‘y va marosimlar platformasiga xush kelibsiz!\n\n"
         "✨ **TuyBox imkoniyatlari:**\n"
         "• 🏰 **500+ Sara To‘yxonalar** va sanʼatkorlar katalogi;\n"
-        "• 📅 Ularning bo‘sh kunlarini **Jonli Kalendarda** real-vaqtda ko‘rish;\n"
-        "• 💍 **AI To‘y Byudjeti** kalkulyatori bilan xarajatlarni aniq hisoblash;\n"
-        "• 💌 **Raqamli to‘y taklifnomasi (QR RSVP)** yaratib, Telegramda ulashish!\n\n"
-        "Quyidagi tugmalar orqali ilovani darhol ochishingiz yoki Android APK faylini yuklab olishingiz mumkin 👇"
+        "• 📍 **Jonli Xarita** orqali eng yaqin to'yxonalarni topish va narxlarni solishtirish;\n"
+        "• 💰 **To‘y Byudjeti** kalkulyatori bilan xarajatlarni aniq hisoblash;\n"
+        "• 💌 **Raqamli to‘y taklifnomasi** yaratib, yaqinlarga ulashish!\n\n"
+        "Platformaga kirish yoki mobil ilova landing sahifasini ko'rish uchun quyidagi tugmalarni bosing 👇"
     )
 
     reply_markup = {
         "inline_keyboard": [
             [
                 {
-                    "text": "🚀 TuyBox Ilovani Ochish (Mini App)",
+                    "text": "🚀 Kirish",
                     "web_app": {"url": WEB_APP_URL}
                 }
             ],
             [
                 {
-                    "text": "📲 Android APK Yuklab Olish",
-                    "url": APK_DOWNLOAD_URL
-                }
-            ],
-            [
-                {
-                    "text": "💍 Byudjet Kalkulyatori",
-                    "web_app": {"url": WEB_APP_URL}
-                },
-                {
-                    "text": "💌 Raqamli Taklifnoma",
-                    "web_app": {"url": f"{WEB_APP_URL}/invite/demo"}
-                }
-            ],
-            [
-                {
-                    "text": "🌐 Rasmiy Sayt (tuybox.asilbek.tech)",
-                    "url": WEB_APP_URL
+                    "text": "📲 APK Yuklab Olish",
+                    "url": LANDING_PAGE_URL
                 }
             ]
         ]
@@ -133,8 +118,18 @@ async def start_bot_polling():
                                     f"{TELEGRAM_API_URL}/sendMessage",
                                     json={
                                         "chat_id": chat_id,
-                                        "text": f"📲 **Android APK Faylini yuklab olish:**\n{APK_DOWNLOAD_URL}\n\nO'rnatish oson va 100% xavfsiz!",
-                                        "parse_mode": "Markdown"
+                                        "text": f"📲 **TuyBox Android APK:**\n\nQuyidagi tugma orqali rasmiy landing sahifasidan APK faylini yuklab olishingiz mumkin 👇",
+                                        "parse_mode": "Markdown",
+                                        "reply_markup": {
+                                            "inline_keyboard": [
+                                                [
+                                                    {
+                                                        "text": "📲 APK Yuklab Olish",
+                                                        "url": LANDING_PAGE_URL
+                                                    }
+                                                ]
+                                            ]
+                                        }
                                     }
                                 )
             except Exception as e:
