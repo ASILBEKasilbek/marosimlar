@@ -8,10 +8,10 @@
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <!-- Google Fonts: Cinzel, Playfair Display & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -90,10 +90,11 @@
 
         body {
             background-color: var(--bg-page);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(255, 248, 230, 0.7) 0px, transparent 55%),
-                radial-gradient(at 100% 100%, rgba(247, 240, 225, 0.6) 0px, transparent 55%),
-                linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(245,240,230,0.2) 100%);
+            background-image: url('https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1200');
+            background-position: center;
+            background-size: cover;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: var(--text-dark);
             min-height: 100vh;
             overflow-x: hidden;
@@ -104,90 +105,58 @@
         body.dark-mode {
             background-image: 
                 radial-gradient(at 0% 0%, rgba(34, 28, 20, 0.8) 0px, transparent 55%),
-                radial-gradient(at 100% 100%, rgba(24, 20, 14, 0.8) 0px, transparent 55%);
+                radial-gradient(at 100% 100%, rgba(24, 20, 14, 0.8) 0px, transparent 55%),
+                linear-gradient(180deg, #100C07 0%, #080604 100%);
         }
 
         .app-shell {
             width: 100%;
             max-width: 440px;
             min-height: 100vh;
-            background: var(--bg-page);
-            background-image: 
-                radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.9) 0%, transparent 40%),
-                radial-gradient(circle at 85% 90%, rgba(245, 238, 222, 0.7) 0%, transparent 50%),
-                linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 15%, #F7F3EA 60%, #FAF7F2 100%);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(250, 248, 245, 0.92) 100%),
+                        url('https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1200') center/cover repeat-y;
             display: flex;
             flex-direction: column;
             position: relative;
-            box-shadow: 0 0 60px rgba(184, 134, 11, 0.12);
+            box-shadow: 0 0 60px rgba(184, 134, 11, 0.22), 0 0 2px rgba(212, 175, 55, 0.4);
             padding-bottom: calc(75px + var(--safe-bottom));
         }
 
         body.dark-mode .app-shell {
-            background-image: 
-                radial-gradient(circle at 15% 10%, rgba(30, 24, 16, 0.8) 0%, transparent 40%),
-                radial-gradient(circle at 85% 90%, rgba(18, 14, 10, 0.9) 0%, transparent 50%),
-                linear-gradient(180deg, #18140E 0%, #120E08 50%, #0E0B07 100%);
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+            background: linear-gradient(180deg, rgba(20, 16, 12, 0.94) 0%, rgba(14, 11, 8, 0.96) 100%),
+                        radial-gradient(circle at 15% 10%, rgba(30, 24, 16, 0.8) 0%, transparent 40%);
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.8), 0 0 2px rgba(245, 211, 101, 0.35);
         }
 
-        /* 1. TEPADAGI ASOSIY PANEL */
-        .app-header {
+        /* 1. TEPADAGI ASOSIY MARKAZIY QASR PANELI */
+        .palace-header-center {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: var(--nav-bg);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(250, 248, 244, 0.92) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            padding: 12px 18px;
+            padding: 16px 18px 12px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1.5px solid var(--border-color);
-            box-shadow: 0 4px 20px rgba(184, 134, 11, 0.05);
-        }
-
-        .header-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .brand-crest {
-            width: 34px;
-            height: 34px;
-            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 2px 10px rgba(212, 175, 55, 0.45));
-            transition: transform 0.25s ease;
+            border-bottom: 1.5px solid var(--border-color);
+            box-shadow: 0 6px 24px rgba(184, 134, 11, 0.08);
+            position: relative;
         }
 
-        .header-brand:hover .brand-crest {
-            transform: scale(1.08);
+        body.dark-mode .palace-header-center {
+            background: linear-gradient(180deg, rgba(24, 20, 14, 0.95) 0%, rgba(18, 14, 10, 0.92) 100%);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
         }
 
-        .brand-title {
-            font-family: 'Playfair Display', serif;
-            font-weight: 800;
-            font-size: 24px;
-            letter-spacing: -0.2px;
-            color: var(--text-dark);
-            line-height: 1;
-        }
-
-        .header-right-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Tezkor rejim almashtirish tugmasi */
-        .theme-toggle-header {
-            width: 40px;
-            height: 40px;
+        .theme-toggle-header-abs {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             background: var(--bg-card);
             border: 1.5px solid var(--border-color);
@@ -195,50 +164,106 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             box-shadow: var(--shadow-card);
             transition: all 0.2s ease;
         }
 
-        .theme-toggle-header:active {
+        .theme-toggle-header-abs:active {
             transform: scale(0.92);
         }
 
-        .header-call-btn {
-            background: var(--gold-gradient);
-            color: #1A1200;
-            padding: 8px 14px;
-            border-radius: var(--radius-pill);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 800;
+        .palace-brand-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .palace-crown-wrap {
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 6px;
-            box-shadow: var(--gold-glow);
+            justify-content: center;
+            margin-bottom: 3px;
+        }
+
+        .palace-crown-aura {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 232, 158, 0.7) 0%, rgba(212, 175, 55, 0.3) 45%, transparent 70%);
+            filter: blur(6px);
+            pointer-events: none;
+            animation: crownPulse 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes crownPulse {
+            0% { transform: scale(0.92); opacity: 0.7; }
+            100% { transform: scale(1.15); opacity: 1; }
+        }
+
+        .palace-crown-svg {
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 4px 12px rgba(184, 134, 11, 0.45));
+            transition: transform 0.25s ease;
+        }
+
+        .palace-brand-center:hover .palace-crown-svg {
+            transform: scale(1.08) translateY(-2px);
+        }
+
+        .palace-brand-name {
+            font-family: 'Cinzel', 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 28px;
+            letter-spacing: 5px;
+            margin: 0;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #FFE89E 0%, #D4AF37 35%, #FFF0AA 55%, #B8860B 80%, #7A4F03 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(184, 134, 11, 0.35));
+        }
+
+        .palace-brand-tagline {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--gold-dark);
+            margin-top: 3px;
+            text-transform: uppercase;
+        }
+
+        body.dark-mode .palace-brand-tagline {
+            color: var(--gold-primary);
         }
 
         /* 2. QIDIRUV VA MAROSIM TURLARI */
         .search-section {
-            padding: 12px 18px 6px;
+            padding: 14px 18px 6px;
         }
 
         .search-pill-box {
             position: relative;
             background: var(--bg-card);
-            border: 1.5px solid var(--border-color);
+            border: 2px solid var(--gold-primary);
             border-radius: var(--radius-pill);
             padding: 6px 8px 6px 18px;
             display: flex;
             align-items: center;
-            box-shadow: var(--shadow-card);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.9);
             transition: all 0.25s ease;
         }
 
         .search-pill-box:focus-within {
-            border-color: var(--border-gold-heavy);
-            box-shadow: 0 6px 24px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            border-color: #B8860B;
+            box-shadow: 0 8px 26px rgba(184, 134, 11, 0.25), inset 0 1px 1px rgba(255, 255, 255, 1);
         }
 
         .search-pill-box input {
@@ -246,7 +271,7 @@
             border: none;
             outline: none;
             background: transparent;
-            font-size: 15px;
+            font-size: 14.5px;
             font-weight: 600;
             color: var(--text-dark);
         }
@@ -260,15 +285,15 @@
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            background: var(--gold-gradient);
-            border: none;
+            background: linear-gradient(135deg, #FFE89E 0%, #D4AF37 40%, #AA771C 100%);
+            border: 1px solid #FFE8A3;
             color: #1A1200;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 15px;
             cursor: pointer;
-            box-shadow: var(--gold-glow);
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.35);
             transition: transform 0.2s ease;
         }
 
@@ -294,7 +319,7 @@
             border-radius: var(--radius-pill);
             background: var(--bg-card);
             border: 1.5px solid var(--border-color);
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 700;
             color: var(--text-dark);
             cursor: pointer;
@@ -327,36 +352,41 @@
             color: #1A1200;
         }
 
-        /* 3. SARLAVHALAR */
-        .section-header {
-            padding: 18px 18px 10px;
+        /* 3. SARLAVHALAR (MARKAZIY IMPERIAL SAROY USLUBIDA) */
+        .palace-section-head-center {
+            text-align: center;
+            padding: 22px 18px 12px;
+        }
+
+        .palace-filigree-line {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 12px;
         }
 
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 21px;
-            font-weight: 700;
-            color: var(--text-dark);
-            letter-spacing: -0.2px;
-        }
-
-        .section-link {
-            font-size: 14px;
-            font-weight: 700;
+        .filigree-star {
             color: var(--gold-primary);
-            text-decoration: none;
-            cursor: pointer;
-            transition: color 0.2s ease;
+            font-size: 15px;
+            filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.5));
         }
 
-        .section-link:hover {
-            color: var(--gold-dark);
+        .palace-section-title {
+            font-family: 'Cinzel', 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: 0.5px;
         }
 
-        /* 4. SARA TO'YXONALAR KARUSELI */
+        .palace-section-desc {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* 4. SARA TO'Y QASRLARI KARUSELI */
         .featured-carousel {
             display: flex;
             gap: 14px;
@@ -371,7 +401,7 @@
         }
 
         .palace-card {
-            flex: 0 0 270px;
+            flex: 0 0 285px;
             scroll-snap-align: start;
             background: var(--bg-card);
             border-radius: var(--radius-card);
@@ -380,20 +410,23 @@
             box-shadow: var(--shadow-card);
             cursor: pointer;
             transition: all 0.25s ease;
+            position: relative;
         }
 
         .palace-card:hover {
             border-color: var(--border-gold-heavy);
-            transform: translateY(-2px);
-            box-shadow: 0 14px 35px rgba(184, 134, 11, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(184, 134, 11, 0.22), inset 0 1px 0 rgba(255, 255, 255, 1);
         }
 
         .palace-img-wrap {
             position: relative;
             width: 100%;
-            height: 175px;
+            height: 180px;
             border-radius: 16px;
             overflow: hidden;
+            border: 2px solid var(--gold-primary);
+            box-shadow: 0 4px 16px rgba(184, 134, 11, 0.25);
             background: #2A2520;
         }
 
@@ -401,27 +434,45 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s ease;
         }
 
         .palace-card:hover .palace-img-wrap img {
-            transform: scale(1.04);
+            transform: scale(1.06);
         }
 
         .palace-badge {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: linear-gradient(135deg, rgba(26, 18, 5, 0.88) 0%, rgba(45, 32, 10, 0.92) 100%);
+            background: linear-gradient(135deg, rgba(26, 18, 5, 0.9) 0%, rgba(45, 32, 10, 0.94) 100%);
             backdrop-filter: blur(6px);
             color: #FFE58F;
-            border: 1px solid rgba(212, 175, 55, 0.5);
-            padding: 5px 12px;
+            border: 1px solid rgba(212, 175, 55, 0.65);
+            padding: 4px 10px;
             border-radius: var(--radius-pill);
-            font-size: 11px;
+            font-size: 10.5px;
             font-weight: 800;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-            letter-spacing: 0.3px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .palace-card-rating-float {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #FFE89E 0%, #D4AF37 100%);
+            color: #1A1200;
+            padding: 4px 9px;
+            border-radius: var(--radius-pill);
+            font-size: 11.5px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            box-shadow: 0 4px 10px rgba(184, 134, 11, 0.4);
         }
 
         .palace-info {
@@ -436,22 +487,13 @@
         }
 
         .palace-name {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Cinzel', 'Playfair Display', serif;
             font-size: 18px;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--text-dark);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        .palace-rating {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--gold-primary);
         }
 
         .palace-sub-line {
@@ -467,136 +509,214 @@
         .palace-price {
             font-size: 14px;
             font-weight: 800;
+            color: var(--gold-dark);
+        }
+
+        body.dark-mode .palace-price {
             color: var(--gold-primary);
         }
 
-        /* 5. YAQIN ATROFDAGI JOYLAR BANNERI */
+        /* 3D LIQUID GOLD BATAFSIL TUGMASI */
+        .btn-discover-book {
+            width: 100%;
+            height: 42px;
+            margin-top: 10px;
+            border-radius: var(--radius-pill);
+            background: linear-gradient(180deg, #FBF6BC 0%, #D4AF37 38%, #AA771C 78%, #7A4F03 100%);
+            border: 1px solid #FFE8A3;
+            color: #1A1200;
+            font-size: 13px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(184, 134, 11, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-discover-book:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.48), inset 0 1px 1px rgba(255, 255, 255, 1);
+        }
+
+        .btn-discover-book:active {
+            transform: scale(0.96);
+        }
+
+        /* 5. EKSKLYUZIV TO'Y XIZMATLARI (3x2 OLTIN KVADRAT GRID) */
+        .exclusive-services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 4px 18px 18px;
+        }
+
+        .service-gold-card {
+            background: linear-gradient(150deg, #FFFDF5 0%, #FBF3D6 28%, #E8CD78 72%, #C59F3E 100%);
+            border: 1.5px solid #FFF1B5;
+            border-radius: 18px;
+            padding: 14px 6px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(184, 134, 11, 0.16), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark-mode .service-gold-card {
+            background: linear-gradient(150deg, #2D2315 0%, #3D301A 30%, #523F1E 70%, #2A1F0D 100%);
+            border: 1.5px solid rgba(245, 211, 101, 0.4);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 235, 160, 0.2);
+        }
+
+        .service-gold-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 38%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .service-gold-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(184, 134, 11, 0.3), inset 0 1px 2px rgba(255, 255, 255, 1);
+            border-color: #FFEAA7;
+        }
+
+        .service-gold-card:active {
+            transform: scale(0.95);
+        }
+
+        .service-gold-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFF8E7 100%);
+            border: 1.5px solid #D4AF37;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #996515;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.22);
+            transition: transform 0.25s ease;
+        }
+
+        body.dark-mode .service-gold-icon {
+            background: linear-gradient(135deg, #221A0F 0%, #151009 100%);
+            border-color: #F5D365;
+            color: #F5D365;
+        }
+
+        .service-gold-card:hover .service-gold-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .service-gold-title {
+            font-family: 'Cinzel', 'Playfair Display', serif;
+            font-size: 13px;
+            font-weight: 800;
+            color: #1A1200;
+            line-height: 1.2;
+            margin-bottom: 3px;
+        }
+
+        body.dark-mode .service-gold-title {
+            color: #FAF8F5;
+        }
+
+        .service-gold-sub {
+            font-size: 10px;
+            font-weight: 700;
+            color: #7A5515;
+            letter-spacing: -0.1px;
+        }
+
+        body.dark-mode .service-gold-sub {
+            color: #D4AF37;
+        }
+
+        /* 6. XARITA BANNERI */
         .near-you-section {
             padding: 10px 18px 14px;
         }
 
-        .near-you-card {
-            background: var(--bg-card-soft);
-            border: 1.5px solid var(--border-color);
+        .palace-map-banner {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
             border-radius: var(--radius-card);
-            padding: 16px 18px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 14px 18px;
             box-shadow: var(--shadow-card);
             cursor: pointer;
             transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .near-you-card:hover {
+        .palace-map-banner:hover {
             border-color: var(--border-gold-heavy);
+            box-shadow: 0 10px 28px rgba(184, 134, 11, 0.18);
             transform: translateY(-2px);
         }
 
-        .near-you-text h4 {
-            font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 3px;
+        .palace-map-banner-inner {
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
-        .near-you-text p {
-            font-size: 13px;
+        .palace-map-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gold-gradient);
+            color: #1A1200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: var(--gold-glow);
+            flex-shrink: 0;
+        }
+
+        .palace-map-info {
+            flex: 1;
+        }
+
+        .palace-map-info h4 {
+            font-family: 'Cinzel', 'Playfair Display', serif;
+            font-size: 16.5px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+
+        .palace-map-info p {
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-muted);
         }
 
-        .map-badge-btn {
-            background: var(--gold-gradient);
-            color: #1A1200;
-            width: 46px;
-            height: 46px;
+        .palace-map-go-btn {
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
+            background: var(--gold-badge-bg);
+            color: var(--gold-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 19px;
-            box-shadow: var(--gold-glow);
-            transition: transform 0.2s ease;
-        }
-
-        .near-you-card:active .map-badge-btn {
-            transform: scale(0.92);
-        }
-
-        /* 6. TO'Y XIZMATLARI (2x2 Katta Vizual Grid) */
-        .categories-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            padding: 4px 18px 20px;
-        }
-
-        .cat-card {
-            position: relative;
-            height: 140px;
-            border-radius: 20px;
-            overflow: hidden;
-            background: #2A2520;
-            box-shadow: var(--shadow-card);
-            border: 1.5px solid var(--border-color);
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .cat-card:hover {
-            border-color: var(--border-gold-heavy);
-            transform: translateY(-2px);
-        }
-
-        .cat-card:active {
-            transform: scale(0.97);
-        }
-
-        .cat-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .cat-card:hover img {
-            transform: scale(1.05);
-        }
-
-        .cat-card-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(15, 12, 10, 0.78) 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 12px;
-        }
-
-        .cat-icon-glass {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            color: var(--gold-dark);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .cat-badge-bottom {
-            background: var(--gold-gradient);
-            padding: 6px 12px;
-            border-radius: var(--radius-pill);
-            color: #1A1200;
-            font-size: 13px;
-            font-weight: 800;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
+            font-size: 14px;
         }
 
         /* 7. TO'YXONALAR RO'YXATI */
@@ -1233,7 +1353,7 @@
             font-size: 17px;
         }
 
-        /* 12. PASTKI NAVIGATSIYA */
+        /* 12. PASTKI NAVIGATSIYA (24K SATIN LIQUID GOLD) */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -1242,15 +1362,21 @@
             width: 100%;
             max-width: 440px;
             z-index: 1000;
-            background: var(--nav-bg);
+            background: linear-gradient(180deg, rgba(255, 253, 245, 0.98) 0%, rgba(252, 244, 218, 0.98) 45%, rgba(242, 217, 142, 0.98) 85%, rgba(212, 175, 55, 0.98) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border-color);
+            border-top: 1.5px solid #FFEAA7;
             display: flex;
             align-items: flex-end;
             justify-content: space-around;
             padding: 8px 8px calc(8px + var(--safe-bottom));
-            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 -8px 30px rgba(184, 134, 11, 0.22);
+        }
+
+        body.dark-mode .bottom-nav {
+            background: linear-gradient(180deg, rgba(34, 28, 20, 0.98) 0%, rgba(25, 20, 14, 0.98) 50%, rgba(18, 14, 10, 0.98) 100%);
+            border-top: 1.5px solid rgba(245, 211, 101, 0.35);
+            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7);
         }
 
         .nav-item {
@@ -1259,7 +1385,7 @@
             align-items: center;
             gap: 4px;
             text-decoration: none;
-            color: var(--text-muted);
+            color: #7A5515;
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
@@ -1268,18 +1394,60 @@
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        body.dark-mode .nav-item {
+            color: #A39686;
+        }
+
+        .nav-icon-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+        }
+
+        .nav-item.active .nav-icon-wrap::before {
+            content: '';
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 232, 158, 0.65) 0%, rgba(212, 175, 55, 0.22) 55%, transparent 75%);
+            z-index: 0;
+            animation: navAuraPulse 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes navAuraPulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            100% { transform: scale(1.15); opacity: 1; }
+        }
+
         .nav-item i {
             font-size: 19px;
+            position: relative;
+            z-index: 1;
             transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .nav-item.active {
-            color: var(--gold-primary);
+            color: #1A1200;
+            font-weight: 800;
+        }
+
+        body.dark-mode .nav-item.active {
+            color: #F5D365;
         }
 
         .nav-item.active i {
-            transform: translateY(-2px) scale(1.1);
-            filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.45));
+            color: #996515;
+            transform: translateY(-2px) scale(1.15);
+            filter: drop-shadow(0 2px 8px rgba(184, 134, 11, 0.5));
+        }
+
+        body.dark-mode .nav-item.active i {
+            color: #F5D365;
+            filter: drop-shadow(0 2px 10px rgba(245, 211, 101, 0.6));
         }
 
         .nav-item-add {
@@ -1288,19 +1456,23 @@
         }
 
         .nav-center-bubble {
-            width: 44px;
-            height: 44px;
+            width: 46px;
+            height: 46px;
             border-radius: 50%;
-            background: var(--gold-gradient);
+            background: linear-gradient(180deg, #FBF6BC 0%, #D4AF37 38%, #AA771C 78%, #7A4F03 100%);
             color: #1A1200;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 19px;
-            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.45);
-            border: 3px solid var(--bg-card);
-            margin-top: -18px;
+            font-size: 20px;
+            box-shadow: 0 4px 18px rgba(184, 134, 11, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+            border: 3px solid #FFF8E7;
+            margin-top: -20px;
             transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .nav-center-bubble {
+            border-color: #18140E;
         }
 
         .nav-item-add:active .nav-center-bubble {
@@ -1729,44 +1901,57 @@
     <div class="app-shell">
 
         <!-- TEPADAGI ASOSIY PANEL (FAQAT BOSH SAHIFADA KO'RINADI) -->
-        <header class="app-header" id="app-header">
-            <div class="header-brand" onclick="switchTab('home')">
-                <div class="brand-crest">
-                    <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="18" cy="18" r="16.5" fill="#1C160E" stroke="url(#goldGradEmblem)" stroke-width="1.8"/>
-                        <path d="M12 14.5L14.5 17.5L18 13.5L21.5 17.5L24 14.5L22.5 20.5H13.5L12 14.5Z" fill="url(#goldGradEmblem)"/>
-                        <path d="M13 22.5H23V23.8C23 24.6 22.3 25.2 21.5 25.2H14.5C13.7 25.2 13 24.6 13 23.8V22.5Z" fill="url(#goldGradEmblem)"/>
-                        <circle cx="18" cy="12" r="1.3" fill="#FFF8E7"/>
-                        <circle cx="12" cy="13" r="1.1" fill="#FFF8E7"/>
-                        <circle cx="24" cy="13" r="1.1" fill="#FFF8E7"/>
+        <!-- TEPADAGI ASOSIY PANEL (MARKAZIY 24K CROWN VA IMPERIAL TUYBOX LOGO) -->
+        <header class="app-header palace-header-center" id="app-header">
+            <!-- Tungi/Kunduzgi rejim tugmasi (burchakda chiroyli joylashgan) -->
+            <button class="theme-toggle-header-abs" onclick="toggleTheme()" title="Rejimni almashtirish">
+                <i class="fa-solid fa-moon" id="header-theme-icon"></i>
+            </button>
+
+            <!-- Markaziy 24K Liquid Gold Toj va TUYBOX yozuvi -->
+            <div class="palace-brand-center" onclick="switchTab('home')">
+                <div class="palace-crown-wrap">
+                    <div class="palace-crown-aura"></div>
+                    <svg class="palace-crown-svg" width="50" height="40" viewBox="0 0 52 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
-                            <linearGradient id="goldGradEmblem" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-                                <stop offset="0%" stop-color="#FFE89E"/>
-                                <stop offset="35%" stop-color="#D4AF37"/>
-                                <stop offset="65%" stop-color="#F5D365"/>
-                                <stop offset="85%" stop-color="#C29012"/>
-                                <stop offset="100%" stop-color="#996515"/>
+                            <linearGradient id="liquidGoldCrownSvg" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FFF5C2"/>
+                                <stop offset="25%" stop-color="#F3CE65"/>
+                                <stop offset="50%" stop-color="#D4AF37"/>
+                                <stop offset="75%" stop-color="#AA771C"/>
+                                <stop offset="100%" stop-color="#6E4402"/>
                             </linearGradient>
+                            <radialGradient id="jewelGlowSvg" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#FFFFFF"/>
+                                <stop offset="40%" stop-color="#FFF6D8"/>
+                                <stop offset="100%" stop-color="#D4AF37"/>
+                            </radialGradient>
                         </defs>
+                        <!-- Toj qirralari va asosi -->
+                        <path d="M7 16L14 26L26 9L38 26L45 16L41 33H11L7 16Z" fill="url(#liquidGoldCrownSvg)"/>
+                        <path d="M10 33H42C43.1 33 44 33.9 44 35V37C44 38.1 43.1 39 42 39H10C8.9 39 8 38.1 8 37V35C8 33.9 8.9 33 10 33Z" fill="url(#liquidGoldCrownSvg)"/>
+                        <circle cx="26" cy="7.5" r="3.5" fill="url(#jewelGlowSvg)"/>
+                        <circle cx="7" cy="14.5" r="2.8" fill="url(#jewelGlowSvg)"/>
+                        <circle cx="45" cy="14.5" r="2.8" fill="url(#jewelGlowSvg)"/>
+                        <circle cx="17.5" cy="22" r="2" fill="url(#jewelGlowSvg)"/>
+                        <circle cx="34.5" cy="22" r="2" fill="url(#jewelGlowSvg)"/>
+                        <rect x="14" y="34.5" width="4" height="3" rx="1" fill="#FFFFFF" fill-opacity="0.8"/>
+                        <rect x="24" y="34.5" width="4" height="3" rx="1" fill="#FFFFFF" fill-opacity="0.8"/>
+                        <rect x="34" y="34.5" width="4" height="3" rx="1" fill="#FFFFFF" fill-opacity="0.8"/>
                     </svg>
                 </div>
-                <span class="brand-title">TuyBox</span>
-            </div>
-
-            <div class="header-right-actions">
-                <button class="theme-toggle-header" onclick="toggleTheme()" title="Rejimni almashtirish">
-                    <i class="fa-solid fa-moon" id="header-theme-icon"></i>
-                </button>
+                <h1 class="palace-brand-name">TUYBOX</h1>
+                <span class="palace-brand-tagline">TO'Y VA MAROSIMLAR EKSKLYUZIV PLATFORMASI</span>
             </div>
         </header>
 
         <!-- 1-SAHIFA: ASOSIY VITRINA -->
         <main id="tab-home">
-            <!-- Qidiruv maydoni -->
+            <!-- Qidiruv maydoni (Oltin ramka va oq marmar pill) -->
             <div class="search-section">
                 <div class="search-pill-box">
-                    <input type="text" id="search-input" placeholder="To'yxona, san'atkor yoki tuman..." oninput="handleSearch(this.value)">
-                    <button class="search-circle-btn" onclick="executeSearch()">
+                    <input type="text" id="search-input" placeholder="To'yxona, xizmat yoki san'atkor qidirish..." oninput="handleSearch(this.value)">
+                    <button class="search-circle-btn" onclick="executeSearch()" title="Qidirish">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
                 </div>
@@ -1778,134 +1963,174 @@
                     <i class="fa-solid fa-crown icon-chip"></i> Barchasi
                 </div>
                 <div class="event-chip" onclick="filterByEvent(this, 'wedding')">
-                    <i class="fa-solid fa-ring icon-chip"></i> Nikoh to'yi
+                    <i class="fa-solid fa-ring icon-chip"></i> Nikoh To'yi
                 </div>
                 <div class="event-chip" onclick="filterByEvent(this, 'restaurant')">
                     <i class="fa-solid fa-utensils icon-chip"></i> Restoran & Osh
                 </div>
                 <div class="event-chip" onclick="filterByEvent(this, 'birthday')">
-                    <i class="fa-solid fa-cake-candles icon-chip"></i> Tug'ilgan kun
+                    <i class="fa-solid fa-cake-candles icon-chip"></i> Tug'ilgan Kun
                 </div>
                 <div class="event-chip" onclick="filterByEvent(this, 'corporate')">
                     <i class="fa-solid fa-champagne-glasses icon-chip"></i> Korporativ
                 </div>
             </div>
 
-            <!-- 1. ENG SARA TO'YXONALAR -->
-            <div class="section-header">
-                <h3 class="section-title"><i class="fa-solid fa-gem" style="color: var(--gold-primary); margin-right: 6px;"></i> Sara To'yxonalar</h3>
-                <span class="section-link" onclick="scrollToVenues()">Barchasi &rarr;</span>
+            <!-- 1. SARA TO'Y QASRLARI (CAROUSEL) -->
+            <div class="palace-section-head-center">
+                <div class="palace-filigree-line">
+                    <span class="filigree-star">✦</span>
+                    <h3 class="palace-section-title">Sara To'y Qasrlari</h3>
+                    <span class="filigree-star">✦</span>
+                </div>
+                <p class="palace-section-desc">Toshkentdagi eng hashamatli va nufuzli to'y saroylari</p>
             </div>
 
             <div class="featured-carousel" id="featured-carousel">
                 <div class="palace-card" onclick="openVenueDetails(1)">
                     <div class="palace-img-wrap">
                         <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800" alt="Versal Grand Ballroom">
-                        <div class="palace-badge">VIP SAROY</div>
+                        <div class="palace-badge"><i class="fa-solid fa-crown" style="margin-right: 4px;"></i>VIP SAROY</div>
+                        <div class="palace-card-rating-float"><i class="fa-solid fa-star"></i> 5.0</div>
                     </div>
                     <div class="palace-info">
                         <div class="palace-top-line">
                             <span class="palace-name">Versal Grand Ballroom</span>
-                            <span class="palace-rating"><i class="fa-solid fa-star"></i> 5.0</span>
                         </div>
                         <div class="palace-sub-line">
-                            <span class="palace-price">48 mln so'mdan</span>
                             <span><i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> Yakkasaroy</span>
+                            <span class="palace-price">48 mln so'mdan</span>
                         </div>
+                        <button class="btn-discover-book" onclick="event.stopPropagation(); openVenueDetails(1)">
+                            <span>Batafsil & Band Qilish</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
 
                 <div class="palace-card" onclick="openVenueDetails(2)">
                     <div class="palace-img-wrap">
                         <img src="https://images.unsplash.com/photo-1545232979-fbf6c8b91953?q=80&w=800" alt="Yakkasaroy Palace">
-                        <div class="palace-badge">HASHAMATLI</div>
+                        <div class="palace-badge"><i class="fa-solid fa-crown" style="margin-right: 4px;"></i>HASHAMATLI</div>
+                        <div class="palace-card-rating-float"><i class="fa-solid fa-star"></i> 4.9</div>
                     </div>
                     <div class="palace-info">
                         <div class="palace-top-line">
                             <span class="palace-name">Yakkasaroy Palace</span>
-                            <span class="palace-rating"><i class="fa-solid fa-star"></i> 4.9</span>
                         </div>
                         <div class="palace-sub-line">
-                            <span class="palace-price">55 mln so'mdan</span>
                             <span><i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> Chilonzor</span>
+                            <span class="palace-price">55 mln so'mdan</span>
                         </div>
+                        <button class="btn-discover-book" onclick="event.stopPropagation(); openVenueDetails(2)">
+                            <span>Batafsil & Band Qilish</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
 
                 <div class="palace-card" onclick="openVenueDetails(3)">
                     <div class="palace-img-wrap">
                         <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800" alt="Osiyo Grand Hall">
-                        <div class="palace-badge">ENG MASHHUR</div>
+                        <div class="palace-badge"><i class="fa-solid fa-crown" style="margin-right: 4px;"></i>ENG MASHHUR</div>
+                        <div class="palace-card-rating-float"><i class="fa-solid fa-star"></i> 4.8</div>
                     </div>
                     <div class="palace-info">
                         <div class="palace-top-line">
                             <span class="palace-name">Osiyo Grand Hall</span>
-                            <span class="palace-rating"><i class="fa-solid fa-star"></i> 4.8</span>
                         </div>
                         <div class="palace-sub-line">
-                            <span class="palace-price">35 mln so'mdan</span>
                             <span><i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> Yunusobod</span>
+                            <span class="palace-price">35 mln so'mdan</span>
+                        </div>
+                        <button class="btn-discover-book" onclick="event.stopPropagation(); openVenueDetails(3)">
+                            <span>Batafsil & Band Qilish</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. EKSKLYUZIV TO'Y XIZMATLARI (3x2 OLTIN KVADRAT GRID) -->
+            <div class="palace-section-head-center">
+                <div class="palace-filigree-line">
+                    <span class="filigree-star">✦</span>
+                    <h3 class="palace-section-title">Eksklyuziv To'y Xizmatlari</h3>
+                    <span class="filigree-star">✦</span>
+                </div>
+                <p class="palace-section-desc">To'yingiz uchun saralangan eng sara to'y xizmatlari</p>
+            </div>
+
+            <div class="exclusive-services-grid">
+                <!-- 1. To'y Uzuklari -->
+                <div class="service-gold-card" onclick="filterByCategory('uzuklar')">
+                    <div class="service-gold-icon"><i class="fa-solid fa-ring"></i></div>
+                    <div class="service-gold-title">To'y Uzuklari</div>
+                    <div class="service-gold-sub">Brilliant & Oltin</div>
+                </div>
+
+                <!-- 2. Kelin Liboslari -->
+                <div class="service-gold-card" onclick="filterByCategory('liboslar')">
+                    <div class="service-gold-icon"><i class="fa-solid fa-vest-patches"></i></div>
+                    <div class="service-gold-title">Kelin Liboslari</div>
+                    <div class="service-gold-sub">Premium Moda</div>
+                </div>
+
+                <!-- 3. To'y Rejasi & Byudjet -->
+                <div class="service-gold-card" onclick="switchTab('budget')">
+                    <div class="service-gold-icon"><i class="fa-solid fa-calculator"></i></div>
+                    <div class="service-gold-title">Reja & Byudjet</div>
+                    <div class="service-gold-sub">Xarajat Hisobi</div>
+                </div>
+
+                <!-- 4. San'atkorlar -->
+                <div class="service-gold-card" onclick="filterByCategory('sanatkorlar')">
+                    <div class="service-gold-icon"><i class="fa-solid fa-microphone-lines"></i></div>
+                    <div class="service-gold-title">San'atkorlar</div>
+                    <div class="service-gold-sub">Yulduzlar & Jonli</div>
+                </div>
+
+                <!-- 5. Foto & Video -->
+                <div class="service-gold-card" onclick="filterByCategory('foto-video')">
+                    <div class="service-gold-icon"><i class="fa-solid fa-camera-retro"></i></div>
+                    <div class="service-gold-title">Foto & Video</div>
+                    <div class="service-gold-sub">Love Story & 4K</div>
+                </div>
+
+                <!-- 6. Lyuqs Kortej -->
+                <div class="service-gold-card" onclick="filterByCategory('kortej')">
+                    <div class="service-gold-icon"><i class="fa-solid fa-car-side"></i></div>
+                    <div class="service-gold-title">Lyuqs Kortej</div>
+                    <div class="service-gold-sub">Rolls & Maybach</div>
+                </div>
+            </div>
+
+            <!-- 3. SIZGA YAQIN TO'YXONALAR (XARITA BANNERI) -->
+            <div class="near-you-section">
+                <div class="palace-map-banner" onclick="switchTab('map')">
+                    <div class="palace-map-banner-inner">
+                        <div class="palace-map-icon-box">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                        </div>
+                        <div class="palace-map-info">
+                            <h4>Xaritada To'y Qasrlari</h4>
+                            <p>Toshkent tumanlari bo'yicha eng yaqin to'yxonalarni topish</p>
+                        </div>
+                        <div class="palace-map-go-btn">
+                            <i class="fa-solid fa-arrow-right"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. SIZGA YAQIN TO'YXONALAR BANNERI -->
-            <div class="near-you-section">
-                <div class="near-you-card" onclick="switchTab('map')">
-                    <div class="near-you-text">
-                        <h4><i class="fa-solid fa-compass" style="color: var(--gold-primary); margin-right: 6px;"></i> Yaqin Atrofdagi Joylar</h4>
-                        <p>Xaritadan tumanlar bo'yicha to'yxonalarni topish</p>
-                    </div>
-                    <div class="map-badge-btn">
-                        <i class="fa-solid fa-map-location-dot"></i>
-                    </div>
+            <!-- 4. BARCHA TO'YXONA VA XIZMATLAR RO'YXATI -->
+            <div class="palace-section-head-center" id="all-venues-heading">
+                <div class="palace-filigree-line">
+                    <span class="filigree-star">✦</span>
+                    <h3 class="palace-section-title">Barcha To'yxona va Xizmatlar</h3>
+                    <span class="filigree-star">✦</span>
                 </div>
-            </div>
-
-            <!-- 3. TO'Y XIZMATLARI BO'LIMLARI (2x2 Grid) -->
-            <div class="section-header">
-                <h3 class="section-title"><i class="fa-solid fa-shapes" style="color: var(--gold-primary); margin-right: 6px;"></i> Xizmat Bo'limlari</h3>
-            </div>
-
-            <div class="categories-grid">
-                <div class="cat-card" onclick="filterByCategory('toyxonalar')">
-                    <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=500" alt="To'yxonalar">
-                    <div class="cat-card-overlay">
-                        <div class="cat-icon-glass"><i class="fa-solid fa-landmark-dome"></i></div>
-                        <div class="cat-badge-bottom">To'yxonalar</div>
-                    </div>
-                </div>
-
-                <div class="cat-card" onclick="filterByCategory('sanatkorlar')">
-                    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=500" alt="San'atkorlar">
-                    <div class="cat-card-overlay">
-                        <div class="cat-icon-glass"><i class="fa-solid fa-microphone-lines"></i></div>
-                        <div class="cat-badge-bottom">San'atkorlar</div>
-                    </div>
-                </div>
-
-                <div class="cat-card" onclick="filterByCategory('restoranlar')">
-                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=500" alt="Restoranlar">
-                    <div class="cat-card-overlay">
-                        <div class="cat-icon-glass"><i class="fa-solid fa-champagne-glasses"></i></div>
-                        <div class="cat-badge-bottom">Restoran & Osh</div>
-                    </div>
-                </div>
-
-                <div class="cat-card" onclick="filterByCategory('foto-video')">
-                    <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=500" alt="Foto & Video">
-                    <div class="cat-card-overlay">
-                        <div class="cat-icon-glass"><i class="fa-solid fa-camera-retro"></i></div>
-                        <div class="cat-badge-bottom">Foto & Video</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. TO'YXONALAR VA XIZMATLAR RO'YXATI -->
-            <div class="section-header" id="all-venues-heading">
-                <h3 class="section-title"><i class="fa-solid fa-layer-group" style="color: var(--gold-primary); margin-right: 6px;"></i> Barcha To'yxona va Xizmatlar</h3>
-                <span class="section-link" id="venue-count-badge">Yuklanmoqda...</span>
+                <p class="palace-section-desc" id="venue-count-badge">Yuklanmoqda...</p>
             </div>
 
             <div class="venue-list-section" id="venues-list-container">
@@ -2265,14 +2490,18 @@
             <!-- JavaScript orqali to'ldiriladi -->
         </section>
 
-        <!-- PASTKI ASOSIY NAVIGATSIYA -->
+        <!-- PASTKI ASOSIY NAVIGATSIYA (SATIN GOLD & CROWN HALO) -->
         <nav class="bottom-nav">
             <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
-                <i class="fa-solid fa-house"></i>
+                <div class="nav-icon-wrap">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
                 <span>Asosiy</span>
             </div>
             <div class="nav-item" onclick="switchTab('map')" id="nav-map">
-                <i class="fa-solid fa-compass"></i>
+                <div class="nav-icon-wrap">
+                    <i class="fa-solid fa-compass"></i>
+                </div>
                 <span>Xarita</span>
             </div>
             <div class="nav-item nav-item-add" onclick="switchTab('add')" id="nav-add">
@@ -2282,11 +2511,15 @@
                 <span>E'lon</span>
             </div>
             <div class="nav-item" onclick="switchTab('budget')" id="nav-budget">
-                <i class="fa-solid fa-wallet"></i>
+                <div class="nav-icon-wrap">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
                 <span>Byudjet</span>
             </div>
             <div class="nav-item" onclick="switchTab('profile')" id="nav-profile">
-                <i class="fa-solid fa-user-tie"></i>
+                <div class="nav-icon-wrap">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
                 <span>Profil</span>
             </div>
         </nav>
@@ -2483,6 +2716,66 @@
                 lat: 41.3110,
                 lng: 69.2790,
                 image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800"
+            },
+            {
+                id: 7,
+                title: "Royal Diamond Zargarlik Uyi",
+                category_slug: "uzuklar",
+                tag: "BRILLIANT & OLTIN",
+                price: 12000000,
+                priceStr: "12,000,000 so'm",
+                capacity: "Eksklyuziv to'plam",
+                district: "Mirobod",
+                rating: 5.0,
+                phone: "+998712000007",
+                lat: 41.3020,
+                lng: 69.2720,
+                image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=800"
+            },
+            {
+                id: 8,
+                title: "La Sposa Kelinlar Modalar Uyi",
+                category_slug: "liboslar",
+                tag: "EVROPA MODASI",
+                price: 8000000,
+                priceStr: "8,000,000 so'm",
+                capacity: "Kutyur to'plami",
+                district: "Yakkasaroy",
+                rating: 4.9,
+                phone: "+998712000008",
+                lat: 41.2840,
+                lng: 69.2450,
+                image: "https://images.unsplash.com/photo-1594552072238-b8a33785b261?q=80&w=800"
+            },
+            {
+                id: 9,
+                title: "Grand Rolls & Maybach Kortej",
+                category_slug: "kortej",
+                tag: "LYUQS AVTO",
+                price: 6500000,
+                priceStr: "6,500,000 so'm",
+                capacity: "Kortej & Haydovchi",
+                district: "Shayxontohur",
+                rating: 5.0,
+                phone: "+998712000009",
+                lat: 41.3250,
+                lng: 69.2300,
+                image: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=800"
+            },
+            {
+                id: 10,
+                title: "Art Vision 4K Studio & Dron",
+                category_slug: "foto-video",
+                tag: "LOVE STORY & 4K",
+                price: 9000000,
+                priceStr: "9,000,000 so'm",
+                capacity: "Professional jamoa",
+                district: "Yunusobod",
+                rating: 4.9,
+                phone: "+998712000010",
+                lat: 41.3680,
+                lng: 69.2890,
+                image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=800"
             }
         ];
 
@@ -2588,12 +2881,12 @@
                 <div class="venue-card" onclick="openVenueDetails(${v.id})" style="cursor: pointer;">
                     <div class="venue-card-img">
                         <img src="${v.image}" alt="${v.title}">
-                        <div class="venue-card-tag"><i class="fa-solid fa-crown" style="font-size: 10px; margin-right: 4px;"></i>${v.tag}</div>
+                        <div class="venue-card-tag"><i class="fa-solid fa-crown" style="font-size: 10px; margin-right: 4px;"></i>${v.tag || 'VIP'}</div>
+                        <div class="palace-card-rating-float"><i class="fa-solid fa-star"></i> ${v.rating}</div>
                     </div>
                     <div class="venue-card-body">
                         <div class="venue-header-row">
                             <h4 class="venue-title">${v.title}</h4>
-                            <div class="venue-rate"><i class="fa-solid fa-star" style="color: #F59E0B; margin-right: 3px;"></i>${v.rating}</div>
                         </div>
                         <div class="venue-specs">
                             <div style="display: flex; align-items: center; gap: 6px;">
@@ -2611,8 +2904,8 @@
                                 <span class="price-amount">${v.priceStr}</span>
                             </div>
                             <div class="venue-action-buttons">
-                                <a href="tel:${v.phone}" class="btn-call" onclick="event.stopPropagation()">
-                                    <i class="fa-solid fa-phone-volume"></i> Qo'ng'iroq
+                                <a href="tel:${v.phone}" class="btn-call" onclick="event.stopPropagation()" title="Qo'ng'iroq">
+                                    <i class="fa-solid fa-phone"></i>
                                 </a>
                                 <button class="btn-book" onclick="event.stopPropagation(); openBookingDrawer(${v.id})">
                                     <i class="fa-solid fa-calendar-check"></i> Band Qilish
@@ -2863,6 +3156,10 @@
             document.querySelectorAll('.event-chip').forEach(c => c.classList.remove('active'));
             element.classList.add('active');
 
+            const heading = document.getElementById('all-venues-heading');
+            const tEl = heading?.querySelector('.palace-section-title');
+            if (tEl) tEl.textContent = "Barcha To'yxona va Xizmatlar";
+
             if (eventType === 'all') {
                 renderVenues(VENUES_DATA);
             } else if (eventType === 'wedding') {
@@ -2876,7 +3173,27 @@
 
         function filterByCategory(cat) {
             triggerHaptic();
+            if (cat === 'budget') {
+                switchTab('budget');
+                return;
+            }
             scrollToVenues();
+            const heading = document.getElementById('all-venues-heading');
+            if (heading) {
+                const titleMap = {
+                    'toyxonalar': "To'y Qasrlari & Saroylar",
+                    'sanatkorlar': "San'atkorlar & Jonli Ijro",
+                    'restoranlar': "Restoranlar & Oshxona",
+                    'uzuklar': "To'y Uzuklari & Zargarlik",
+                    'liboslar': "Kelin Liboslari & Moda",
+                    'kortej': "Lyuqs Kortej & Avtomobillar",
+                    'foto-video': "Foto & Video Syomka"
+                };
+                const tEl = heading.querySelector('.palace-section-title');
+                if (tEl && titleMap[cat]) {
+                    tEl.textContent = titleMap[cat];
+                }
+            }
             const filtered = VENUES_DATA.filter(v => v.category_slug === cat);
             renderVenues(filtered.length > 0 ? filtered : VENUES_DATA);
         }
