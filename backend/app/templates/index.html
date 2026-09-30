@@ -22,56 +22,60 @@
 
     <style>
         :root {
-            /* KUNDUZGI REJIM (LIGHT MODE) - ZARHAL TILLO VA OQ IPAK */
-            --bg-page: #FAF7F2;
+            /* 🏛️ 2-USLUB: WHITE MARBLE & 24K LIQUID GOLD (OQ MARMAR VA YALTIROQ TILLO) */
+            --bg-page: #FAF8F5;
             --bg-card: #FFFFFF;
-            --bg-card-soft: #FDFBF8;
-            --bg-input: #F7F3EC;
-            --text-dark: #241E19;
-            --text-muted: #786C60;
-            --border-color: rgba(230, 162, 10, 0.28);
-            --border-light: rgba(0, 0, 0, 0.06);
+            --bg-card-soft: #F8F5EE;
+            --bg-input: #F5F1E8;
+            --text-dark: #1A140C;
+            --text-muted: #786B5A;
+            --border-color: rgba(212, 175, 55, 0.38);
+            --border-gold-heavy: rgba(212, 175, 55, 0.7);
+            --border-light: rgba(212, 175, 55, 0.16);
 
-            /* ZUR SARIQ GOLD PALITRASI (Radiant Imperial Gold) */
-            --gold-primary: #E6A10A;
-            --gold-dark: #B57700;
+            /* 24K LIQUID MOLTEN GOLD (Suyuq va Yaltiroq Zarhal Oltin) */
+            --gold-primary: #D4AF37;
+            --gold-dark: #996515;
             --gold-light: #FFF8E6;
-            --gold-gradient: linear-gradient(135deg, #FFD54F 0%, #FFA000 50%, #D47A00 100%);
-            --gold-gradient-hover: linear-gradient(135deg, #FFE082 0%, #FFB300 50%, #E68A00 100%);
-            --gold-glow: 0 8px 24px rgba(255, 160, 0, 0.35);
-            --gold-badge-bg: rgba(255, 160, 0, 0.12);
+            --gold-gradient: linear-gradient(135deg, #FFE89E 0%, #D4AF37 35%, #F5D365 65%, #C29012 85%, #996515 100%);
+            --gold-gradient-hover: linear-gradient(135deg, #FFF0B8 0%, #E2BE46 35%, #FFE285 65%, #D4A11E 85%, #B37A18 100%);
+            --gold-metallic: linear-gradient(110deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --gold-glow: 0 8px 24px rgba(212, 175, 55, 0.38), 0 2px 6px rgba(153, 101, 21, 0.22);
+            --gold-badge-bg: rgba(212, 175, 55, 0.12);
 
-            --shadow-card: 0 8px 26px rgba(140, 105, 50, 0.08);
-            --shadow-elevated: 0 16px 45px rgba(140, 105, 50, 0.15);
-            --nav-bg: rgba(255, 255, 255, 0.95);
+            --shadow-card: 0 10px 30px rgba(184, 134, 11, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            --shadow-elevated: 0 18px 45px rgba(184, 134, 11, 0.16), 0 4px 12px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            --nav-bg: rgba(255, 255, 255, 0.96);
             --map-tiles-filter: none;
             --radius-card: 22px;
             --radius-pill: 999px;
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
-        /* TUNGI REJIM (DARK MODE) - OBSIDIAN & YORQIN ZARHAL TILLO */
+        /* TUNGI REJIM (DARK MODE) - NERO MARQUINA BLACK MARBLE & 24K LIQUID GOLD */
         body.dark-mode {
-            --bg-page: #0D111A;
-            --bg-card: #151C28;
-            --bg-card-soft: #1B2434;
-            --bg-input: #101622;
-            --text-dark: #F7FAFC;
-            --text-muted: #94A3B8;
-            --border-color: rgba(255, 213, 79, 0.25);
-            --border-light: rgba(255, 255, 255, 0.08);
+            --bg-page: #0E0B07;
+            --bg-card: #18140E;
+            --bg-card-soft: #221C14;
+            --bg-input: #14100A;
+            --text-dark: #FAF8F5;
+            --text-muted: #A39686;
+            --border-color: rgba(245, 211, 101, 0.32);
+            --border-gold-heavy: rgba(245, 211, 101, 0.65);
+            --border-light: rgba(245, 211, 101, 0.12);
 
-            --gold-primary: #FFD54F;
-            --gold-dark: #FFA000;
-            --gold-light: rgba(255, 213, 79, 0.15);
-            --gold-gradient: linear-gradient(135deg, #FFE082 0%, #FFB300 50%, #D47A00 100%);
-            --gold-gradient-hover: linear-gradient(135deg, #FFF176 0%, #FFCA28 50%, #E68A00 100%);
-            --gold-glow: 0 8px 28px rgba(255, 179, 0, 0.45);
-            --gold-badge-bg: rgba(255, 213, 79, 0.18);
+            --gold-primary: #F5D365;
+            --gold-dark: #D4AF37;
+            --gold-light: rgba(245, 211, 101, 0.15);
+            --gold-gradient: linear-gradient(135deg, #FFE89E 0%, #D4AF37 35%, #F5D365 65%, #C29012 85%, #996515 100%);
+            --gold-gradient-hover: linear-gradient(135deg, #FFF0B8 0%, #E2BE46 35%, #FFE285 65%, #D4A11E 85%, #B37A18 100%);
+            --gold-metallic: linear-gradient(110deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --gold-glow: 0 8px 30px rgba(212, 175, 55, 0.45);
+            --gold-badge-bg: rgba(245, 211, 101, 0.16);
 
-            --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.45);
-            --shadow-elevated: 0 16px 45px rgba(0, 0, 0, 0.6);
-            --nav-bg: rgba(21, 28, 40, 0.96);
+            --shadow-card: 0 10px 32px rgba(0, 0, 0, 0.55), 0 0 1px rgba(245, 211, 101, 0.3);
+            --shadow-elevated: 0 18px 48px rgba(0, 0, 0, 0.7), 0 0 2px rgba(245, 211, 101, 0.45);
+            --nav-bg: rgba(24, 20, 14, 0.96);
             --map-tiles-filter: brightness(0.65) invert(1) contrast(2.6) hue-rotate(200deg) saturate(0.3) brightness(0.85);
         }
 
@@ -86,6 +90,10 @@
 
         body {
             background-color: var(--bg-page);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 248, 230, 0.7) 0px, transparent 55%),
+                radial-gradient(at 100% 100%, rgba(247, 240, 225, 0.6) 0px, transparent 55%),
+                linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(245,240,230,0.2) 100%);
             color: var(--text-dark);
             min-height: 100vh;
             overflow-x: hidden;
@@ -93,16 +101,34 @@
             justify-content: center;
         }
 
+        body.dark-mode {
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(34, 28, 20, 0.8) 0px, transparent 55%),
+                radial-gradient(at 100% 100%, rgba(24, 20, 14, 0.8) 0px, transparent 55%);
+        }
+
         .app-shell {
             width: 100%;
             max-width: 440px;
             min-height: 100vh;
             background: var(--bg-page);
+            background-image: 
+                radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.9) 0%, transparent 40%),
+                radial-gradient(circle at 85% 90%, rgba(245, 238, 222, 0.7) 0%, transparent 50%),
+                linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 15%, #F7F3EA 60%, #FAF7F2 100%);
             display: flex;
             flex-direction: column;
             position: relative;
-            box-shadow: 0 0 50px rgba(0,0,0,0.1);
+            box-shadow: 0 0 60px rgba(184, 134, 11, 0.12);
             padding-bottom: calc(75px + var(--safe-bottom));
+        }
+
+        body.dark-mode .app-shell {
+            background-image: 
+                radial-gradient(circle at 15% 10%, rgba(30, 24, 16, 0.8) 0%, transparent 40%),
+                radial-gradient(circle at 85% 90%, rgba(18, 14, 10, 0.9) 0%, transparent 50%),
+                linear-gradient(180deg, #18140E 0%, #120E08 50%, #0E0B07 100%);
+            box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
         }
 
         /* 1. TEPADAGI ASOSIY PANEL */
@@ -111,72 +137,43 @@
             top: 0;
             z-index: 100;
             background: var(--nav-bg);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             padding: 12px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .header-avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--gold-gradient);
-            padding: 2px;
-            box-shadow: var(--gold-glow);
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .header-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
+            border-bottom: 1.5px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(184, 134, 11, 0.05);
         }
 
         .header-brand {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             text-decoration: none;
             cursor: pointer;
         }
 
-        .brand-monogram {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-weight: 700;
-            font-size: 28px;
-            color: var(--gold-primary);
-            line-height: 1;
-        }
-
         .brand-crest {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.4));
+            filter: drop-shadow(0 2px 10px rgba(212, 175, 55, 0.45));
             transition: transform 0.25s ease;
         }
 
         .header-brand:hover .brand-crest {
-            transform: scale(1.06);
+            transform: scale(1.08);
         }
 
         .brand-title {
             font-family: 'Playfair Display', serif;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 24px;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.2px;
             color: var(--text-dark);
             line-height: 1;
         }
@@ -189,11 +186,11 @@
 
         /* Tezkor rejim almashtirish tugmasi */
         .theme-toggle-header {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            border: 1.5px solid var(--border-color);
             color: var(--gold-primary);
             display: flex;
             align-items: center;
@@ -201,6 +198,11 @@
             font-size: 16px;
             cursor: pointer;
             box-shadow: var(--shadow-card);
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle-header:active {
+            transform: scale(0.92);
         }
 
         .header-call-btn {
@@ -231,6 +233,12 @@
             display: flex;
             align-items: center;
             box-shadow: var(--shadow-card);
+            transition: all 0.25s ease;
+        }
+
+        .search-pill-box:focus-within {
+            border-color: var(--border-gold-heavy);
+            box-shadow: 0 6px 24px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.95);
         }
 
         .search-pill-box input {
@@ -261,6 +269,11 @@
             font-size: 15px;
             cursor: pointer;
             box-shadow: var(--gold-glow);
+            transition: transform 0.2s ease;
+        }
+
+        .search-circle-btn:active {
+            transform: scale(0.92);
         }
 
         .event-pills-row {
@@ -289,6 +302,11 @@
             align-items: center;
             gap: 6px;
             box-shadow: var(--shadow-card);
+            transition: all 0.25s ease;
+        }
+
+        .event-chip:hover {
+            border-color: var(--border-gold-heavy);
         }
 
         .event-chip.active {
@@ -296,6 +314,7 @@
             border-color: transparent;
             color: #1A1200;
             box-shadow: var(--gold-glow);
+            font-weight: 800;
         }
 
         .icon-chip {
@@ -330,6 +349,11 @@
             color: var(--gold-primary);
             text-decoration: none;
             cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .section-link:hover {
+            color: var(--gold-dark);
         }
 
         /* 4. SARA TO'YXONALAR KARUSELI */
@@ -355,6 +379,13 @@
             border: 1.5px solid var(--border-color);
             box-shadow: var(--shadow-card);
             cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .palace-card:hover {
+            border-color: var(--border-gold-heavy);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 35px rgba(184, 134, 11, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1);
         }
 
         .palace-img-wrap {
@@ -370,20 +401,27 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .palace-card:hover .palace-img-wrap img {
+            transform: scale(1.04);
         }
 
         .palace-badge {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(18, 14, 10, 0.85);
+            background: linear-gradient(135deg, rgba(26, 18, 5, 0.88) 0%, rgba(45, 32, 10, 0.92) 100%);
             backdrop-filter: blur(6px);
-            color: #FFD54F;
-            border: 1px solid rgba(255, 213, 79, 0.4);
+            color: #FFE58F;
+            border: 1px solid rgba(212, 175, 55, 0.5);
             padding: 5px 12px;
             border-radius: var(--radius-pill);
             font-size: 11px;
             font-weight: 800;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            letter-spacing: 0.3px;
         }
 
         .palace-info {
@@ -447,6 +485,12 @@
             justify-content: space-between;
             box-shadow: var(--shadow-card);
             cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .near-you-card:hover {
+            border-color: var(--border-gold-heavy);
+            transform: translateY(-2px);
         }
 
         .near-you-text h4 {
@@ -474,6 +518,11 @@
             justify-content: center;
             font-size: 19px;
             box-shadow: var(--gold-glow);
+            transition: transform 0.2s ease;
+        }
+
+        .near-you-card:active .map-badge-btn {
+            transform: scale(0.92);
         }
 
         /* 6. TO'Y XIZMATLARI (2x2 Katta Vizual Grid) */
@@ -493,6 +542,12 @@
             box-shadow: var(--shadow-card);
             border: 1.5px solid var(--border-color);
             cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .cat-card:hover {
+            border-color: var(--border-gold-heavy);
+            transform: translateY(-2px);
         }
 
         .cat-card:active {
@@ -503,6 +558,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .cat-card:hover img {
+            transform: scale(1.05);
         }
 
         .cat-card-overlay {
@@ -519,12 +579,13 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 16px;
-            color: #D47A00;
+            color: var(--gold-dark);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .cat-badge-bottom {
@@ -535,6 +596,7 @@
             font-size: 13px;
             font-weight: 800;
             text-align: center;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
         }
 
         /* 7. TO'YXONALAR RO'YXATI */
@@ -551,6 +613,12 @@
             overflow: hidden;
             border: 1.5px solid var(--border-color);
             box-shadow: var(--shadow-card);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .venue-card:hover {
+            border-color: var(--border-gold-heavy);
+            box-shadow: 0 14px 35px rgba(184, 134, 11, 0.15), inset 0 1px 0 rgba(255, 255, 255, 1);
         }
 
         .venue-card-img {
@@ -559,12 +627,18 @@
             height: 200px;
             background: #2A2520;
             cursor: pointer;
+            overflow: hidden;
         }
 
         .venue-card-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .venue-card:hover .venue-card-img img {
+            transform: scale(1.04);
         }
 
         .venue-card-tag {
@@ -576,9 +650,11 @@
             border-radius: var(--radius-pill);
             font-size: 12px;
             font-weight: 800;
-            color: var(--gold-primary);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            border: 1px solid var(--border-color);
+            color: var(--gold-dark);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1.5px solid var(--border-color);
+            display: flex;
+            align-items: center;
         }
 
         .venue-card-body {
@@ -603,7 +679,7 @@
         .venue-rate {
             background: var(--gold-badge-bg);
             border: 1px solid var(--border-color);
-            color: var(--gold-primary);
+            color: var(--gold-dark);
             padding: 4px 9px;
             border-radius: 8px;
             font-size: 13px;
@@ -657,16 +733,23 @@
             padding: 0 16px;
             height: 44px;
             border-radius: 12px;
-            background: var(--gold-light);
+            background: var(--bg-card);
             color: var(--gold-dark);
-            border: 1px solid var(--border-color);
+            border: 1.5px solid var(--border-color);
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 13.5px;
+            font-weight: 800;
             cursor: pointer;
             text-decoration: none;
+            box-shadow: 0 2px 8px rgba(184, 134, 11, 0.06);
+            transition: all 0.2s ease;
+        }
+
+        .btn-call:active {
+            transform: scale(0.95);
+            background: var(--gold-light);
         }
 
         .btn-book {
@@ -676,13 +759,20 @@
             background: var(--gold-gradient);
             border: none;
             color: #1A1200;
-            font-size: 14px;
+            font-size: 13.5px;
             font-weight: 800;
             display: flex;
             align-items: center;
             gap: 6px;
             cursor: pointer;
             box-shadow: var(--gold-glow);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-book:active {
+            transform: scale(0.95);
         }
 
         /* 8. XARITA (TO'LIQ ISHLAYDIGAN, QIDIRUV VA TUMANLAR BILAN) */
@@ -1497,14 +1587,19 @@
 
         .preset-pill {
             background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            border: 1.5px solid var(--border-color);
             border-radius: var(--radius-pill);
-            padding: 5px 12px;
-            font-size: 12px;
+            padding: 6px 14px;
+            font-size: 12.5px;
             font-weight: 700;
-            color: var(--text-muted);
+            color: var(--text-dark);
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(184, 134, 11, 0.05);
+        }
+
+        .preset-pill:hover {
+            border-color: var(--border-gold-heavy);
         }
 
         .preset-pill.active {
@@ -1512,6 +1607,7 @@
             color: #1A1200;
             border-color: transparent;
             font-weight: 800;
+            box-shadow: var(--gold-glow);
         }
 
         .addons-list-box {
@@ -1522,7 +1618,7 @@
         }
 
         .addon-item {
-            background: var(--bg-card-soft);
+            background: var(--bg-card);
             border: 1.5px solid var(--border-color);
             border-radius: 14px;
             padding: 10px 14px;
@@ -1531,6 +1627,11 @@
             gap: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
+            box-shadow: var(--shadow-card);
+        }
+
+        .addon-item:hover {
+            border-color: var(--border-gold-heavy);
         }
 
         .addon-item input[type="checkbox"] {
@@ -1590,7 +1691,7 @@
             transition: width 0.3s ease;
         }
 
-        .bar-venue { background: #10B981; }
+        .bar-venue { background: var(--gold-gradient); }
         .bar-music { background: #F59E0B; }
         .bar-photo { background: #3B82F6; }
         .bar-addons { background: #8B5CF6; }
@@ -1603,7 +1704,7 @@
             border: 1.5px solid var(--border-color);
             color: var(--text-dark);
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -1611,6 +1712,11 @@
             gap: 8px;
             box-shadow: var(--shadow-card);
             transition: all 0.2s ease;
+        }
+
+        .btn-share-budget:hover {
+            border-color: var(--border-gold-heavy);
+            background: var(--bg-card-soft);
         }
 
         .btn-share-budget:active {
@@ -1627,7 +1733,7 @@
             <div class="header-brand" onclick="switchTab('home')">
                 <div class="brand-crest">
                     <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="18" cy="18" r="16.5" fill="#141419" stroke="url(#goldGradEmblem)" stroke-width="1.8"/>
+                        <circle cx="18" cy="18" r="16.5" fill="#1C160E" stroke="url(#goldGradEmblem)" stroke-width="1.8"/>
                         <path d="M12 14.5L14.5 17.5L18 13.5L21.5 17.5L24 14.5L22.5 20.5H13.5L12 14.5Z" fill="url(#goldGradEmblem)"/>
                         <path d="M13 22.5H23V23.8C23 24.6 22.3 25.2 21.5 25.2H14.5C13.7 25.2 13 24.6 13 23.8V22.5Z" fill="url(#goldGradEmblem)"/>
                         <circle cx="18" cy="12" r="1.3" fill="#FFF8E7"/>
@@ -1635,8 +1741,10 @@
                         <circle cx="24" cy="13" r="1.1" fill="#FFF8E7"/>
                         <defs>
                             <linearGradient id="goldGradEmblem" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-                                <stop offset="0%" stop-color="#FCEABB"/>
-                                <stop offset="50%" stop-color="#D4AF37"/>
+                                <stop offset="0%" stop-color="#FFE89E"/>
+                                <stop offset="35%" stop-color="#D4AF37"/>
+                                <stop offset="65%" stop-color="#F5D365"/>
+                                <stop offset="85%" stop-color="#C29012"/>
                                 <stop offset="100%" stop-color="#996515"/>
                             </linearGradient>
                         </defs>
@@ -2090,18 +2198,18 @@
                 <div style="font-size: 13px; color: var(--gold-primary); font-weight: 700; margin-top: 4px;">TuyBox Foydalanuvchisi</div>
             </div>
 
-            <!-- MAVZU SOZLAMALARI: KUNDUZGI VA TUNGI REJIM -->
+            <!-- MAVZU SOZLAMALARI: OQ MARMAR VA QORA MARMAR -->
             <div class="theme-selector-box">
                 <div>
-                    <div style="font-size: 15px; font-weight: 700; color: var(--text-dark);">Ilova Mavzusi</div>
-                    <div style="font-size: 12px; color: var(--text-muted);" id="theme-status-text">Kunduzgi rejim (Yorug')</div>
+                    <div style="font-size: 15px; font-weight: 700; color: var(--text-dark);">Ilova Uslubi</div>
+                    <div style="font-size: 12px; color: var(--gold-primary); font-weight: 700;" id="theme-status-text">🏛️ Oq Marmar & 24K Oltin</div>
                 </div>
                 <div class="theme-pills">
                     <button class="theme-pill-btn active" id="pill-light" onclick="setThemeMode('light')">
-                        <i class="fa-solid fa-sun"></i> Yorug'
+                        <i class="fa-solid fa-crown"></i> Oq Marmar
                     </button>
                     <button class="theme-pill-btn" id="pill-dark" onclick="setThemeMode('dark')">
-                        <i class="fa-solid fa-moon"></i> Tungi
+                        <i class="fa-solid fa-moon"></i> Qora Marmar
                     </button>
                 </div>
             </div>
@@ -2239,11 +2347,11 @@
                 if (icon) icon.className = 'fa-solid fa-sun';
                 if (pillLight) pillLight.classList.remove('active');
                 if (pillDark) pillDark.classList.add('active');
-                if (statusText) statusText.textContent = "Tungi rejim (Qorong'i)";
+                if (statusText) statusText.textContent = "🌌 Qora Marmar & 24K Oltin";
                 if (tg) {
                     try {
-                        tg.setHeaderColor('#0D111A');
-                        tg.setBackgroundColor('#0D111A');
+                        tg.setHeaderColor('#0E0B07');
+                        tg.setBackgroundColor('#0E0B07');
                     } catch (e) {}
                 }
             } else {
@@ -2251,11 +2359,11 @@
                 if (icon) icon.className = 'fa-solid fa-moon';
                 if (pillLight) pillLight.classList.add('active');
                 if (pillDark) pillDark.classList.remove('active');
-                if (statusText) statusText.textContent = "Kunduzgi rejim (Yorug')";
+                if (statusText) statusText.textContent = "🏛️ Oq Marmar & 24K Oltin";
                 if (tg) {
                     try {
-                        tg.setHeaderColor('#FAF7F2');
-                        tg.setBackgroundColor('#FAF7F2');
+                        tg.setHeaderColor('#FAF8F5');
+                        tg.setBackgroundColor('#FAF8F5');
                     } catch (e) {}
                 }
             }
