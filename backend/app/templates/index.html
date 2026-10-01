@@ -237,6 +237,60 @@
             border-color: rgba(245, 211, 101, 0.4) !important;
         }
 
+        body.dark-mode .theme-selector-card,
+        body.dark-mode .theme-pills-grid {
+            background-color: rgba(22, 16, 10, 0.94) !important;
+            border-color: rgba(245, 211, 101, 0.35) !important;
+        }
+        body.dark-mode .tier-card {
+            background: rgba(26, 18, 10, 0.85);
+            border-color: rgba(245, 211, 101, 0.3);
+        }
+        body.dark-mode .tier-card.active {
+            background: rgba(245, 197, 56, 0.2);
+            border-color: #F5C538;
+            box-shadow: 0 0 16px rgba(245, 197, 56, 0.4);
+        }
+        body.dark-mode .preset-pill {
+            background: rgba(26, 18, 10, 0.85);
+            color: #FAF5EA;
+            border-color: rgba(245, 211, 101, 0.3);
+        }
+        body.dark-mode .preset-pill.active {
+            background: var(--gold-gradient);
+            color: #1A0E00;
+            border-color: #FFF8D5;
+        }
+        body.dark-mode .addon-item {
+            background: rgba(26, 18, 10, 0.85);
+            border-color: rgba(245, 211, 101, 0.3);
+        }
+        body.dark-mode .addon-item:hover {
+            border-color: #F5C538;
+        }
+        body.dark-mode .addon-title {
+            color: #FAF5EA;
+        }
+        body.dark-mode .addon-desc {
+            color: #C2A572;
+        }
+        body.dark-mode .detail-top-nav,
+        body.dark-mode .venue-sticky-actions {
+            background: linear-gradient(180deg, #1C140A 0%, #0F0A05 100%) !important;
+            border-color: rgba(245, 211, 101, 0.35) !important;
+        }
+        body.dark-mode .btn-detail-back {
+            background: rgba(30, 22, 14, 0.85) !important;
+            color: #FAF5EA !important;
+            border-color: rgba(245, 211, 101, 0.3) !important;
+        }
+        body.dark-mode .detail-spec-item,
+        body.dark-mode .detail-amenity-item {
+            background: rgba(26, 18, 10, 0.88);
+            border: 1px solid rgba(245, 211, 101, 0.25);
+            color: #FAF5EA;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -290,15 +344,17 @@
 
         .app-shell {
             width: 100%;
-            max-width: 440px;
+            max-width: 480px;
+            margin: 0 auto;
             min-height: 100vh;
             background: transparent;
             display: flex;
             flex-direction: column;
             position: relative;
             box-shadow: 0 0 60px rgba(180, 130, 10, 0.22);
-            padding-bottom: calc(78px + var(--safe-bottom));
+            padding-bottom: calc(88px + var(--safe-bottom));
             overflow-x: hidden !important;
+            box-sizing: border-box;
         }
 
         /* ═══════════════════════════════════════════════════
@@ -657,13 +713,24 @@
             color: #D4AF37;
             font-size: 11px;
         }
-        .palace-rating-stars {
-            color: #D4AF37;
-            font-size: 15px;
-            letter-spacing: 3px;
+        .palace-meta-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #7A5520;
             margin-bottom: 12px;
-            filter: drop-shadow(0 1px 3px rgba(184, 134, 11, 0.35));
-            text-align: center;
+            background: rgba(212, 175, 55, 0.09);
+            padding: 4px 10px;
+            border-radius: var(--radius-pill);
+            border: 1px dashed rgba(212, 175, 55, 0.38);
+        }
+        body.dark-mode .palace-meta-badge {
+            color: #FFE69B;
+            background: rgba(245, 200, 60, 0.12);
+            border-color: rgba(245, 200, 60, 0.35);
         }
 
         /* 1:1 REFERENCE: 3D MOLTEN 24K LIQUID GOLD PILL BUTTON */
@@ -735,7 +802,19 @@
         .exclusive-services-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 10px;
+        }
+
+        .service-gold-title {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            font-weight: 800;
+            line-height: 1.25;
+            color: #3A2205;
+            text-align: center;
+            letter-spacing: 0.1px;
+            word-break: break-word;
+            margin-top: 2px;
         }
 
         /* 1:1 REFERENCE: BRUSHED 24K METALLIC GOLD BULLION PLAQUE */
@@ -1838,7 +1917,7 @@
         /* 9. TO'Y BYUDJETI KALKULYATORI */
         .budget-view-container {
             display: none;
-            padding: 16px 18px 30px;
+            padding: 16px 18px calc(115px + var(--safe-bottom));
         }
 
         .budget-hero-box {
@@ -2069,7 +2148,7 @@
         /* 11. PROFIL VA REJIMLAR (DARK/LIGHT MODE) */
         .profile-view-container {
             display: none;
-            padding: 16px 18px 30px;
+            padding: 16px 18px calc(115px + var(--safe-bottom));
         }
 
         .profile-hero {
@@ -2084,7 +2163,67 @@
             margin-bottom: 16px;
         }
 
-        /* Rejim tanlash blok */
+        .profile-avatar-wrap {
+            position: relative;
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 12px;
+        }
+
+        .profile-avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--gold-gradient);
+            color: #1A1200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: var(--gold-glow);
+            border: 2px solid #FFF8D5;
+        }
+
+        .profile-crown-badge {
+            position: absolute;
+            top: -4px;
+            right: -2px;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #1A1200;
+            color: #FFE566;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            border: 1.5px solid #F5C538;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            z-index: 2;
+        }
+
+        .profile-vip-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--gold-dark);
+            background: rgba(212, 175, 55, 0.12);
+            padding: 4px 14px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+        body.dark-mode .profile-vip-pill {
+            color: #FFE89E;
+            background: rgba(245, 200, 60, 0.15);
+            border-color: rgba(245, 200, 60, 0.4);
+        }
+
+        /* Rejim tanlash blok (100% Responsive Grid Card) */
+        .theme-selector-card,
         .theme-selector-box {
             background-color: #FDFAF5;
             background-image: var(--marble-url);
@@ -2093,15 +2232,36 @@
             border-radius: 18px;
             padding: 16px 18px;
             margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .theme-card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            margin-bottom: 12px;
         }
 
+        .theme-card-title {
+            font-size: 14.5px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .theme-card-subtitle {
+            font-size: 12px;
+            color: var(--gold-dark);
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .theme-pills-grid,
         .theme-pills {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
             background: var(--bg-input);
-            padding: 4px;
+            padding: 5px;
             border-radius: var(--radius-pill);
             border: 1px solid var(--border-color);
         }
@@ -2109,7 +2269,7 @@
         .theme-pill-btn {
             border: none;
             background: transparent;
-            padding: 6px 14px;
+            padding: 9px 12px;
             border-radius: var(--radius-pill);
             font-size: 13px;
             font-weight: 700;
@@ -2117,7 +2277,10 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 5px;
+            justify-content: center;
+            gap: 7px;
+            white-space: nowrap;
+            transition: all 0.22s ease;
         }
 
         .theme-pill-btn.active {
@@ -2173,9 +2336,10 @@
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
-            max-width: 440px;
+            max-width: 480px;
+            box-sizing: border-box;
             z-index: 1000;
-            border-radius: 28px 28px 0 0;
+            border-radius: 26px 26px 0 0;
             /* KO'ZGA QULAY: Silky Champagne-Pearl Glass Bar */
             background: linear-gradient(180deg,
                 rgba(255, 254, 250, 0.98) 0%,
@@ -2190,9 +2354,10 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 6px 4px calc(6px + var(--safe-bottom));
+            padding: 7px 6px calc(7px + var(--safe-bottom));
         }
         body.dark-mode .bottom-nav {
+            max-width: 480px;
             background: linear-gradient(180deg, rgba(22, 16, 10, 0.96) 0%, rgba(14, 10, 6, 0.98) 100%) !important;
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
@@ -2216,11 +2381,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 3px;
+            gap: 2px;
             flex: 1;
+            min-width: 0;
             cursor: pointer;
             text-decoration: none;
-            padding: 4px 2px;
+            padding: 3px 1px;
             color: #38240F;
             transition: transform 0.18s ease;
         }
@@ -2233,15 +2399,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 38px;
-            height: 32px;
+            width: 34px;
+            height: 28px;
         }
 
         /* 1:1 REFERENCE: GOLDEN RADIANT HALO ON ACTIVE TAB */
         .nav-crown-halo {
             position: absolute;
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: radial-gradient(circle,
                 rgba(255, 248, 185, 1) 0%,
@@ -2273,10 +2439,11 @@
         .nav-item span {
             font-family: 'Playfair Display', Georgia, serif;
             font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.2px;
+            font-weight: 600;
+            letter-spacing: -0.15px;
             line-height: 1;
             color: #38240F;
+            white-space: nowrap;
         }
 
         .nav-item.active {
@@ -2588,13 +2755,21 @@
         /* 15. BYUDJET QO'SHIMCHALARI VA PRESETLAR */
         .guest-presets-row {
             display: flex;
-            justify-content: center;
-            gap: 6px;
+            justify-content: flex-start;
+            gap: 8px;
             margin: 10px 0 16px;
-            flex-wrap: wrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px 2px 8px;
+        }
+        .guest-presets-row::-webkit-scrollbar {
+            display: none;
         }
 
         .preset-pill {
+            flex-shrink: 0;
+            white-space: nowrap;
             background: var(--bg-card);
             border: 1.5px solid var(--border-color);
             border-radius: var(--radius-pill);
@@ -2860,14 +3035,18 @@
                 <div class="palace-card" onclick="openVenueDetails(1)">
                     <div class="palace-img-wrap">
                         <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800" alt="The Royal Palace, Versal">
-                        <div class="palace-photo-stars">★★★★★</div>
+                        <div class="palace-photo-stars"><i class="fa-solid fa-star"></i> 5.0 VIP</div>
                     </div>
                     <div class="palace-info">
                         <div class="palace-name">The Royal Palace, Versal</div>
                         <div class="palace-location">
                             <span class="palace-location-badge"><i class="fa-solid fa-location-dot"></i> Yakkasaroy, Toshkent</span>
                         </div>
-                        <div class="palace-rating-stars">★★★★★</div>
+                        <div class="palace-meta-badge">
+                            <span><i class="fa-solid fa-users" style="color: #D4AF37;"></i> 300 - 800</span>
+                            <span>•</span>
+                            <span><i class="fa-solid fa-coins" style="color: #D4AF37;"></i> 48 mln so'm</span>
+                        </div>
                         <button class="btn-discover-book" onclick="event.stopPropagation(); openVenueDetails(1)">
                             <span>Batafsil & Band Qilish</span>
                         </button>
@@ -2877,14 +3056,18 @@
                 <div class="palace-card" onclick="openVenueDetails(2)">
                     <div class="palace-img-wrap">
                         <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800" alt="Grand Amara Pavilion">
-                        <div class="palace-photo-stars">★★★★★</div>
+                        <div class="palace-photo-stars"><i class="fa-solid fa-star"></i> 5.0 VIP</div>
                     </div>
                     <div class="palace-info">
                         <div class="palace-name">Grand Amara Pavilion</div>
                         <div class="palace-location">
                             <span class="palace-location-badge"><i class="fa-solid fa-location-dot"></i> Chilonzor, Toshkent</span>
                         </div>
-                        <div class="palace-rating-stars">★★★★★</div>
+                        <div class="palace-meta-badge">
+                            <span><i class="fa-solid fa-users" style="color: #D4AF37;"></i> 400 - 1000</span>
+                            <span>•</span>
+                            <span><i class="fa-solid fa-coins" style="color: #D4AF37;"></i> 55 mln so'm</span>
+                        </div>
                         <button class="btn-discover-book" onclick="event.stopPropagation(); openVenueDetails(2)">
                             <span>Batafsil & Band Qilish</span>
                         </button>
@@ -2894,14 +3077,18 @@
                 <div class="palace-card" onclick="openVenueDetails(3)">
                     <div class="palace-img-wrap">
                         <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800" alt="Osiyo Grand Hall">
-                        <div class="palace-photo-stars">★★★★★</div>
+                        <div class="palace-photo-stars"><i class="fa-solid fa-star"></i> 4.9 VIP</div>
                     </div>
                     <div class="palace-info">
                         <div class="palace-name">Osiyo Grand Hall</div>
                         <div class="palace-location">
                             <span class="palace-location-badge"><i class="fa-solid fa-location-dot"></i> Yunusobod, Toshkent</span>
                         </div>
-                        <div class="palace-rating-stars">★★★★★</div>
+                        <div class="palace-meta-badge">
+                            <span><i class="fa-solid fa-users" style="color: #D4AF37;"></i> 250 - 650</span>
+                            <span>•</span>
+                            <span><i class="fa-solid fa-coins" style="color: #D4AF37;"></i> 42 mln so'm</span>
+                        </div>
                         <button class="btn-discover-book" onclick="event.stopPropagation(); openVenueDetails(3)">
                             <span>Batafsil & Band Qilish</span>
                         </button>
@@ -2951,7 +3138,7 @@
                                 <path d="M37 13L39 15L32 29L30 29L30 27L37 13Z" fill="#3A2205"/>
                             </svg>
                         </div>
-                        <div class="service-gold-title">Tashkilotchilar</div>
+                        <div class="service-gold-title">To'y<br>Tashkili</div>
                     </div>
                 </div>
 
@@ -3372,20 +3559,29 @@
         <!-- 5-SAHIFA: PROFIL VA REJIMLAR (DARK & LIGHT MODE) -->
         <section id="tab-profile" class="profile-view-container">
             <div class="profile-hero">
-                <div style="width: 72px; height: 72px; border-radius: 50%; background: var(--gold-gradient); color: #1A1200; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 12px; box-shadow: var(--gold-glow);">
-                    <i class="fa-solid fa-crown"></i>
+                <div class="profile-avatar-wrap">
+                    <div class="profile-crown-badge"><i class="fa-solid fa-crown"></i></div>
+                    <div class="profile-avatar-inner" id="profile-avatar-icon">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
                 </div>
                 <h3 class="section-title" id="user-display-name">Hurmatli Mehmon</h3>
-                <div style="font-size: 13px; color: var(--gold-primary); font-weight: 700; margin-top: 4px;">TuyBox Foydalanuvchisi</div>
+                <div class="profile-vip-pill">
+                    <span class="vip-sparkle">✦</span>
+                    <span>TuyBox VIP Foydalanuvchisi</span>
+                    <span class="vip-sparkle">✦</span>
+                </div>
             </div>
 
             <!-- MAVZU SOZLAMALARI: OQ MARMAR VA QORA MARMAR -->
-            <div class="theme-selector-box">
-                <div>
-                    <div style="font-size: 15px; font-weight: 700; color: var(--text-dark);">Ilova Uslubi</div>
-                    <div style="font-size: 12px; color: var(--gold-primary); font-weight: 700;" id="theme-status-text">🏛️ Oq Marmar & 24K Oltin</div>
+            <div class="theme-selector-card">
+                <div class="theme-card-header">
+                    <div>
+                        <div class="theme-card-title"><i class="fa-solid fa-palette" style="color: var(--gold-primary); margin-right: 6px;"></i> Ilova Ko'rinishi (Mavzu)</div>
+                        <div class="theme-card-subtitle" id="theme-status-text">🏛️ Oq Marmar & 24K Oltin</div>
+                    </div>
                 </div>
-                <div class="theme-pills">
+                <div class="theme-pills-grid">
                     <button class="theme-pill-btn active" id="pill-light" onclick="setThemeMode('light')">
                         <i class="fa-solid fa-crown"></i> Oq Marmar
                     </button>
@@ -3396,11 +3592,33 @@
             </div>
 
             <!-- FOYDALI ALOQA VA HAVOLALAR -->
+            <div class="action-link-item" onclick="openMyBookingsModal()">
+                <div class="action-link-left">
+                    <div class="action-icon-circle"><i class="fa-solid fa-calendar-check"></i></div>
+                    <div>
+                        <div style="font-size: 15px; font-weight: 700;">Mening Buyurtmalarim</div>
+                        <div style="font-size: 13px; color: var(--text-muted);">Faol va tasdiqlangan bronlar</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+            </div>
+
+            <div class="action-link-item" onclick="switchTab('add')">
+                <div class="action-link-left">
+                    <div class="action-icon-circle" style="background: rgba(212, 175, 55, 0.18); color: var(--gold-dark);"><i class="fa-solid fa-plus"></i></div>
+                    <div>
+                        <div style="font-size: 15px; font-weight: 700;">To'yxona yoki Xizmat Qo'shish</div>
+                        <div style="font-size: 13px; color: var(--text-muted);">Platformaga o'z biznesingizni joylang</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
+            </div>
+
             <a href="tel:+998712000000" class="action-link-item">
                 <div class="action-link-left">
                     <div class="action-icon-circle"><i class="fa-solid fa-phone"></i></div>
                     <div>
-                        <div style="font-size: 15px; font-weight: 700;">24/7 Call Markaz</div>
+                        <div style="font-size: 15px; font-weight: 700;">24/7 VIP Call Markaz</div>
                         <div style="font-size: 13px; color: var(--text-muted);">+998 (71) 200-00-00</div>
                     </div>
                 </div>
@@ -3412,7 +3630,7 @@
                     <div class="action-icon-circle"><i class="fa-brands fa-telegram"></i></div>
                     <div>
                         <div style="font-size: 15px; font-weight: 700;">Telegramda Admin</div>
-                        <div style="font-size: 13px; color: var(--text-muted);">Savollar va takliflar uchun</div>
+                        <div style="font-size: 13px; color: var(--text-muted);">Savollar va individual xizmat</div>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
@@ -3422,8 +3640,8 @@
                 <div class="action-link-left">
                     <div class="action-icon-circle"><i class="fa-solid fa-envelope-open-text"></i></div>
                     <div>
-                        <div style="font-size: 15px; font-weight: 700;">To'y Taklifnomasi</div>
-                        <div style="font-size: 13px; color: var(--text-muted);">Telegram orqali ulashish</div>
+                        <div style="font-size: 15px; font-weight: 700;">To'y Taklifnomasi Yaratish</div>
+                        <div style="font-size: 13px; color: var(--text-muted);">Mehmonlarga Telegramda ulashish</div>
                     </div>
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
@@ -3439,6 +3657,10 @@
                 </div>
                 <i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i>
             </a>
+
+            <div style="text-align: center; margin-top: 24px; padding-bottom: 20px; font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px;">
+                TUYBOX LUXURY CONCIERGE • v2.8 • TOSHKENT 2026
+            </div>
         </section>
 
         <!-- 6-SAHIFA: TO'YXONA VA XIZMATNING BATAFSIL SAHIFASI -->
@@ -3646,6 +3868,16 @@
         if (tg) {
             tg.ready();
             tg.expand();
+            try {
+                if (tg.initDataUnsafe?.user) {
+                    const u = tg.initDataUnsafe.user;
+                    const fullName = `${u.first_name || ''} ${u.last_name || ''}`.trim() || u.username;
+                    if (fullName) {
+                        const nameEl = document.getElementById('user-display-name');
+                        if (nameEl) nameEl.textContent = fullName;
+                    }
+                }
+            } catch(e) {}
         }
 
         function triggerHaptic(type = 'light') {
@@ -4448,6 +4680,10 @@
             // Boshqa barcha bo'limlar va asosiy header yashiriladi
             const header = document.getElementById('app-header');
             if (header) header.style.display = 'none';
+
+            // Pastki navigatsiyani yashirish (Detail sahifada o'z sticky action paneli bor)
+            const bNav = document.querySelector('.bottom-nav');
+            if (bNav) bNav.style.display = 'none';
 
             ['tab-home', 'tab-map', 'tab-services', 'tab-budget', 'tab-add', 'tab-profile'].forEach(id => {
                 const el = document.getElementById(id);
@@ -5469,7 +5705,7 @@
             const date = document.getElementById('book-date').value;
 
             if (!name || !phone) {
-                alert("Iltimos, ismingiz va telefon raqamingizni kiriting!");
+                showToast("Iltimos, ismingiz va telefon raqamingizni kiriting!");
                 triggerHaptic('error');
                 return;
             }
@@ -5487,6 +5723,19 @@
                 guest_count: guestCount,
                 notes: `TuyBox Web App orqali buyurtma`
             };
+
+            // LocalStorage ga saqlash
+            try {
+                const list = JSON.parse(localStorage.getItem('tuybox_my_bookings') || '[]');
+                list.unshift({
+                    id: Date.now(),
+                    title: payload.service_title,
+                    date: payload.event_date || 'Kelishiladi',
+                    phone: payload.phone,
+                    status: 'Qabul qilindi'
+                });
+                localStorage.setItem('tuybox_my_bookings', JSON.stringify(list));
+            } catch(e) {}
 
             // Telegram WebApp orqali to'g'ridan-to'g'ri xabar yuborish
             if (tg && typeof tg.sendData === 'function') {
@@ -5509,6 +5758,20 @@
 
             document.getElementById('book-name').value = '';
             document.getElementById('book-phone').value = '';
+        }
+
+        function openMyBookingsModal() {
+            triggerHaptic('medium');
+            try {
+                const list = JSON.parse(localStorage.getItem('tuybox_my_bookings') || '[]');
+                if (list.length === 0) {
+                    showToast("Hozircha buyurtmalaringiz mavjud emas. Qasrlarni tanlab bron qiling!");
+                } else {
+                    showToast(`Sizda ${list.length} ta faol bron bor: "${list[0].title}"`);
+                }
+            } catch(e) {
+                showToast("Buyurtmalar yuklanmadi");
+            }
         }
 
         // 11. E'LON BERISH
