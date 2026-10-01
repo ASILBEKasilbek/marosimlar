@@ -20,6 +20,13 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+    <!-- Key Textures & Assets Preload (0.1s Instant Render) -->
+    <link rel="preload" as="image" href="/static/textures/white_marble_bg.png">
+    <link rel="preload" as="image" href="/static/textures/black_gold_marble.png">
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800">
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800">
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800">
+
     <style>
         :root {
             /* 🏛️ 1:1 REFERENCE: WHITE CARRARA MARBLE & 24K LIQUID GOLD */
@@ -407,19 +414,50 @@
             font-style: italic;
         }
         .search-mag-wrap {
+            position: relative;
             flex-shrink: 0;
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #C89422;
-            font-size: 18px;
+            font-size: 17px;
             cursor: pointer;
-            filter: drop-shadow(0 0 8px rgba(240, 180, 40, 0.75));
             transition: transform 0.2s ease;
         }
         .search-mag-wrap:active { transform: scale(0.9); }
+
+        .search-sparkle-aura {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                rgba(255, 235, 130, 0.75) 0%,
+                rgba(245, 195, 45, 0.35) 42%,
+                transparent 75%);
+            filter: blur(4px);
+            pointer-events: none;
+            animation: auraPulse 3s ease-in-out infinite alternate;
+        }
+        .search-mag-wrap .sparkle {
+            position: absolute;
+            color: #FFE668;
+            font-size: 8px;
+            pointer-events: none;
+            text-shadow: 0 0 6px #FFF, 0 0 10px #FFD700;
+            animation: sparkleTwinkle 2.5s ease-in-out infinite;
+        }
+        .search-mag-wrap .sp-1 { top: -4px; right: -2px; font-size: 10px; animation-delay: 0s; }
+        .search-mag-wrap .sp-2 { bottom: -2px; right: -4px; font-size: 7px; animation-delay: 0.7s; }
+        .search-mag-wrap .sp-3 { top: 0px; left: -3px; font-size: 8px; animation-delay: 1.4s; }
+        .search-mag-wrap .sp-4 { bottom: -4px; left: 4px; font-size: 6px; animation-delay: 2.1s; }
+
+        @keyframes sparkleTwinkle {
+            0%, 100% { opacity: 0.25; transform: scale(0.7) rotate(0deg); }
+            50%      { opacity: 1; transform: scale(1.3) rotate(45deg); filter: drop-shadow(0 0 5px #FFF); }
+        }
 
         /* FILTER CHIPS */
         .event-pills-row {
@@ -546,16 +584,22 @@
         }
         .palace-card:hover .palace-img-wrap img { transform: scale(1.05); }
 
-        /* 1:1 REFERENCE: 5 GOLD STARS CENTRED OVER TOP OF PHOTO */
+        /* 1:1 REFERENCE: GOLD STARS TOP-RIGHT CORNER WITH GLASS PILL BADGE */
         .palace-photo-stars {
             position: absolute;
             top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 12px;
             color: #FFE650;
-            font-size: 15px;
-            letter-spacing: 3px;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.9), 0 0 12px rgba(255,215,0,0.95);
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 10px rgba(255,215,0,0.95);
+            background: rgba(18, 12, 6, 0.72);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            padding: 3px 9px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(255, 215, 0, 0.6);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
             z-index: 2;
             pointer-events: none;
         }
@@ -571,16 +615,36 @@
             font-size: 17px;
             font-weight: 700;
             color: #2E1E12;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
             text-align: center;
             line-height: 1.25;
         }
+        body.dark-mode .palace-name { color: #FFF2D6; }
         .palace-location {
-            font-size: 12.5px;
-            font-style: italic;
-            color: #826E5C;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             text-align: center;
+        }
+        .palace-location-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #6E5030;
+            padding: 3px 11px;
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            border-radius: var(--radius-pill);
+            letter-spacing: 0.2px;
+        }
+        body.dark-mode .palace-location-badge {
+            color: #E6D2B5;
+            background: rgba(212, 175, 55, 0.18);
+            border-color: rgba(212, 175, 55, 0.45);
+        }
+        .palace-location-badge i {
+            color: #D4AF37;
+            font-size: 11px;
         }
         .palace-rating-stars {
             color: #D4AF37;
@@ -699,10 +763,13 @@
             pointer-events: none;
         }
         .service-gold-card:hover {
-            transform: translateY(-3px) scale(1.03);
+            transform: translateY(-2px) scale(1.02);
             box-shadow: 0 12px 28px rgba(210, 150, 25, 0.48), inset 0 2px 3px #FFFFFF;
         }
-        .service-gold-card:active { transform: scale(0.95); }
+        .service-gold-card:active {
+            transform: scale(0.96) translateY(2px) !important;
+            box-shadow: 0 4px 10px rgba(120, 80, 10, 0.45), inset 0 2px 4px rgba(0, 0, 0, 0.25) !important;
+        }
 
         .service-gold-icon-wrap {
             width: 40px;
@@ -714,15 +781,133 @@
             filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.7)) drop-shadow(0 2px 3px rgba(70, 40, 3, 0.5));
         }
 
-        .service-gold-title {
-            font-family: 'Cinzel', serif;
-            font-size: 11.5px;
+        .service-gold-card.active {
+            transform: translateY(-2px) scale(1.02);
+            border: 2px solid #FFF8D5 !important;
+            box-shadow: 0 0 26px rgba(245, 195, 45, 0.85), inset 0 2px 3px #FFFFFF !important;
+        }
+
+        .exclusive-masters-container {
+            margin-top: 14px;
+            background: rgba(255, 253, 247, 0.96);
+            background-image: var(--marble-url);
+            background-size: cover;
+            border: 1.5px solid rgba(212, 175, 55, 0.5);
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            animation: tabFadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        body.dark-mode .exclusive-masters-container {
+            background: rgba(22, 16, 10, 0.94) !important;
+            border-color: rgba(240, 200, 75, 0.45) !important;
+        }
+
+        .masters-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+            padding-bottom: 8px;
+        }
+        .masters-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 15px;
             font-weight: 700;
-            line-height: 1.25;
-            color: #382103;
-            letter-spacing: 0.3px;
-            text-align: center;
-            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+            color: #382410;
+            margin: 0;
+        }
+        body.dark-mode .masters-heading { color: #FFF6DD; }
+        .masters-close-btn {
+            font-size: 22px;
+            cursor: pointer;
+            color: #8A6520;
+            line-height: 1;
+            padding: 2px 6px;
+            transition: transform 0.2s;
+        }
+        .masters-close-btn:hover { transform: scale(1.2); }
+
+        .masters-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .master-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        body.dark-mode .master-card {
+            background: rgba(30, 22, 14, 0.88);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+        .master-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.15);
+        }
+        .master-card-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .master-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1.5px solid #D4AF37;
+        }
+        .master-info-name {
+            font-family: 'Cinzel', serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: #2A1A0E;
+        }
+        body.dark-mode .master-info-name { color: #FFEAC0; }
+        .master-info-meta {
+            font-size: 11.5px;
+            color: #7A6550;
+        }
+        body.dark-mode .master-info-meta { color: #BBA588; }
+        .btn-master-contact {
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            background: linear-gradient(135deg, #FDE68A 0%, #D49B1E 60%, #9E6A05 100%);
+            color: #1A1000;
+            font-size: 11px;
+            font-weight: 700;
+            border: 1px solid #FFF8D5;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+            transition: transform 0.15s ease;
+        }
+        .btn-master-contact:active { transform: scale(0.95); }
+
+        /* ═══════════════════════════════════════════════════
+           PAGE TRANSITIONS & 60 FPS ACCELERATION
+        ═══════════════════════════════════════════════════ */
+        @keyframes tabFadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tab-animated {
+            animation: tabFadeInUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            will-change: opacity, transform;
         }
 
         /* 6. XARITA BANNERI */
@@ -1449,28 +1634,28 @@
             max-width: 440px;
             z-index: 1000;
             border-radius: 28px 28px 0 0;
-            /* 1:1 REFERENCE: 24K Brushed Champagne-Gold Bar */
+            /* KO'ZGA QULAY: Silky Champagne-Pearl Glass Bar */
             background: linear-gradient(180deg,
-                #F4E7CC 0%,
-                #EBD7AA 16%,
-                #DFBF87 50%,
-                #CEAA6D 80%,
-                #BF9657 100%);
-            border-top: 1.5px solid #FFFDF2;
+                rgba(255, 254, 250, 0.98) 0%,
+                rgba(252, 247, 237, 0.98) 45%,
+                rgba(246, 238, 224, 0.98) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1.5px solid rgba(212, 175, 55, 0.45);
             box-shadow:
-                inset 0 1.5px 2px rgba(255, 255, 255, 0.98),
-                0 -8px 26px rgba(150, 105, 25, 0.28);
+                inset 0 1.5px 2px #FFFFFF,
+                0 -10px 30px rgba(110, 80, 20, 0.1);
             display: flex;
             align-items: center;
             justify-content: space-around;
             padding: 6px 4px calc(6px + var(--safe-bottom));
         }
         body.dark-mode .bottom-nav {
-            background: linear-gradient(180deg, #2D2010 0%, #20160A 35%, #160F06 75%, #0C0803 100%) !important;
-            border-top: 1.5px solid rgba(245, 215, 110, 0.65) !important;
-            box-shadow:
-                inset 0 1.5px 2px rgba(255, 235, 160, 0.25),
-                0 -8px 28px rgba(0, 0, 0, 0.9) !important;
+            background: linear-gradient(180deg, rgba(22, 16, 10, 0.96) 0%, rgba(14, 10, 6, 0.98) 100%) !important;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1.5px solid rgba(240, 195, 70, 0.4) !important;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 235, 150, 0.15) !important;
         }
         body.dark-mode .nav-item {
             color: #CBB285 !important;
@@ -2095,6 +2280,11 @@
                 <div class="search-pill-box">
                     <input type="text" id="search-input" placeholder="To'yxonalar, dizaynerlar, liboslar..." oninput="handleSearch(this.value)">
                     <div class="search-mag-wrap" onclick="executeSearch()" title="Qidirish">
+                        <div class="search-sparkle-aura"></div>
+                        <span class="sparkle sp-1">✦</span>
+                        <span class="sparkle sp-2">✧</span>
+                        <span class="sparkle sp-3">⋆</span>
+                        <span class="sparkle sp-4">✦</span>
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>
                 </div>
@@ -2132,7 +2322,9 @@
                     </div>
                     <div class="palace-info">
                         <div class="palace-name">The Royal Palace, Versal</div>
-                        <div class="palace-location">Yakkasaroy, Toshkent</div>
+                        <div class="palace-location">
+                            <span class="palace-location-badge"><i class="fa-solid fa-location-dot"></i> Yakkasaroy, Toshkent</span>
+                        </div>
                         <div class="palace-rating-stars">★★★★★</div>
                         <button class="btn-discover-book" onclick="event.stopPropagation(); openVenueDetails(1)">
                             <span>Batafsil & Band Qilish</span>
@@ -2147,7 +2339,9 @@
                     </div>
                     <div class="palace-info">
                         <div class="palace-name">Grand Amara Pavilion</div>
-                        <div class="palace-location">Chilonzor, Toshkent</div>
+                        <div class="palace-location">
+                            <span class="palace-location-badge"><i class="fa-solid fa-location-dot"></i> Chilonzor, Toshkent</span>
+                        </div>
                         <div class="palace-rating-stars">★★★★★</div>
                         <button class="btn-discover-book" onclick="event.stopPropagation(); openVenueDetails(2)">
                             <span>Batafsil & Band Qilish</span>
@@ -2162,7 +2356,9 @@
                     </div>
                     <div class="palace-info">
                         <div class="palace-name">Osiyo Grand Hall</div>
-                        <div class="palace-location">Yunusobod, Toshkent</div>
+                        <div class="palace-location">
+                            <span class="palace-location-badge"><i class="fa-solid fa-location-dot"></i> Yunusobod, Toshkent</span>
+                        </div>
                         <div class="palace-rating-stars">★★★★★</div>
                         <button class="btn-discover-book" onclick="event.stopPropagation(); openVenueDetails(3)">
                             <span>Batafsil & Band Qilish</span>
@@ -2179,7 +2375,7 @@
             <div class="exclusive-marble-tray" id="exclusive-services-tray">
                 <div class="exclusive-services-grid">
                     <!-- 1. To'y Uzuklari (Wedding Rings) -->
-                    <div class="service-gold-card" onclick="openServicesTab('uzuklar')">
+                    <div class="service-gold-card" id="srv-card-uzuklar" onclick="toggleExclusiveService('uzuklar', this)">
                         <div class="service-gold-icon-wrap">
                             <svg width="34" height="34" viewBox="0 0 48 48" fill="none">
                                 <circle cx="19" cy="25" r="12" stroke="#3A2205" stroke-width="3.5" fill="none"/>
@@ -2191,7 +2387,7 @@
                     </div>
 
                     <!-- 2. Kelin Liboslari (Bridal Gowns) -->
-                    <div class="service-gold-card" onclick="openServicesTab('liboslar')">
+                    <div class="service-gold-card" id="srv-card-liboslar" onclick="toggleExclusiveService('liboslar', this)">
                         <div class="service-gold-icon-wrap">
                             <svg width="34" height="34" viewBox="0 0 48 48" fill="none">
                                 <path d="M20 9L24 14L28 9L27 18L36 38H12L21 18L20 9Z" stroke="#3A2205" stroke-width="3" stroke-linejoin="round" fill="none"/>
@@ -2201,8 +2397,8 @@
                         <div class="service-gold-title">Kelin<br>Liboslari</div>
                     </div>
 
-                    <!-- 3. To'y Rejasi / Planners -->
-                    <div class="service-gold-card" onclick="switchTab('budget')">
+                    <!-- 3. To'y Tashkilotchilari / Planners -->
+                    <div class="service-gold-card" id="srv-card-tashkilotchilar" onclick="toggleExclusiveService('tashkilotchilar', this)">
                         <div class="service-gold-icon-wrap">
                             <svg width="34" height="34" viewBox="0 0 48 48" fill="none">
                                 <rect x="11" y="9" width="24" height="31" rx="4" stroke="#3A2205" stroke-width="3" fill="none"/>
@@ -2213,7 +2409,21 @@
                                 <path d="M37 13L39 15L32 29L30 29L30 27L37 13Z" fill="#3A2205"/>
                             </svg>
                         </div>
-                        <div class="service-gold-title">To'y<br>Rejasi</div>
+                        <div class="service-gold-title">Tashkilotchilar</div>
+                    </div>
+                </div>
+
+                <!-- EKSKLYUZIV XIZMAT USTALARI RO'YXATI (DYNAMIC ACCORDION DRAWER) -->
+                <div id="exclusive-service-masters-drawer" class="exclusive-masters-container" style="display: none;">
+                    <div class="masters-header">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-crown" style="color: #D4AF37; font-size: 14px;"></i>
+                            <h3 class="masters-heading" id="masters-drawer-title">Eksklyuziv Xizmat Ustalari</h3>
+                        </div>
+                        <span class="masters-close-btn" onclick="closeExclusiveServiceDrawer()">&times;</span>
+                    </div>
+                    <div class="masters-grid" id="masters-list-content">
+                        <!-- Populated dynamically via JS -->
                     </div>
                 </div>
             </div>
@@ -2842,7 +3052,19 @@
 
         function triggerHaptic(type = 'light') {
             if (tg?.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred(type);
+                try {
+                    if (type === 'selection') {
+                        tg.HapticFeedback.selectionChanged();
+                    } else if (type === 'success' || type === 'error' || type === 'warning') {
+                        tg.HapticFeedback.notificationOccurred(type);
+                    } else {
+                        tg.HapticFeedback.impactOccurred(type);
+                    }
+                } catch (e) {}
+            } else if (window.navigator?.vibrate) {
+                try {
+                    window.navigator.vibrate(type === 'heavy' || type === 'success' ? 24 : 12);
+                } catch (e) {}
             }
         }
 
@@ -3049,14 +3271,20 @@
             // Sahifani tepaga silliq o'tkazish
             window.scrollTo({ top: 0, behavior: 'instant' });
 
-            // Sahifalarni ochish/yopish
-            document.getElementById('tab-home').style.display = tabName === 'home' ? 'block' : 'none';
-            document.getElementById('tab-map').style.display = tabName === 'map' ? 'block' : 'none';
-            const sTab = document.getElementById('tab-services');
-            if (sTab) sTab.style.display = tabName === 'services' ? 'block' : 'none';
-            document.getElementById('tab-budget').style.display = tabName === 'budget' ? 'block' : 'none';
-            document.getElementById('tab-add').style.display = tabName === 'add' ? 'block' : 'none';
-            document.getElementById('tab-profile').style.display = tabName === 'profile' ? 'block' : 'none';
+            // Sahifalarni ochish/yopish va silliq 60 FPS fade-in-up animatsiyasi
+            const tabIds = ['tab-home', 'tab-map', 'tab-services', 'tab-budget', 'tab-add', 'tab-profile'];
+            tabIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const shouldShow = (id === `tab-${tabName}`);
+                    el.style.display = shouldShow ? 'block' : 'none';
+                    if (shouldShow) {
+                        el.classList.remove('tab-animated');
+                        void el.offsetWidth; // Reflow for smooth restart
+                        el.classList.add('tab-animated');
+                    }
+                }
+            });
 
             // Pastki navigatsiya holati
             const tabs = ['home', 'map', 'services', 'budget', 'profile'];
@@ -3577,22 +3805,296 @@
             renderVenues(filtered.length > 0 ? filtered : VENUES_DATA);
         }
 
+        // 7. DEBOUNCED INSTANT LIVE SEARCH
+        let searchDebounceTimer = null;
         function handleSearch(query) {
-            const q = query.toLowerCase().trim();
-            if (!q) {
-                renderVenues(VENUES_DATA);
-                return;
-            }
-            const filtered = VENUES_DATA.filter(v => 
-                v.title.toLowerCase().includes(q) ||
-                v.district.toLowerCase().includes(q)
-            );
-            renderVenues(filtered);
+            clearTimeout(searchDebounceTimer);
+            searchDebounceTimer = setTimeout(() => {
+                triggerHaptic('light');
+                const q = query.toLowerCase().trim();
+
+                // 1. Featured Wedding Palaces Carousel Real-time Filter
+                const carousel = document.getElementById('featured-carousel');
+                if (carousel) {
+                    const cards = carousel.querySelectorAll('.palace-card');
+                    cards.forEach(card => {
+                        const name = (card.querySelector('.palace-name')?.textContent || '').toLowerCase();
+                        const loc = (card.querySelector('.palace-location')?.textContent || '').toLowerCase();
+                        if (!q || name.includes(q) || loc.includes(q)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+
+                // 2. Venues Grid Real-time Filter
+                if (!q) {
+                    renderVenues(VENUES_DATA);
+                    return;
+                }
+                const filtered = VENUES_DATA.filter(v => 
+                    v.title.toLowerCase().includes(q) ||
+                    v.district.toLowerCase().includes(q) ||
+                    (v.tag && v.tag.toLowerCase().includes(q))
+                );
+                renderVenues(filtered);
+            }, 180);
         }
 
         function executeSearch() {
             triggerHaptic();
             scrollToVenues();
+        }
+
+        // 7.1 EKSKLYUZIV TO'Y XIZMATLARI (DYNAMIC VERIFIED MASTERS DRAWER)
+        const EXCLUSIVE_MASTERS_DATA = {
+            uzuklar: {
+                title: "To'y Uzuklari & Zargarlik Uylari",
+                masters: [
+                    {
+                        name: "Royal Diamond Tashkent",
+                        rating: "★★★★★ 5.0 (140+ sharh)",
+                        desc: "Eksklyuziv 750-probali juft to'y uzuklari, xalqaro GIA sertifikatli olmoslar va bepul gravirovka.",
+                        price: "3,800,000 so'mdan",
+                        phone: "+998 71 200 11 22",
+                        img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=400"
+                    },
+                    {
+                        name: "Zargarlik Saroyi Samarkand",
+                        rating: "★★★★★ 4.9 (95 sharh)",
+                        desc: "Milliy an'anaviy va nozik Yevropa uslubidagi to'y zargarlik buyumlari, toza 585 va 750 oltin.",
+                        price: "4,200,000 so'mdan",
+                        phone: "+998 90 321 00 11",
+                        img: "https://images.unsplash.com/photo-1598560917505-59a3ad559071?q=80&w=400"
+                    },
+                    {
+                        name: "Golden Crown Jewelry Atelier",
+                        rating: "★★★★★ 5.0 (78 sharh)",
+                        desc: "Italiya texnologiyasida yasalgan nikoh uzuklari va to'y to'plamlari, individual dizayn asosida.",
+                        price: "3,200,000 so'mdan",
+                        phone: "+998 97 700 88 99",
+                        img: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=400"
+                    }
+                ]
+            },
+            liboslar: {
+                title: "Kelin Liboslari & Haute Couture Atelyelari",
+                masters: [
+                    {
+                        name: "Versal Bridal Couture Studio",
+                        rating: "★★★★★ 5.0 (210+ sharh)",
+                        desc: "Fransuz shoyisi va qimmatbaho Swarovski toshlari bilan qo'lda bezatilgan dabdabali kelin ko'ylaklari.",
+                        price: "Ijara 2,800,000 so'mdan",
+                        phone: "+998 93 555 44 33",
+                        img: "https://images.unsplash.com/photo-1594552072238-b8a33785b261?q=80&w=400"
+                    },
+                    {
+                        name: "Princess Wedding Boutique",
+                        rating: "★★★★★ 4.9 (160 sharh)",
+                        desc: "Yevropa va sharqona milliy fasonlar, bepul professional fitting va kelin aksessuarlari sovg'aga.",
+                        price: "Ijara 2,200,000 so'mdan",
+                        phone: "+998 91 123 77 88",
+                        img: "https://images.unsplash.com/photo-1546804784-896d0d517245?q=80&w=400"
+                    },
+                    {
+                        name: "Amir Luxury Bridal House",
+                        rating: "★★★★★ 5.0 (89 sharh)",
+                        desc: "Yengil tilla hoshiyali, nozik korsetli va shohona poyezdli liboslar to'plami.",
+                        price: "Ijara 3,500,000 so'mdan",
+                        phone: "+998 90 999 00 22",
+                        img: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=400"
+                    }
+                ]
+            },
+            tashkilotchilar: {
+                title: "Professional To'y Tashkilotchilari & Event Agensilar",
+                masters: [
+                    {
+                        name: "Grand Imperial Event Agency",
+                        rating: "★★★★★ 5.0 (280+ sharh)",
+                        desc: "'Kalit ostida' to'liq to'y koordinatsiyasi, shou-dastur, san'atkorlar taklifi va VIP xizmat.",
+                        price: "8,000,000 so'mdan",
+                        phone: "+998 90 001 02 03",
+                        img: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=400"
+                    },
+                    {
+                        name: "Versailles Wedding Planners",
+                        rating: "★★★★★ 4.9 (175 sharh)",
+                        desc: "Kreativ to'y ssenariysi, eng so'nggi yorug'lik va ovoz texnologiyalari, marosim nazorati.",
+                        price: "6,500,000 so'mdan",
+                        phone: "+998 97 111 22 33",
+                        img: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=400"
+                    },
+                    {
+                        name: "Afsona Deluxe Decor & Event",
+                        rating: "★★★★★ 5.0 (130 sharh)",
+                        desc: "Jonli gullar bilan hashamatli to'y zali dekoratsiyasi, fotohudud va to'liq to'y boshqaruvi.",
+                        price: "5,000,000 so'mdan",
+                        phone: "+998 99 888 77 66",
+                        img: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=400"
+                    }
+                ]
+            }
+        };
+
+        let activeExclusiveCategory = null;
+
+        function toggleExclusiveService(category, cardEl) {
+            triggerHaptic('medium');
+            const drawer = document.getElementById('exclusive-service-masters-drawer');
+            const cards = document.querySelectorAll('.service-gold-card');
+
+            if (activeExclusiveCategory === category) {
+                closeExclusiveServiceDrawer();
+                return;
+            }
+
+            activeExclusiveCategory = category;
+            cards.forEach(c => c.classList.remove('active'));
+            if (cardEl) cardEl.classList.add('active');
+
+            const data = EXCLUSIVE_MASTERS_DATA[category];
+            if (!data || !drawer) return;
+
+            document.getElementById('masters-drawer-title').textContent = data.title;
+            const container = document.getElementById('masters-list-content');
+
+            container.innerHTML = data.masters.map(m => `
+                <div class="master-card">
+                    <div class="master-card-left">
+                        <img src="${m.img}" alt="${m.name}" class="master-img">
+                        <div>
+                            <div class="master-info-name">${m.name}</div>
+                            <div style="font-size: 11px; color: #D4AF37; margin: 1px 0;">${m.rating}</div>
+                            <div class="master-info-meta">${m.desc}</div>
+                            <div style="font-size: 11.5px; font-weight: 700; color: #C28B14; margin-top: 2px;">${m.price}</div>
+                        </div>
+                    </div>
+                    <button class="btn-master-contact" onclick="bookExclusiveMaster('${m.name}', '${m.phone}')">
+                        Band Qilish
+                    </button>
+                </div>
+            `).join('');
+
+            drawer.style.display = 'block';
+            drawer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function closeExclusiveServiceDrawer() {
+            triggerHaptic('light');
+            activeExclusiveCategory = null;
+            document.querySelectorAll('.service-gold-card').forEach(c => c.classList.remove('active'));
+            const drawer = document.getElementById('exclusive-service-masters-drawer');
+            if (drawer) drawer.style.display = 'none';
+        }
+
+        function bookExclusiveMaster(masterName, masterPhone) {
+            triggerHaptic('heavy');
+            openBookingDrawerCustom(masterName, masterPhone);
+        }
+
+        function openBookingDrawerCustom(title, contactInfo) {
+            triggerHaptic('medium');
+            selectedVenueForBooking = {
+                id: 999,
+                title: title,
+                priceStr: "Eksklyuziv Taklif",
+                capacity: "Xizmat Ustalari"
+            };
+
+            document.getElementById('drawer-venue-title').textContent = `${title} — Bog'lanish`;
+            document.getElementById('drawer-venue-sub').textContent = `Aloqa: ${contactInfo} | Administrator tezda javob beradi`;
+
+            document.getElementById('drawer-backdrop').classList.add('active');
+            document.getElementById('drawer-container').classList.add('active');
+
+            if (tg?.MainButton) {
+                tg.MainButton.setText("👑 XIZMATNI TASDIQLASH");
+                tg.MainButton.setParams({
+                    color: '#D4AF37',
+                    text_color: '#1A1000',
+                    is_active: true,
+                    is_visible: true
+                });
+                tg.MainButton.onClick(confirmBookingApi);
+            }
+        }
+
+        // CAROUSEL SWIPE PHYSICS WITH SPRING MOMENTUM
+        function initCarouselPhysics() {
+            const carousel = document.getElementById('featured-carousel');
+            if (!carousel) return;
+
+            let isDown = false;
+            let startX, scrollLeft, startTime;
+            let velocity = 0;
+            let rafId = null;
+            let isDraggingMoved = false;
+
+            const onStart = (clientX) => {
+                isDown = true;
+                isDraggingMoved = false;
+                carousel.classList.add('is-dragging');
+                startX = clientX - carousel.offsetLeft;
+                scrollLeft = carousel.scrollLeft;
+                startTime = performance.now();
+                cancelAnimationFrame(rafId);
+            };
+
+            const onMove = (clientX) => {
+                if (!isDown) return;
+                const x = clientX - carousel.offsetLeft;
+                const walk = (x - startX) * 1.3;
+                if (Math.abs(walk) > 6) isDraggingMoved = true;
+                const now = performance.now();
+                const dt = Math.max(1, now - startTime);
+                velocity = (carousel.scrollLeft - (scrollLeft - walk)) / dt;
+                startTime = now;
+                carousel.scrollLeft = scrollLeft - walk;
+            };
+
+            const onEnd = () => {
+                if (!isDown) return;
+                isDown = false;
+                carousel.classList.remove('is-dragging');
+
+                let currentVelocity = velocity * 14;
+                const friction = 0.91;
+
+                const step = () => {
+                    if (Math.abs(currentVelocity) > 0.4) {
+                        carousel.scrollLeft += currentVelocity;
+                        currentVelocity *= friction;
+                        rafId = requestAnimationFrame(step);
+                    }
+                };
+                rafId = requestAnimationFrame(step);
+            };
+
+            carousel.addEventListener('mousedown', (e) => onStart(e.clientX));
+            window.addEventListener('mousemove', (e) => { if (isDown) onMove(e.clientX); });
+            window.addEventListener('mouseup', onEnd);
+
+            carousel.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) onStart(e.touches[0].clientX);
+            }, { passive: true });
+
+            carousel.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isDown) onMove(e.touches[0].clientX);
+            }, { passive: true });
+
+            carousel.addEventListener('touchend', onEnd);
+
+            // Ignore card click when swiping
+            carousel.querySelectorAll('.palace-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (isDraggingMoved) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }, true);
+            });
         }
 
         function scrollToVenues() {
@@ -3875,7 +4377,7 @@
             }
         }
 
-        // 10. BAND QILISH OYNASI
+        // 10. BAND QILISH OYNASI & TELEGRAM MAINBUTTON INTEGRATSIYASI
         function openBookingDrawer(venueId) {
             triggerHaptic('medium');
             const venue = VENUES_DATA.find(v => v.id === venueId) || VENUES_DATA[0];
@@ -3886,11 +4388,29 @@
 
             document.getElementById('drawer-backdrop').classList.add('active');
             document.getElementById('drawer-container').classList.add('active');
+
+            // Telegram WebApp MainButton ("Buyurtmani tasdiqlash")
+            if (tg?.MainButton) {
+                tg.MainButton.setText("👑 BUYURTMANI TASDIQLASH");
+                tg.MainButton.setParams({
+                    color: '#D4AF37',
+                    text_color: '#1A1000',
+                    is_active: true,
+                    is_visible: true
+                });
+                tg.MainButton.onClick(confirmBookingApi);
+            }
         }
 
         function closeBookingDrawer() {
+            triggerHaptic('light');
             document.getElementById('drawer-backdrop').classList.remove('active');
             document.getElementById('drawer-container').classList.remove('active');
+
+            if (tg?.MainButton) {
+                tg.MainButton.hide();
+                tg.MainButton.offClick(confirmBookingApi);
+            }
         }
 
         async function confirmBookingApi() {
@@ -3900,25 +4420,38 @@
 
             if (!name || !phone) {
                 alert("Iltimos, ismingiz va telefon raqamingizni kiriting!");
+                triggerHaptic('error');
                 return;
             }
 
-            triggerHaptic('heavy');
+            triggerHaptic('success');
             closeBookingDrawer();
-            showToast("Buyurtmangiz qabul qilindi! Tez orada bog'lanamiz.");
+            showToast("Buyurtmangiz qabul qilindi! Administratorga yuborildi.");
+
+            const payload = {
+                name,
+                phone,
+                service_id: selectedVenueForBooking ? selectedVenueForBooking.id : 1,
+                service_title: selectedVenueForBooking ? selectedVenueForBooking.title : "To'y Xizmati",
+                event_date: date || null,
+                guest_count: guestCount,
+                notes: `TuyBox Web App orqali buyurtma`
+            };
+
+            // Telegram WebApp orqali to'g'ridan-to'g'ri xabar yuborish
+            if (tg && typeof tg.sendData === 'function') {
+                try {
+                    tg.sendData(JSON.stringify(payload));
+                } catch (e) {
+                    console.log("tg.sendData:", e);
+                }
+            }
 
             try {
                 await fetch('/api/v1/bookings/quick', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name,
-                        phone,
-                        service_id: selectedVenueForBooking ? selectedVenueForBooking.id : 1,
-                        event_date: date || null,
-                        guest_count: guestCount,
-                        notes: `TuyBox Web App orqali buyurtma`
-                    })
+                    body: JSON.stringify(payload)
                 });
             } catch (e) {
                 console.error(e);
@@ -3995,14 +4528,44 @@
             }
         }
 
-        // 14. INITIAL BOOT
+        // 14. TEXTURES PRELOADER (0.1S INSTANT CACHE)
+        function preloadEssentialTextures() {
+            const assets = [
+                '/static/textures/white_marble_bg.png',
+                '/static/textures/black_gold_marble.png',
+                'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800',
+                'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800',
+                'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=800'
+            ];
+            assets.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+
+        // 15. INITIAL BOOT
         document.addEventListener('DOMContentLoaded', () => {
             applyTheme(currentTheme);
             if (urlParams.get('tab')) {
                 switchTab(urlParams.get('tab'));
             }
+            if (urlParams.get('open_service')) {
+                const srv = urlParams.get('open_service');
+                const card = document.getElementById(`srv-card-${srv}`);
+                toggleExclusiveService(srv, card);
+            }
+            if (urlParams.get('search')) {
+                const sVal = urlParams.get('search');
+                const inp = document.getElementById('search-input');
+                if (inp) {
+                    inp.value = sVal;
+                    handleSearch(sVal);
+                }
+            }
             fetchLiveServices();
             updateBudgetDisplay();
+            initCarouselPhysics();
+            preloadEssentialTextures();
         });
     </script>
 </body>
