@@ -245,11 +245,21 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
+        html {
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100vw !important;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             background-color: #FAF8F5;
             color: var(--text-dark);
             min-height: 100vh;
-            overflow-x: hidden;
+            width: 100% !important;
+            max-width: 100vw !important;
+            overflow-x: hidden !important;
             display: flex;
             justify-content: center;
             margin: 0;
@@ -288,6 +298,7 @@
             position: relative;
             box-shadow: 0 0 60px rgba(180, 130, 10, 0.22);
             padding-bottom: calc(78px + var(--safe-bottom));
+            overflow-x: hidden !important;
         }
 
         /* ═══════════════════════════════════════════════════
@@ -1155,143 +1166,674 @@
             transform: scale(0.95);
         }
 
-        /* 8. XARITA (TO'LIQ ISHLAYDIGAN, QIDIRUV VA TUMANLAR BILAN) */
+        /* 8. XARITA (100% TO'LIQ ISHLAYDIGAN, HASHAMATLI VA KO'ZGA QULAY) */
         .map-view-container {
             display: none;
-            height: calc(100vh - 135px);
+            width: 100%;
+            height: calc(100vh - 72px - env(safe-area-inset-bottom, 0px));
             position: relative;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
         }
 
         #map-element {
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
             z-index: 1;
-            filter: var(--map-tiles-filter);
+            background: #EAE6DF;
+        }
+        body.dark-mode #map-element {
+            background: #120D08;
+        }
+
+        /* 1:1 REFERENCE: 24K MOLTEN GOLD MAP PIN */
+        .custom-pin-wrap {
+            background: transparent;
+            border: none;
+        }
+        .luxury-map-pin {
+            position: relative;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFF7D6 0%, #F5C538 40%, #C99318 75%, #8A5A05 100%);
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 4px 14px rgba(180, 130, 20, 0.55), inset 0 1px 2px #FFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1E1202;
+            font-size: 15px;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .luxury-map-pin:hover {
+            transform: scale(1.15) translateY(-2px);
+        }
+        .luxury-map-pin.active {
+            transform: scale(1.22) translateY(-3px);
+            border-color: #FFFDE8;
+            box-shadow: 0 0 25px rgba(245, 195, 45, 0.95), 0 6px 18px rgba(0, 0, 0, 0.35);
+        }
+        .luxury-map-pin.active::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px solid #F5C538;
+            animation: pinBeacon 1.8s ease-out infinite;
+        }
+        @keyframes pinBeacon {
+            0% { transform: scale(0.9); opacity: 1; }
+            100% { transform: scale(1.6); opacity: 0; }
         }
 
         /* Tumanlar filtri paneli xaritada */
         .map-controls-box {
             position: absolute;
-            top: 10px;
+            top: calc(env(safe-area-inset-top, 0px) + 12px);
             left: 12px;
             right: 12px;
-            z-index: 999;
+            width: calc(100% - 24px);
+            max-width: calc(100% - 24px);
+            z-index: 1000;
             display: flex;
             flex-direction: column;
             gap: 8px;
+            box-sizing: border-box;
+            pointer-events: auto;
         }
 
         .map-search-bar {
-            background: var(--bg-card);
+            background: rgba(255, 254, 250, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-radius: var(--radius-pill);
-            padding: 6px 16px;
+            padding: 8px 14px;
             display: flex;
             align-items: center;
-            border: 1.5px solid var(--border-color);
-            box-shadow: var(--shadow-elevated);
+            gap: 8px;
+            border: 1.5px solid rgba(212, 175, 55, 0.45);
+            box-shadow: 0 8px 24px rgba(110, 80, 20, 0.15);
+            box-sizing: border-box;
+            width: 100%;
         }
-
+        body.dark-mode .map-search-bar {
+            background: rgba(22, 16, 10, 0.94) !important;
+            border-color: rgba(240, 200, 75, 0.45) !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7) !important;
+        }
         .map-search-bar input {
             flex: 1;
+            min-width: 0 !important;
             border: none;
             outline: none;
             background: transparent;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            color: var(--text-dark);
+            color: #2E1E12;
+        }
+        body.dark-mode .map-search-bar input {
+            color: #FFF5DD !important;
+        }
+        .map-search-bar input::placeholder {
+            color: #946E26;
+            font-style: italic;
+            font-weight: 500;
+        }
+        .map-counter-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: #1A1200;
+            background: linear-gradient(135deg, #FFEAA2 0%, #D4AF37 100%);
+            padding: 3px 8px;
+            border-radius: 12px;
+            white-space: nowrap;
+            border: 1px solid #FFF8D5;
         }
 
         .map-district-chips {
             display: flex;
             gap: 6px;
+            width: 100%;
+            max-width: 100%;
             overflow-x: auto;
             scrollbar-width: none;
             padding: 2px 0;
+            box-sizing: border-box;
         }
-
-        .map-district-chips::-webkit-scrollbar {
-            display: none;
-        }
+        .map-district-chips::-webkit-scrollbar { display: none; }
 
         .district-chip {
             flex-shrink: 0;
             padding: 6px 14px;
             border-radius: var(--radius-pill);
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-dark);
+            background: rgba(255, 254, 250, 0.92);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            color: #38240F;
             font-size: 12px;
             font-weight: 700;
-            box-shadow: var(--shadow-card);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             cursor: pointer;
+            transition: all 0.16s ease;
         }
-
+        body.dark-mode .district-chip {
+            background: rgba(26, 18, 11, 0.92);
+            border-color: rgba(212, 175, 55, 0.35);
+            color: #EBD8BE;
+        }
         .district-chip.active {
-            background: var(--gold-gradient);
-            color: #1A1200;
-            border-color: transparent;
+            background: linear-gradient(135deg, #FFEAA2 0%, #D4AF37 60%, #996515 100%) !important;
+            color: #1A1000 !important;
+            border-color: #FFF8D5 !important;
+            box-shadow: 0 4px 14px rgba(184, 134, 11, 0.4) !important;
         }
 
-        .map-gps-btn {
+        /* O'ng tarafdagi qulay navigatsiya asboblari */
+        .map-utility-toolbar {
             position: absolute;
-            right: 14px;
-            top: 100px;
-            z-index: 999;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 1.5px solid var(--border-color);
-            color: var(--gold-primary);
+            right: 12px;
+            top: calc(env(safe-area-inset-top, 0px) + 115px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .map-tool-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(255, 254, 250, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1.5px solid rgba(212, 175, 55, 0.45);
+            color: #7A5506;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            box-shadow: var(--shadow-card);
+            font-size: 16px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
             cursor: pointer;
+            transition: transform 0.18s ease, background 0.18s ease;
         }
+        body.dark-mode .map-tool-btn {
+            background: rgba(26, 18, 11, 0.94);
+            border-color: rgba(240, 200, 75, 0.45);
+            color: #F5C538;
+        }
+        .map-tool-btn:hover { transform: scale(1.08); }
+        .map-tool-btn:active { transform: scale(0.92); }
 
+        /* Xaritada tanlangan to'yxona kartochkasi (Nav bar ustida, hecham to'silmaydi) */
         .map-overlay-card {
             position: absolute;
-            bottom: 14px;
+            bottom: calc(84px + env(safe-area-inset-bottom, 0px));
             left: 12px;
             right: 12px;
-            z-index: 999;
-            background: var(--bg-card);
+            width: calc(100% - 24px);
+            max-width: calc(100% - 24px);
+            z-index: 1000;
+            display: none;
+            flex-direction: column !important;
+            gap: 10px;
+            box-sizing: border-box;
+            background: rgba(255, 254, 250, 0.97);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 14px;
-            border: 1.5px solid var(--border-color);
-            box-shadow: var(--shadow-elevated);
-            display: flex;
-            gap: 12px;
-            align-items: center;
+            padding: 12px 14px;
+            border: 1.5px solid rgba(212, 175, 55, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18), inset 0 1px 1px #FFF;
+            animation: tabFadeInUp 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-
+        body.dark-mode .map-overlay-card {
+            background: rgba(22, 16, 10, 0.96) !important;
+            border-color: rgba(240, 200, 75, 0.45) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8) !important;
+        }
+        .map-overlay-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .map-overlay-thumb-wrap {
+            position: relative;
+            width: 66px;
+            height: 66px;
+            flex-shrink: 0;
+        }
         .map-overlay-thumb {
-            width: 72px;
-            height: 72px;
+            width: 100%;
+            height: 100%;
             border-radius: 14px;
             object-fit: cover;
+            border: 1.5px solid #D4AF37;
         }
-
+        .map-overlay-rating-badge {
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 14, 8, 0.75);
+            color: #FFE650;
+            font-size: 9.5px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 10px;
+            border: 0.8px solid #FFD700;
+            white-space: nowrap;
+        }
         .map-overlay-info {
             flex: 1;
+            min-width: 0;
         }
-
-        .map-overlay-info h4 {
+        .map-overlay-title {
             font-family: 'Playfair Display', serif;
-            font-size: 17px;
+            font-size: 15.5px;
             font-weight: 700;
-            color: var(--text-dark);
+            color: #2E1E12;
             margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        body.dark-mode .map-overlay-title { color: #FFF2D6; }
+        .map-overlay-meta {
+            font-size: 12px;
+            color: #826E5C;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 3px;
+        }
+        body.dark-mode .map-overlay-meta { color: #C5B29B; }
+        .map-overlay-price {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #C89422;
+        }
+        body.dark-mode .map-overlay-price { color: #FFE082; }
+        .map-overlay-close {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 20px;
+            color: #8A6820;
+            cursor: pointer;
+            line-height: 1;
+            padding: 4px;
+            transition: transform 0.2s;
+        }
+        .map-overlay-close:hover { transform: scale(1.2); }
+        .map-overlay-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn-map-call, .btn-map-route {
+            height: 38px;
+            padding: 0 11px;
+            border-radius: var(--radius-pill);
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: #7A5205;
+            font-size: 11.5px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.15s ease;
+        }
+        body.dark-mode .btn-map-call, body.dark-mode .btn-map-route {
+            background: rgba(212, 175, 55, 0.2);
+            color: #FFE695;
+        }
+        .btn-map-call:active, .btn-map-route:active { transform: scale(0.95); }
+        .btn-map-book {
+            flex: 1;
+            min-width: 0;
+            height: 38px;
+            padding: 0 12px;
+            border-radius: var(--radius-pill);
+            background: linear-gradient(135deg, #FFE89E 0%, #D4AF37 45%, #996515 100%);
+            border: 1px solid #FFF8D5;
+            color: #1A1000;
+            font-family: 'Cinzel', serif;
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.35);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: transform 0.15s ease;
+        }
+        .btn-map-book:active { transform: scale(0.96); }
+
+        /* ═══════════════════════════════════════════════════
+           TO'Y XIZMATLARI KATALOGI (LUXURY BOUTIQUE SHOWCASE)
+        ═══════════════════════════════════════════════════ */
+        .services-view-container {
+            padding: 12px 16px 36px;
+        }
+        .services-search-bar {
+            background: rgba(255, 254, 250, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: var(--radius-pill);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1.5px solid rgba(212, 175, 55, 0.45);
+            box-shadow: 0 6px 20px rgba(110, 80, 20, 0.1);
+            margin-bottom: 12px;
+        }
+        body.dark-mode .services-search-bar {
+            background: rgba(22, 16, 10, 0.94) !important;
+            border-color: rgba(240, 200, 75, 0.45) !important;
+        }
+        .services-search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #2E1E12;
+        }
+        body.dark-mode .services-search-bar input { color: #FFF5DD; }
+        .services-search-bar input::placeholder {
+            color: #946E26;
+            font-style: italic;
+            font-weight: 500;
         }
 
-        .map-overlay-price {
-            font-size: 14px;
-            font-weight: 800;
-            color: var(--gold-primary);
-            margin-top: 3px;
+        .services-chips-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+            margin-bottom: 10px;
         }
+        .services-chips-scroll::-webkit-scrollbar { display: none; }
+
+        .services-filter-chip {
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: var(--radius-pill);
+            background: rgba(255, 254, 250, 0.92);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            color: #4A331E;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: transform 0.16s ease, background 0.16s ease;
+        }
+        body.dark-mode .services-filter-chip {
+            background: rgba(24, 18, 11, 0.92);
+            border-color: rgba(212, 175, 55, 0.35);
+            color: #ECD7BA;
+        }
+        .services-filter-chip:hover { transform: translateY(-1px); }
+        .services-filter-chip:active { transform: scale(0.96); }
+        .services-filter-chip.active {
+            background: linear-gradient(135deg, #FFEAA2 0%, #D4AF37 60%, #996515 100%) !important;
+            color: #1A1000 !important;
+            border-color: #FFF8D5 !important;
+            box-shadow: 0 4px 14px rgba(184, 134, 11, 0.35) !important;
+        }
+        .chip-count-pill {
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.08);
+            font-weight: 800;
+        }
+        .services-filter-chip.active .chip-count-pill {
+            background: rgba(0, 0, 0, 0.2);
+            color: #FFF;
+        }
+
+        /* SERVICE SHOWCASE CARD */
+        .service-showcase-card {
+            background: rgba(255, 253, 248, 0.97);
+            background-image: var(--marble-url);
+            background-size: cover;
+            border-radius: 20px;
+            border: 1.5px solid rgba(212, 175, 55, 0.45);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06), inset 0 1px 1px #FFF;
+            overflow: hidden;
+            margin-bottom: 16px;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+        }
+        body.dark-mode .service-showcase-card {
+            background: rgba(20, 14, 9, 0.95) !important;
+            border-color: rgba(240, 200, 75, 0.4) !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.75) !important;
+        }
+        .service-showcase-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(184, 134, 11, 0.22);
+        }
+
+        .service-card-media {
+            position: relative;
+            width: 100%;
+            height: 185px;
+            overflow: hidden;
+            background: #1A140F;
+        }
+        .service-card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.35s ease;
+        }
+        .service-showcase-card:hover .service-card-media img {
+            transform: scale(1.05);
+        }
+        .service-media-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 40%, rgba(0,0,0,0.7) 100%);
+            pointer-events: none;
+        }
+        .service-badge-category {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(20, 14, 8, 0.75);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            color: #FFECA0;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(255, 215, 0, 0.55);
+            z-index: 2;
+        }
+        .service-badge-rating {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(20, 14, 8, 0.75);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            color: #FFE650;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(255, 215, 0, 0.55);
+            z-index: 2;
+        }
+        .service-badge-verified {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, #FFE89E 0%, #D4AF37 100%);
+            color: #1A1000;
+            font-size: 10.5px;
+            font-weight: 800;
+            padding: 2px 9px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .service-card-content {
+            padding: 14px 16px;
+        }
+        .service-title-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .service-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16.5px;
+            font-weight: 700;
+            color: #2E1E12;
+            line-height: 1.3;
+        }
+        body.dark-mode .service-card-title { color: #FFF3DB; }
+
+        .service-location-meta {
+            font-size: 12px;
+            color: #7E654F;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+        body.dark-mode .service-location-meta { color: #C5B29B; }
+
+        .service-features-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .service-feature-pill {
+            font-size: 11px;
+            font-weight: 600;
+            color: #694C27;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.28);
+            padding: 2px 8px;
+            border-radius: 8px;
+        }
+        body.dark-mode .service-feature-pill {
+            color: #E2CEAF;
+            background: rgba(212, 175, 55, 0.16);
+            border-color: rgba(212, 175, 55, 0.35);
+        }
+
+        .service-desc-text {
+            font-size: 12.5px;
+            color: #5C4A3A;
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+        body.dark-mode .service-desc-text { color: #BBA790; }
+
+        .service-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .service-price-block {
+            display: flex;
+            flex-direction: column;
+        }
+        .service-price-label {
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #9A7E64;
+            font-weight: 700;
+        }
+        body.dark-mode .service-price-label { color: #AFA08C; }
+        .service-price-val {
+            font-family: 'Cinzel', serif;
+            font-size: 15px;
+            font-weight: 800;
+            color: #B57F0C;
+        }
+        body.dark-mode .service-price-val { color: #FFDF79; }
+
+        .service-actions-block {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-service-call {
+            height: 36px;
+            width: 36px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: #7A5205;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            text-decoration: none;
+            transition: transform 0.15s ease;
+        }
+        body.dark-mode .btn-service-call {
+            background: rgba(212, 175, 55, 0.2);
+            color: #FFE695;
+        }
+        .btn-service-call:active { transform: scale(0.92); }
+
+        .btn-service-book {
+            height: 36px;
+            padding: 0 16px;
+            border-radius: var(--radius-pill);
+            background: linear-gradient(135deg, #FFE89E 0%, #D4AF37 50%, #9E6B05 100%);
+            border: 1px solid #FFF8D5;
+            color: #1A1000;
+            font-family: 'Cinzel', serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.35);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.15s ease;
+        }
+        .btn-service-book:active { transform: scale(0.96); }
 
         /* 9. TO'Y BYUDJETI KALKULYATORI */
         .budget-view-container {
@@ -2461,92 +3003,144 @@
             </div>
         </main>
 
-        <!-- 2-SAHIFA: XARITA (QIDIRUV VA TUMANLAR BILAN) -->
+        <!-- 2-SAHIFA: XARITA (100% ISHLAYDIGAN, HASHAMATLI & KO'ZGA QULAY) -->
         <section id="tab-map" class="map-view-container">
             <div class="map-controls-box">
                 <!-- Qidiruv paneli -->
                 <div class="map-search-bar">
-                    <i class="fa-solid fa-magnifying-glass" style="color: var(--gold-primary); margin-right: 8px;"></i>
-                    <input type="text" placeholder="Xaritadan to'yxona yoki tuman qidirish..." oninput="handleMapSearch(this.value)">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #D4AF37; font-size: 15px;"></i>
+                    <input type="text" id="map-search-input" placeholder="Xaritadan to'yxona yoki tuman qidirish..." oninput="handleMapSearch(this.value)">
+                    <span class="map-counter-badge" id="map-results-count">12 ta saroy</span>
                 </div>
 
                 <!-- Tumanlar tezkor filtri -->
                 <div class="map-district-chips">
-                    <div class="district-chip active" onclick="filterMapByDistrict(this, 'all')">Barchasi</div>
+                    <div class="district-chip active" onclick="filterMapByDistrict(this, 'all')">🏛️ Barchasi</div>
                     <div class="district-chip" onclick="filterMapByDistrict(this, 'Yakkasaroy')">Yakkasaroy</div>
                     <div class="district-chip" onclick="filterMapByDistrict(this, 'Chilonzor')">Chilonzor</div>
                     <div class="district-chip" onclick="filterMapByDistrict(this, 'Yunusobod')">Yunusobod</div>
                     <div class="district-chip" onclick="filterMapByDistrict(this, 'Mirobod')">Mirobod</div>
                     <div class="district-chip" onclick="filterMapByDistrict(this, 'Shayxontohur')">Shayxontohur</div>
+                    <div class="district-chip" onclick="filterMapByDistrict(this, 'Mirzo Ulug\'bek')">Mirzo Ulug'bek</div>
                 </div>
             </div>
 
-            <!-- GPS tugmasi -->
-            <div class="map-gps-btn" onclick="locateUserGPS()" title="Mening joylashuvim">
-                <i class="fa-solid fa-crosshairs"></i>
+            <!-- O'ng tarafdagi qulay navigatsiya asboblari -->
+            <div class="map-utility-toolbar">
+                <button class="map-tool-btn" onclick="locateUserGPS()" title="Mening joylashuvim">
+                    <i class="fa-solid fa-crosshairs"></i>
+                </button>
+                <button class="map-tool-btn" onclick="resetMapView()" title="Barcha to'yxonalarni ko'rish">
+                    <i class="fa-solid fa-compass"></i>
+                </button>
+                <button class="map-tool-btn" onclick="mapZoomIn()" title="Yaqinlashtirish">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+                <button class="map-tool-btn" onclick="mapZoomOut()" title="Uzoqlashtirish">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
             </div>
 
             <div id="map-element"></div>
             
-            <!-- Xaritada tanlangan to'yxona kartochkasi -->
+            <!-- Xaritada tanlangan to'yxona qulay kartochkasi (Nav bar ustida) -->
             <div class="map-overlay-card" id="map-selected-card">
-                <img id="map-card-img" class="map-overlay-thumb" src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=400" alt="Venue">
-                <div class="map-overlay-info">
-                    <h4 id="map-card-title">Versal Grand Ballroom</h4>
-                    <p id="map-card-location" style="font-size: 13px; color: var(--text-muted);"><i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> Yakkasaroy tumani</p>
-                    <div id="map-card-price" class="map-overlay-price">48,000,000 so'm</div>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <div style="display: flex; gap: 6px;">
-                        <a id="map-card-phone-btn" href="tel:+998712000001" class="btn-call" style="height: 38px; padding: 0 12px;" title="Qo'ng'iroq">
-                            <i class="fa-solid fa-phone"></i>
-                        </a>
-                        <a id="map-card-nav-btn" href="https://yandex.com/maps/?rtext=~41.2825,69.2435" target="_blank" class="btn-call" style="height: 38px; padding: 0 12px; background: var(--gold-badge-bg);" title="Yo'l ochish">
-                            <i class="fa-solid fa-diamond-turn-right" style="color: var(--gold-primary);"></i>
-                        </a>
+                <span class="map-overlay-close" onclick="closeMapSelectedCard()" title="Yopish">&times;</span>
+                <div class="map-overlay-top">
+                    <div class="map-overlay-thumb-wrap">
+                        <img id="map-card-img" class="map-overlay-thumb" src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=400" alt="Venue">
+                        <div class="map-overlay-rating-badge" id="map-card-rating">★★★★★ 5.0</div>
                     </div>
-                    <button class="btn-book" style="height: 38px; padding: 0 12px; font-size: 12px;" onclick="openBookingDrawerFromMap()">
-                        Band Qilish
+                    <div class="map-overlay-info">
+                        <h4 id="map-card-title" class="map-overlay-title">Versal Grand Ballroom</h4>
+                        <div class="map-overlay-meta" id="map-card-location">
+                            <i class="fa-solid fa-location-dot" style="color: #D4AF37;"></i>
+                            <span>Yakkasaroy tumani</span>
+                        </div>
+                        <div class="map-overlay-price" id="map-card-price">48,000,000 so'm</div>
+                    </div>
+                </div>
+                <div class="map-overlay-actions">
+                    <a id="map-card-phone-btn" href="tel:+998712000001" class="btn-map-call" title="Qo'ng'iroq">
+                        <i class="fa-solid fa-phone"></i>
+                        <span>Qo'ng'iroq</span>
+                    </a>
+                    <a id="map-card-nav-btn" href="https://yandex.com/maps/?rtext=~41.2825,69.2435" target="_blank" class="btn-map-route" title="Yo'l ochish">
+                        <i class="fa-solid fa-diamond-turn-right"></i>
+                        <span>Xarita</span>
+                    </a>
+                    <button class="btn-map-book" onclick="openBookingDrawerFromMap()">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <span>Band Qilish</span>
                     </button>
                 </div>
             </div>
         </section>
 
         <!-- 2.5-SAHIFA: EKSKLYUZIV TO'Y XIZMATLARI KATALOGI -->
-        <section id="tab-services" class="services-view-container" style="display: none; padding: 14px 18px 30px;">
-            <div class="palace-section-head-center" style="margin-bottom: 14px;">
+        <section id="tab-services" class="services-view-container" style="display: none;">
+            <div class="palace-section-head-center" style="margin-bottom: 12px;">
                 <div class="palace-filigree-line">
                     <span class="filigree-star">✦</span>
-                    <h3 class="palace-section-title">To'y Xizmatlari</h3>
+                    <h2 class="palace-section-title">To'y Xizmatlari</h2>
                     <span class="filigree-star">✦</span>
                 </div>
-                <p class="palace-section-desc">Eng sara zargarlik, salonlar, san'atkorlar va to'y kortejlari</p>
+                <p class="palace-section-desc">VIP zargarlik, kelin liboslari, mashhur san'atkorlar va to'y kortejlari</p>
             </div>
 
-            <!-- Kategoriya teglari -->
-            <div class="event-pills-row" style="margin-bottom: 16px; padding: 0;">
-                <div class="event-chip active" onclick="filterServicesCatalog(this, 'all')">
-                    <i class="fa-solid fa-crown icon-chip"></i> Barchasi
+            <!-- Qidiruv paneli -->
+            <div class="services-search-bar">
+                <i class="fa-solid fa-magnifying-glass" style="color: #D4AF37; font-size: 15px;"></i>
+                <input type="text" id="services-search-input" placeholder="Xizmat nomi, usta yoki brend qidirish..." oninput="handleServicesSearch(this.value)">
+                <span class="map-counter-badge" id="services-count-badge">Barcha xizmatlar</span>
+            </div>
+
+            <!-- Kategoriya filtri (Gorizontal silliq skroll) -->
+            <div class="services-chips-scroll" id="services-categories-bar">
+                <div class="services-filter-chip active" onclick="filterServicesCatalog(this, 'all')">
+                    <i class="fa-solid fa-crown"></i>
+                    <span>Barchasi</span>
+                    <span class="chip-count-pill" id="cnt-all">19</span>
                 </div>
-                <div class="event-chip" onclick="filterServicesCatalog(this, 'uzuklar')">
-                    <i class="fa-solid fa-ring icon-chip"></i> Uzuklar
+                <div class="services-filter-chip" onclick="filterServicesCatalog(this, 'uzuklar')">
+                    <i class="fa-solid fa-ring"></i>
+                    <span>Uzuklar</span>
+                    <span class="chip-count-pill" id="cnt-uzuklar">3</span>
                 </div>
-                <div class="event-chip" onclick="filterServicesCatalog(this, 'liboslar')">
-                    <i class="fa-solid fa-person-dress icon-chip"></i> Liboslar
+                <div class="services-filter-chip" onclick="filterServicesCatalog(this, 'liboslar')">
+                    <i class="fa-solid fa-person-dress"></i>
+                    <span>Liboslar</span>
+                    <span class="chip-count-pill" id="cnt-liboslar">3</span>
                 </div>
-                <div class="event-chip" onclick="filterServicesCatalog(this, 'sanatkorlar')">
-                    <i class="fa-solid fa-microphone-lines icon-chip"></i> San'atkorlar
+                <div class="services-filter-chip" onclick="filterServicesCatalog(this, 'sanatkorlar')">
+                    <i class="fa-solid fa-microphone-lines"></i>
+                    <span>San'atkorlar</span>
+                    <span class="chip-count-pill" id="cnt-sanatkorlar">3</span>
                 </div>
-                <div class="event-chip" onclick="filterServicesCatalog(this, 'foto-video')">
-                    <i class="fa-solid fa-camera-retro icon-chip"></i> Foto & Video
+                <div class="services-filter-chip" onclick="filterServicesCatalog(this, 'foto-video')">
+                    <i class="fa-solid fa-camera-retro"></i>
+                    <span>Foto & Video</span>
+                    <span class="chip-count-pill" id="cnt-foto-video">3</span>
                 </div>
-                <div class="event-chip" onclick="filterServicesCatalog(this, 'kortej')">
-                    <i class="fa-solid fa-car-side icon-chip"></i> Kortej
+                <div class="services-filter-chip" onclick="filterServicesCatalog(this, 'kortej')">
+                    <i class="fa-solid fa-car-side"></i>
+                    <span>Kortej</span>
+                    <span class="chip-count-pill" id="cnt-kortej">3</span>
+                </div>
+                <div class="services-filter-chip" onclick="filterServicesCatalog(this, 'dekor')">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Dekoratsiya</span>
+                    <span class="chip-count-pill" id="cnt-dekor">2</span>
+                </div>
+                <div class="services-filter-chip" onclick="filterServicesCatalog(this, 'tort')">
+                    <i class="fa-solid fa-cake-candles"></i>
+                    <span>To'y Torti</span>
+                    <span class="chip-count-pill" id="cnt-tort">2</span>
                 </div>
             </div>
 
             <!-- Xizmatlar ro'yxati -->
-            <div id="services-catalog-list" class="venue-list-section" style="padding: 0;">
+            <div id="services-catalog-list" style="padding: 4px 0 20px;">
                 <!-- JS orqali to'ldiriladi -->
             </div>
         </section>
@@ -3031,6 +3625,10 @@
                     } catch (e) {}
                 }
             }
+
+            if (typeof updateMapTileTheme === 'function') {
+                updateMapTileTheme();
+            }
         }
 
         function toggleTheme() {
@@ -3269,7 +3867,7 @@
             }
 
             // Sahifani tepaga silliq o'tkazish
-            window.scrollTo({ top: 0, behavior: 'instant' });
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 
             // Sahifalarni ochish/yopish va silliq 60 FPS fade-in-up animatsiyasi
             const tabIds = ['tab-home', 'tab-map', 'tab-services', 'tab-budget', 'tab-add', 'tab-profile'];
@@ -3304,17 +3902,26 @@
             if (bNav) bNav.style.display = 'flex';
 
             if (tabName === 'map') {
-                setTimeout(initMapIfNeeded, 200);
+                setTimeout(() => {
+                    initMapIfNeeded();
+                    if (mapInstance) {
+                        mapInstance.invalidateSize();
+                    }
+                }, 150);
             }
             if (tabName === 'services') {
+                updateServiceCategoryCounts();
                 renderServicesCatalog(SERVICES_DATA);
             }
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         }
 
-        // XIZMATLAR MA'LUMOTLARI VA FILTRLARI
+        // ═══════════════════════════════════════════════════
+        // EKSKLYUZIV TO'Y XIZMATLARI MA'LUMOTLARI (19 TA MASTER)
+        // ═══════════════════════════════════════════════════
         const SERVICES_DATA = [
+            // 1. UZUKLAR
             {
                 id: 101,
                 title: "Tiffany & Cartier Marosim Uzuklari",
@@ -3324,25 +3931,87 @@
                 rating: 5.0,
                 tag: "EKSLYUZIV",
                 district: "Mirobod tumani",
-                priceStr: "12 mln so'mdan",
+                priceStr: "12,000,000 so'mdan",
                 phone: "+998712000001",
-                description: "Tabiiy olmoslar va 24K toza oltindan ishlangan maxsus buyurtmali nikoh uzuklari. Xalqaro sertifikati bilan."
+                features: ["GIA Sertifikat", "24K Sof Oltin", "Maxsus Gravirovka"],
+                description: "Tabiiy brilliantlar va 24K toza oltindan ishlangan maxsus buyurtmali nikoh uzuklari. Xalqaro GIA sertifikati va umrlik parvarish bilan."
             },
             {
                 id: 102,
+                title: "Graff & De Beers Brilliantlar Kolleksiyasi",
+                category: "uzuklar",
+                categoryName: "To'y Uzuklari",
+                image: "https://images.unsplash.com/photo-1603561591411-07134e71a2a9?q=80&w=800",
+                rating: 5.0,
+                tag: "ROYAL JEWELRY",
+                district: "Yakkasaroy tumani",
+                priceStr: "22,000,000 so'mdan",
+                phone: "+998712000011",
+                features: ["VVS1 Tozalik", "Shaxsiy Dizayn", "Umrlik Kafolat"],
+                description: "Eng yuqori tozalikdagi olmoslar bilan bezatilgan shohona to'y to'plami. Kelin va kuyov uchun yagona nusxadagi mualliflik ishi."
+            },
+            {
+                id: 103,
+                title: "Chopard Platina & Oltin Nikoh Uzuklari",
+                category: "uzuklar",
+                categoryName: "To'y Uzuklari",
+                image: "https://images.unsplash.com/photo-1598560917505-59a3ad559071?q=80&w=800",
+                rating: 4.9,
+                tag: "PREMIUM",
+                district: "Shayxontohur tumani",
+                priceStr: "9,500,000 so'mdan",
+                phone: "+998712000012",
+                features: ["Platina 950", "Swarovski Elements", "Lyuqs Quti"],
+                description: "Klassik shveytsar uslubidagi chidamli platina va oq oltin uzuklar. Nozik didli juftliklar uchun ideal tanlov."
+            },
+
+            // 2. LIBOSLAR
+            {
+                id: 104,
                 title: "Zuhair Murad & Royal Haute Couture",
                 category: "liboslar",
                 categoryName: "Kelin Liboslari",
                 image: "https://images.unsplash.com/photo-1594552072238-b8a33785b261?q=80&w=800",
-                rating: 4.9,
-                tag: "PREMIUM",
+                rating: 5.0,
+                tag: "HAUTE COUTURE",
                 district: "Yakkasaroy tumani",
-                priceStr: "15 mln so'mdan",
+                priceStr: "15,000,000 so'mdan",
                 phone: "+998712000002",
-                description: "Parij va Milan modalar haftaligidagi eng sara kelinlik liboslari. Maxsus tikish va ijaraga berish xizmati."
+                features: ["Parij Kolleksiyasi", "3 Metrli Fata", "Qo'lda Tikilgan"],
+                description: "Parij va Milan modalar haftaligidagi eng sara kelinlik liboslari. Fransuz to'rlari va mayin boncuklar bilan qo'lda ishlangan."
             },
             {
-                id: 103,
+                id: 105,
+                title: "Elie Saab Livan Ipak Kelinlik Liboslari",
+                category: "liboslar",
+                categoryName: "Kelin Liboslari",
+                image: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800",
+                rating: 4.9,
+                tag: "VIP COUTURE",
+                district: "Mirobod tumani",
+                priceStr: "18,000,000 so'mdan",
+                phone: "+998712000013",
+                features: ["Sof Livan Ipagi", "Kristal Bordon", "VIP Fitting"],
+                description: "Qirollik to'ylariga xos hashamatli shleyf va beqiyos siluet. Shaxsiy tikuvchi va qulay kiyib ko'rish zallari."
+            },
+            {
+                id: 106,
+                title: "Milliy Oltin Zardo'zlik Sarpo Liboslari",
+                category: "liboslar",
+                categoryName: "Kelin Liboslari",
+                image: "https://images.unsplash.com/photo-1546804784-896d0dca3805?q=80&w=800",
+                rating: 4.9,
+                tag: "MILLIY BREND",
+                district: "Chilonzor tumani",
+                priceStr: "7,000,000 so'mdan",
+                phone: "+998712000014",
+                features: ["Buxoro Zardo'zi", "Sof Ipak Atlas", "To'liq Sarpo"],
+                description: "Asrlar davomida saqlanib kelgan o'zbek milliy zardo'zlik san'ati. Nikoh oqshomi va kelin salom uchun betakror to'plam."
+            },
+
+            // 3. SAN'ATKORLAR
+            {
+                id: 107,
                 title: "O'zbekiston Yulduzlari & Jonli Orkestr",
                 category: "sanatkorlar",
                 categoryName: "San'atkorlar",
@@ -3350,25 +4019,87 @@
                 rating: 5.0,
                 tag: "YULDUZLAR",
                 district: "Toshkent shahri",
-                priceStr: "25 mln so'mdan",
+                priceStr: "25,000,000 so'mdan",
                 phone: "+998712000003",
-                description: "Eng sevimli el suygan san'atkorlar, mahoratli boshlovchilar va jonli simfonik ansambl ijrosi."
+                features: ["Xalq Sevgan Yulduzlar", "Jonli Simfonik", "VIP Akustika"],
+                description: "Eng sevimli el suygan san'atkorlar, mahoratli xonandalar va 16 kishilik jonli simfonik orkestr ijrosi."
             },
             {
-                id: 104,
+                id: 108,
+                title: "Royal Brass & Jazz-Pop VIP Ansambl",
+                category: "sanatkorlar",
+                categoryName: "San'atkorlar",
+                image: "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?q=80&w=800",
+                rating: 4.9,
+                tag: "JONLI IJRO",
+                district: "Yunusobod tumani",
+                priceStr: "14,000,000 so'mdan",
+                phone: "+998712000015",
+                features: ["Saxophone & Brass", "Interaktiv Shou", "Karnay-Surnay"],
+                description: "Zamonaviy estrada va jaz durdonalari, kelin-kuyov valsi uchun maxsus romantik kompozitsiyalar."
+            },
+            {
+                id: 109,
+                title: "Elita Boshlovchilari & To'y Shousi",
+                category: "sanatkorlar",
+                categoryName: "San'atkorlar",
+                image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800",
+                rating: 5.0,
+                tag: "TOP SHOWMAN",
+                district: "Mirzo Ulug'bek tumani",
+                priceStr: "8,000,000 so'mdan",
+                phone: "+998712000016",
+                features: ["Senariy Asosida", "O'zbek / Rus Tillarida", "Professional DJ"],
+                description: "To'y marosimini yuqori madaniyat, nozik hazillar va unutilmas shou muhitida o'tkazuvchi oliy toifali boshlovchilar."
+            },
+
+            // 4. FOTO VA VIDEO
+            {
+                id: 110,
                 title: "Royal Cinema 4K & Drone Studio",
                 category: "foto-video",
                 categoryName: "Foto & Video",
                 image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=800",
-                rating: 4.9,
+                rating: 5.0,
                 tag: "4K CINEMA",
                 district: "Chilonzor tumani",
-                priceStr: "8 mln so'mdan",
+                priceStr: "8,000,000 so'mdan",
                 phone: "+998712000004",
-                description: "Kino darajasidagi 4K tasvirga olish, havodan dron video, shaxsiy Love Story va eng unutilmas fotokitoblar."
+                features: ["4K Cinema Kameralar", "Havodan Dron", "Love Story Film"],
+                description: "Kino darajasidagi 4K tasvirga olish, havodan dron parvozi, hissiyotlarga boy Love Story va unutilmas klip."
             },
             {
-                id: 105,
+                id: 111,
+                title: "Vogue Wedding Studio & Italyan Fotokitob",
+                category: "foto-video",
+                categoryName: "Foto & Video",
+                image: "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800",
+                rating: 4.9,
+                tag: "VOGUE STYLE",
+                district: "Mirobod tumani",
+                priceStr: "6,500,000 so'mdan",
+                phone: "+998712000017",
+                features: ["Italyan Teri Kitob", "Tezkor Montaj", "3 Professional Operator"],
+                description: "Jahon jurnallari andozasidagi fotosessiya, ranglar korreksiyasi va charm muqovali hashamatli to'y albomi."
+            },
+            {
+                id: 112,
+                title: "Hollywood SDE (Same Day Edit) Klip",
+                category: "foto-video",
+                categoryName: "Foto & Video",
+                image: "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800",
+                rating: 5.0,
+                tag: "SAME DAY EDIT",
+                district: "Yakkasaroy tumani",
+                priceStr: "11,000,000 so'mdan",
+                phone: "+998712000018",
+                features: ["To'y Kuni Tayyor Klip", "Katta Ekran Namoyishi", "HDR Ranglar"],
+                description: "Ertalabki marosimdan boshlab to'y zalida katta ekranda mehmonlarga o'sha kuniyoq ko'rsatiladigan emotsional video-shedevr."
+            },
+
+            // 5. KORTEJ
+            {
+                id: 113,
                 title: "Rolls-Royce Ghost & Maybach Kortej",
                 category: "kortej",
                 categoryName: "Lyuqs Kortej",
@@ -3376,11 +4107,114 @@
                 rating: 5.0,
                 tag: "VIP KORTEJ",
                 district: "Toshkent shahri",
-                priceStr: "6 mln so'mdan",
+                priceStr: "6,000,000 so'mdan",
                 phone: "+998712000005",
-                description: "Kelin-kuyov uchun hashamatli oq Rolls-Royce Ghost va kuzatuvchi Mercedes-Maybach korteji."
+                features: ["Oq Rolls-Royce Ghost", "Mercedes-Maybach Kuzatuv", "VIP Haydovchi"],
+                description: "Kelin-kuyov uchun hashamatli oq Rolls-Royce Ghost va kuzatuvchi Mercedes-Maybach korteji. Kostyumli shaxsiy haydovchilar."
+            },
+            {
+                id: 114,
+                title: "Mercedes G-Class (G-Wagen) Karvoni",
+                category: "kortej",
+                categoryName: "Lyuqs Kortej",
+                image: "https://images.unsplash.com/photo-1520050206274-a1ae44613e6d?q=80&w=800",
+                rating: 4.9,
+                tag: "G-CLASS KARVON",
+                district: "Toshkent shahri",
+                priceStr: "5,000,000 so'mdan",
+                phone: "+998712000019",
+                features: ["6 Ta Qora G63 AMG", "Professional Eskort", "Yo'l Protokoli"],
+                description: "To'liq bir xil yangi modeldagi qora Gelandewagen avtomobillari karvoni. Shahar bo'ylab xavfsiz va shohona harakat."
+            },
+            {
+                id: 115,
+                title: "Bentley Flying Spur & Cadillac Limuzin",
+                category: "kortej",
+                categoryName: "Lyuqs Kortej",
+                image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=800",
+                rating: 5.0,
+                tag: "PRESTIGE",
+                district: "Yunusobod tumani",
+                priceStr: "7,500,000 so'mdan",
+                phone: "+998712000020",
+                features: ["Mulliner Salon", "Champagne Bar", "Gullar Bilan Bezatish"],
+                description: "Britaniya nafisligi va amerika kengligi uyg'unlashgan premium avtomobillar. Yangi uzilgan gullar bilan bezatish bepul."
+            },
+
+            // 6. DEKORATSIYA
+            {
+                id: 116,
+                title: "Florist VIP & Gollandiya Yangi Gullari",
+                category: "dekor",
+                categoryName: "To'y Dekoratsiyasi",
+                image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800",
+                rating: 5.0,
+                tag: "ROYAL FLORIST",
+                district: "Mirobod tumani",
+                priceStr: "16,000,000 so'mdan",
+                phone: "+998712000021",
+                features: ["Gollandiya Atirgullari", "Prezidium Taxti", "Kristal Lyustralar"],
+                description: "Saroy zali va prezidiumni tirik xushbo'y gullar, yaltiroq kristallar va nafis matolar bilan ertaknamo bezatish."
+            },
+            {
+                id: 117,
+                title: "Romantic Candle & Neoklassik Bezatish",
+                category: "dekor",
+                categoryName: "To'y Dekoratsiyasi",
+                image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=800",
+                rating: 4.9,
+                tag: "CANDLE LIGHT",
+                district: "Shayxontohur tumani",
+                priceStr: "10,000,000 so'mdan",
+                phone: "+998712000022",
+                features: ["1000 Shamlar Arkasi", "Lyuqs Fotozona", "Maxsus Yorug'lik"],
+                description: "Minglab mayin shamlarning oltin jilosi, eng so'nggi urfdagi fotozona va romantik nikoh oqshomi muhiti."
+            },
+
+            // 7. TO'Y TORTI
+            {
+                id: 118,
+                title: "Royal 5-Qavatli 24K Oltin To'y Torti",
+                category: "tort",
+                categoryName: "To'y Torti",
+                image: "https://images.unsplash.com/photo-1535141192574-5d4897c13136?q=80&w=800",
+                rating: 5.0,
+                tag: "ROYAL CAKE",
+                district: "Mirobod tumani",
+                priceStr: "4,500,000 so'mdan",
+                phone: "+998712000023",
+                features: ["24K Yeyiladigan Oltin", "Fransuz Masalliqlari", "Piromexanizm Shou"],
+                description: "5 qavatli shohona to'y torti, yeyiladigan toza oltin zarralari, tabiiy mevalar va zalga kiritish piromexanik shousi."
+            },
+            {
+                id: 119,
+                title: "Parisian Candy Bar & Macaron Tower",
+                category: "tort",
+                categoryName: "To'y Torti",
+                image: "https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?q=80&w=800",
+                rating: 4.9,
+                tag: "FRENCH SWEETS",
+                district: "Yakkasaroy tumani",
+                priceStr: "3,200,000 so'mdan",
+                phone: "+998712000024",
+                features: ["Belgiya Shokoladi", "Parij Makaronlari", "Sovutgichli Yetkazish"],
+                description: "Mehmonlarni kutib olish uchun hashamatli shirinliklar stoli (Candy Bar), Belgiya shokoladli fontan va fransuz makaronlari minorasi."
             }
         ];
+
+        let servicesSearchTimeout = null;
+        let currentServiceCategory = 'all';
+
+        function updateServiceCategoryCounts() {
+            const counts = { all: SERVICES_DATA.length };
+            SERVICES_DATA.forEach(s => {
+                counts[s.category] = (counts[s.category] || 0) + 1;
+            });
+            Object.keys(counts).forEach(k => {
+                const el = document.getElementById(`cnt-${k}`);
+                if (el) el.textContent = counts[k];
+            });
+        }
 
         function renderServicesCatalog(items) {
             const container = document.getElementById('services-catalog-list');
@@ -3388,46 +4222,48 @@
 
             if (items.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-                        <i class="fa-solid fa-magnifying-glass" style="font-size: 32px; color: var(--border-color); margin-bottom: 10px;"></i>
-                        <p style="font-weight: 600; font-size: 15px;">Hech qanday xizmat topilmadi</p>
+                    <div style="text-align: center; padding: 48px 20px; color: var(--text-muted);">
+                        <i class="fa-solid fa-magnifying-glass" style="font-size: 34px; color: #D4AF37; margin-bottom: 12px; display: block; opacity: 0.7;"></i>
+                        <p style="font-weight: 700; font-size: 16px; margin-bottom: 6px; color: var(--gold-primary);">Mos keladigan xizmat topilmadi</p>
+                        <p style="font-size: 13px; color: var(--text-muted);">Boshqa kalit so'z bilan qidirib ko'ring yoki boshqa toifani tanlang</p>
                     </div>
                 `;
                 return;
             }
 
             container.innerHTML = items.map(s => `
-                <div class="venue-card" onclick="openVenueDetails(${s.id})" style="cursor: pointer;">
-                    <div class="venue-card-img">
-                        <img src="${s.image}" alt="${s.title}">
-                        <div class="venue-card-tag"><i class="fa-solid fa-crown" style="font-size: 10px; margin-right: 4px;"></i>${s.tag || 'PREMIUM'}</div>
-                        <div class="palace-card-rating-float"><i class="fa-solid fa-star"></i> ${s.rating}</div>
+                <div class="service-showcase-card">
+                    <div class="service-card-media">
+                        <img src="${s.image}" alt="${s.title}" loading="lazy">
+                        <div class="service-media-overlay"></div>
+                        <span class="service-badge-category">${s.categoryName}</span>
+                        <span class="service-badge-rating">★ ${s.rating.toFixed(1)}</span>
+                        <span class="service-badge-verified"><i class="fa-solid fa-certificate"></i> VERIFIED MASTER</span>
                     </div>
-                    <div class="venue-card-body">
-                        <div class="venue-header-row">
-                            <h4 class="venue-title">${s.title}</h4>
+                    <div class="service-card-content">
+                        <div class="service-title-row">
+                            <h3 class="service-card-title">${s.title}</h3>
                         </div>
-                        <div class="venue-specs">
-                            <div style="display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i>
-                                <span>${s.district}</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 6px;">
-                                <i class="fa-solid fa-tag" style="color: var(--gold-primary);"></i>
-                                <span>${s.categoryName}</span>
-                            </div>
+                        <div class="service-location-meta">
+                            <i class="fa-solid fa-location-dot" style="color: #D4AF37;"></i>
+                            <span>${s.district}</span>
                         </div>
-                        <div class="venue-footer-row">
-                            <div class="venue-price-box">
-                                <span class="price-label">Narxi</span>
-                                <span class="price-amount">${s.priceStr}</span>
+                        <div class="service-features-row">
+                            ${(s.features || []).map(f => `<span class="service-feature-pill">${f}</span>`).join('')}
+                        </div>
+                        <p class="service-desc-text">${s.description}</p>
+                        <div class="service-card-footer">
+                            <div class="service-price-block">
+                                <span class="service-price-label">Boshlang'ich narx</span>
+                                <span class="service-price-val">${s.priceStr}</span>
                             </div>
-                            <div class="venue-action-buttons">
-                                <a href="tel:${s.phone}" class="btn-call" onclick="event.stopPropagation()" title="Qo'ng'iroq">
+                            <div class="service-actions-block">
+                                <a href="tel:${s.phone}" class="btn-service-call" title="Bog'lanish" onclick="triggerHaptic('light')">
                                     <i class="fa-solid fa-phone"></i>
                                 </a>
-                                <button class="btn-book" onclick="event.stopPropagation(); openBookingDrawer(${s.id})">
-                                    <i class="fa-solid fa-calendar-check"></i> Band Qilish
+                                <button class="btn-service-book" onclick="bookExclusiveMaster(${s.id})">
+                                    <i class="fa-solid fa-crown"></i>
+                                    <span>Band Qilish</span>
                                 </button>
                             </div>
                         </div>
@@ -3436,24 +4272,68 @@
             `).join('');
         }
 
+        function handleServicesSearch(query) {
+            clearTimeout(servicesSearchTimeout);
+            servicesSearchTimeout = setTimeout(() => {
+                const q = (query || '').toLowerCase().trim();
+                let filtered = SERVICES_DATA;
+                if (currentServiceCategory !== 'all') {
+                    filtered = filtered.filter(s => s.category === currentServiceCategory);
+                }
+                if (q) {
+                    filtered = filtered.filter(s => 
+                        s.title.toLowerCase().includes(q) ||
+                        s.categoryName.toLowerCase().includes(q) ||
+                        s.district.toLowerCase().includes(q) ||
+                        (s.features && s.features.some(f => f.toLowerCase().includes(q))) ||
+                        s.description.toLowerCase().includes(q)
+                    );
+                }
+                const badge = document.getElementById('services-count-badge');
+                if (badge) {
+                    badge.textContent = `${filtered.length} ta xizmat`;
+                }
+                renderServicesCatalog(filtered);
+            }, 180);
+        }
+
         function filterServicesCatalog(el, category) {
             triggerHaptic();
-            document.querySelectorAll('#tab-services .event-chip').forEach(chip => chip.classList.remove('active'));
+            currentServiceCategory = category;
+            document.querySelectorAll('#tab-services .services-filter-chip').forEach(chip => chip.classList.remove('active'));
             if (el) el.classList.add('active');
 
-            if (category === 'all') {
-                renderServicesCatalog(SERVICES_DATA);
-            } else {
-                const filtered = SERVICES_DATA.filter(s => s.category === category);
-                renderServicesCatalog(filtered);
+            const searchInput = document.getElementById('services-search-input');
+            const q = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            let filtered = (category === 'all') 
+                ? SERVICES_DATA 
+                : SERVICES_DATA.filter(s => s.category === category);
+
+            if (q) {
+                filtered = filtered.filter(s => 
+                    s.title.toLowerCase().includes(q) ||
+                    s.categoryName.toLowerCase().includes(q) ||
+                    s.district.toLowerCase().includes(q) ||
+                    (s.features && s.features.some(f => f.toLowerCase().includes(q))) ||
+                    s.description.toLowerCase().includes(q)
+                );
             }
+
+            const badge = document.getElementById('services-count-badge');
+            if (badge) {
+                badge.textContent = (category === 'all' && !q) 
+                    ? `Barcha xizmatlar (${filtered.length})` 
+                    : `${filtered.length} ta xizmat`;
+            }
+            renderServicesCatalog(filtered);
         }
 
         function openServicesTab(category) {
             triggerHaptic();
             switchTab('services');
             setTimeout(() => {
-                const chips = document.querySelectorAll('#tab-services .event-chip');
+                const chips = document.querySelectorAll('#tab-services .services-filter-chip');
                 chips.forEach(c => {
                     const onclickStr = c.getAttribute('onclick') || '';
                     if (onclickStr.includes(`'${category}'`)) {
@@ -3461,6 +4341,41 @@
                     }
                 });
             }, 100);
+        }
+
+        function bookExclusiveMaster(serviceId) {
+            triggerHaptic('medium');
+            const service = SERVICES_DATA.find(s => s.id === serviceId);
+            if (!service) return;
+
+            selectedVenueForBooking = {
+                id: service.id,
+                title: service.title,
+                priceStr: service.priceStr,
+                capacity: service.categoryName,
+                isService: true
+            };
+
+            const titleEl = document.getElementById('drawer-venue-title');
+            const subEl = document.getElementById('drawer-venue-sub');
+            if (titleEl) titleEl.textContent = `${service.title} — VIP Band Qilish`;
+            if (subEl) subEl.textContent = `${service.categoryName} • ${service.priceStr}`;
+
+            const backdrop = document.getElementById('drawer-backdrop');
+            const container = document.getElementById('drawer-container');
+            if (backdrop) backdrop.classList.add('active');
+            if (container) container.classList.add('active');
+
+            if (tg?.MainButton) {
+                tg.MainButton.setText("👑 XIZMATNI TASDIQLASH");
+                tg.MainButton.setParams({
+                    color: '#D4AF37',
+                    text_color: '#1A1000',
+                    is_active: true,
+                    is_visible: true
+                });
+                tg.MainButton.onClick(confirmBookingApi);
+            }
         }
 
         // 6. RENDER VENUE CARDS & TO'LIQ BATAFSIL SAHIFA
@@ -3971,7 +4886,7 @@
                             <div style="font-size: 11.5px; font-weight: 700; color: #C28B14; margin-top: 2px;">${m.price}</div>
                         </div>
                     </div>
-                    <button class="btn-master-contact" onclick="bookExclusiveMaster('${m.name}', '${m.phone}')">
+                    <button class="btn-master-contact" onclick="bookExclusiveMasterFromCard('${m.name}', '${m.phone}')">
                         Band Qilish
                     </button>
                 </div>
@@ -3989,7 +4904,7 @@
             if (drawer) drawer.style.display = 'none';
         }
 
-        function bookExclusiveMaster(masterName, masterPhone) {
+        function bookExclusiveMasterFromCard(masterName, masterPhone) {
             triggerHaptic('heavy');
             openBookingDrawerCustom(masterName, masterPhone);
         }
@@ -4254,137 +5169,272 @@
             showToast(`${toShow.length} ta to'yxona sizning byudjetingizga mos topildi!`);
         }
 
-        // 9. LEAFLET XARITA (TUMANLAR FILTRI VA NAVIGATSIYA BILAN)
+        // 9. LEAFLET XARITA (KO'ZGA QULAY ESRI CANVAS TILE, 24K OLTIN PINLAR VA NAVIGATSIYA)
         let mapInstance = null;
         let mapMarkers = [];
+        let baseTileLayer = null;
+        let labelTileLayer = null;
+        let activeVenueId = null;
+
+        function updateMapTileTheme() {
+            if (!mapInstance) return;
+            const isDark = document.body.classList.contains('dark-mode');
+            const baseUrl = isDark 
+                ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+                : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+            
+            const labelUrl = isDark
+                ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}'
+                : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}';
+            
+            if (baseTileLayer) {
+                try { mapInstance.removeLayer(baseTileLayer); } catch(e) {}
+            }
+            if (labelTileLayer) {
+                try { mapInstance.removeLayer(labelTileLayer); } catch(e) {}
+            }
+
+            baseTileLayer = L.tileLayer(baseUrl, {
+                maxZoom: 16,
+                attribution: ''
+            }).addTo(mapInstance);
+
+            labelTileLayer = L.tileLayer(labelUrl, {
+                maxZoom: 16,
+                attribution: ''
+            }).addTo(mapInstance);
+        }
 
         function initMapIfNeeded() {
+            const mapEl = document.getElementById('map-element');
+            if (!mapEl) return;
+
             if (mapInstance) {
                 mapInstance.invalidateSize();
                 return;
             }
 
-            const mapEl = document.getElementById('map-element');
-            if (!mapEl) return;
-
             mapInstance = L.map('map-element', {
                 zoomControl: false,
                 attributionControl: false
-            }).setView([41.3050, 69.2650], 12);
+            }).setView([41.3110, 69.2790], 12);
 
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(mapInstance);
-
+            updateMapTileTheme();
             loadMapMarkers(VENUES_DATA);
+
+            // Default birinchi to'yxonani tanlash (xarita ochilganda)
+            if (VENUES_DATA.length > 0) {
+                selectVenueOnMap(VENUES_DATA[0], false);
+            }
         }
 
         function loadMapMarkers(venues) {
-            mapMarkers.forEach(m => mapInstance.removeLayer(m));
+            if (!mapInstance) return;
+
+            mapMarkers.forEach(m => {
+                try { mapInstance.removeLayer(m); } catch(e) {}
+            });
             mapMarkers = [];
 
+            const countBadge = document.getElementById('map-results-count');
+            if (countBadge) {
+                countBadge.textContent = `${venues.length} ta saroy`;
+            }
+
             venues.forEach(v => {
+                const isActive = activeVenueId === v.id;
                 const icon = L.divIcon({
-                    className: 'custom-pin',
+                    className: 'luxury-map-pin-container',
                     html: `
-                        <div style="background: linear-gradient(135deg, #FCEABB, #D4AF37 60%, #996515); width: 38px; height: 38px; border-radius: 50%; border: 2.5px solid #FFFFFF; box-shadow: 0 4px 14px rgba(212, 175, 55, 0.45); display: flex; align-items: center; justify-content: center; color: #1A1200; font-size: 15px;">
-                            <i class="fa-solid fa-crown"></i>
+                        <div class="luxury-map-pin-wrap" id="pin-wrap-${v.id}">
+                            <div class="pin-beacon" style="${isActive ? 'display: block;' : 'display: none;'}"></div>
+                            <div class="luxury-map-pin ${isActive ? 'active' : ''}">
+                                <div class="luxury-map-pin-inner"><i class="fa-solid fa-crown"></i></div>
+                            </div>
                         </div>
                     `,
-                    iconSize: [38, 38],
-                    iconAnchor: [19, 19]
+                    iconSize: [42, 42],
+                    iconAnchor: [21, 42]
                 });
 
                 const m = L.marker([v.lat, v.lng], { icon }).addTo(mapInstance);
                 m.on('click', () => {
                     triggerHaptic();
-                    selectVenueOnMap(v);
+                    selectVenueOnMap(v, true);
                 });
+                m.venueId = v.id;
                 mapMarkers.push(m);
             });
         }
 
-        function selectVenueOnMap(v) {
+        function selectVenueOnMap(v, shouldPan = true) {
+            if (!v) return;
+            activeVenueId = v.id;
             selectedVenueForBooking = v;
-            document.getElementById('map-card-img').src = v.image;
-            document.getElementById('map-card-title').textContent = v.title;
-            document.getElementById('map-card-location').innerHTML = `<i class="fa-solid fa-location-dot" style="color: var(--gold-primary);"></i> ${v.district} tumani`;
-            document.getElementById('map-card-price').textContent = v.priceStr;
-            document.getElementById('map-card-phone-btn').href = `tel:${v.phone}`;
-            document.getElementById('map-card-nav-btn').href = `https://yandex.com/maps/?rtext=~${v.lat},${v.lng}`;
-            mapInstance.panTo([v.lat, v.lng], { animate: true });
+
+            // Pinlarni faol holatga yangilash
+            document.querySelectorAll('.luxury-map-pin-wrap .pin-beacon').forEach(b => b.style.display = 'none');
+            document.querySelectorAll('.luxury-map-pin').forEach(p => p.classList.remove('active'));
+
+            const activeWrap = document.getElementById(`pin-wrap-${v.id}`);
+            if (activeWrap) {
+                const beacon = activeWrap.querySelector('.pin-beacon');
+                const pin = activeWrap.querySelector('.luxury-map-pin');
+                if (beacon) beacon.style.display = 'block';
+                if (pin) pin.classList.add('active');
+            }
+
+            // Kartochkani to'ldirish
+            const cardImg = document.getElementById('map-card-img');
+            const cardRating = document.getElementById('map-card-rating');
+            const cardTitle = document.getElementById('map-card-title');
+            const cardLocation = document.getElementById('map-card-location');
+            const cardPrice = document.getElementById('map-card-price');
+            const phoneBtn = document.getElementById('map-card-phone-btn');
+            const navBtn = document.getElementById('map-card-nav-btn');
+
+            if (cardImg) cardImg.src = v.image || 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=400';
+            if (cardRating) cardRating.textContent = `★★★★★ ${v.rating || '5.0'}`;
+            if (cardTitle) cardTitle.textContent = v.title;
+            if (cardLocation) cardLocation.innerHTML = `<i class="fa-solid fa-location-dot" style="color: #D4AF37;"></i> <span>${v.district} tumani</span>`;
+            if (cardPrice) cardPrice.textContent = v.priceStr || (v.price ? v.price.toLocaleString('uz-UZ') + " so'm" : "Kelishilgan");
+            if (phoneBtn) phoneBtn.href = `tel:${v.phone || '+998712000001'}`;
+            if (navBtn) navBtn.href = `https://yandex.com/maps/?rtext=~${v.lat},${v.lng}`;
+
+            // Kartochkani ko'rsatish
+            const card = document.getElementById('map-selected-card');
+            if (card) {
+                card.style.display = 'flex';
+                card.classList.add('active');
+            }
+
+            if (shouldPan && mapInstance) {
+                mapInstance.panTo([v.lat, v.lng], { animate: true, duration: 0.8 });
+            }
+        }
+
+        function closeMapSelectedCard() {
+            triggerHaptic('light');
+            const card = document.getElementById('map-selected-card');
+            if (card) {
+                card.style.display = 'none';
+                card.classList.remove('active');
+            }
+            activeVenueId = null;
+            document.querySelectorAll('.luxury-map-pin-wrap .pin-beacon').forEach(b => b.style.display = 'none');
+            document.querySelectorAll('.luxury-map-pin').forEach(p => p.classList.remove('active'));
         }
 
         function filterMapByDistrict(chip, district) {
             triggerHaptic();
             document.querySelectorAll('.district-chip').forEach(c => c.classList.remove('active'));
-            chip.classList.add('active');
+            if (chip) chip.classList.add('active');
 
             if (district === 'all') {
                 loadMapMarkers(VENUES_DATA);
-                mapInstance.setView([41.3050, 69.2650], 12);
+                if (mapInstance) mapInstance.setView([41.3050, 69.2650], 12);
             } else {
                 const filtered = VENUES_DATA.filter(v => v.district.toLowerCase().includes(district.toLowerCase()));
                 loadMapMarkers(filtered);
                 if (filtered.length > 0) {
-                    selectVenueOnMap(filtered[0]);
-                    mapInstance.setView([filtered[0].lat, filtered[0].lng], 13);
+                    selectVenueOnMap(filtered[0], true);
+                    if (mapInstance) mapInstance.setView([filtered[0].lat, filtered[0].lng], 13);
                 }
             }
         }
 
+        let mapSearchTimeout = null;
         function handleMapSearch(query) {
-            const q = query.toLowerCase().trim();
-            if (!q) {
-                loadMapMarkers(VENUES_DATA);
-                return;
-            }
-            const filtered = VENUES_DATA.filter(v => 
-                v.title.toLowerCase().includes(q) ||
-                v.district.toLowerCase().includes(q)
-            );
-            loadMapMarkers(filtered);
-            if (filtered.length > 0) {
-                selectVenueOnMap(filtered[0]);
-            }
+            clearTimeout(mapSearchTimeout);
+            mapSearchTimeout = setTimeout(() => {
+                const q = (query || '').toLowerCase().trim();
+                if (!q) {
+                    loadMapMarkers(VENUES_DATA);
+                    return;
+                }
+                const filtered = VENUES_DATA.filter(v => 
+                    v.title.toLowerCase().includes(q) ||
+                    v.district.toLowerCase().includes(q) ||
+                    (v.priceStr && v.priceStr.toLowerCase().includes(q))
+                );
+                loadMapMarkers(filtered);
+                if (filtered.length > 0) {
+                    selectVenueOnMap(filtered[0], true);
+                }
+            }, 180);
         }
 
         function locateUserGPS() {
             triggerHaptic();
-            if (navigator.geolocation) {
+            if (navigator.geolocation && mapInstance) {
                 navigator.geolocation.getCurrentPosition(
                     pos => {
                         const { latitude, longitude } = pos.coords;
-                        mapInstance.setView([latitude, longitude], 14);
+                        mapInstance.setView([latitude, longitude], 15);
                         L.circleMarker([latitude, longitude], {
-                            radius: 8,
-                            color: '#FFB300',
-                            fillColor: '#FFB300',
-                            fillOpacity: 1
+                            radius: 10,
+                            color: '#D4AF37',
+                            fillColor: '#FFD700',
+                            fillOpacity: 0.9,
+                            weight: 3
                         }).addTo(mapInstance);
-                        showToast("Joylashuvingiz aniqlandi!");
+                        showToast("Joylashuvingiz xaritada ko'rsatildi!");
                     },
                     err => {
-                        showToast("GPS yoqilmadi");
+                        showToast("GPS joylashuv ruxsati berilmadi");
                     }
                 );
+            } else {
+                showToast("GPS qurilmangizda qo'llab-quvvatlanmaydi");
             }
+        }
+
+        function resetMapView() {
+            triggerHaptic('light');
+            if (!mapInstance) return;
+            if (VENUES_DATA.length > 0) {
+                const bounds = L.latLngBounds(VENUES_DATA.map(v => [v.lat, v.lng]));
+                mapInstance.fitBounds(bounds, { padding: [40, 40] });
+            } else {
+                mapInstance.setView([41.3050, 69.2650], 12);
+            }
+            showToast("Barcha to'yxonalar ko'rinishi tiklandi");
+        }
+
+        function mapZoomIn() {
+            triggerHaptic('light');
+            if (mapInstance) mapInstance.zoomIn();
+        }
+
+        function mapZoomOut() {
+            triggerHaptic('light');
+            if (mapInstance) mapInstance.zoomOut();
         }
 
         function openBookingDrawerFromMap() {
             if (selectedVenueForBooking) {
                 openBookingDrawer(selectedVenueForBooking.id);
-            } else {
-                openBookingDrawer(1);
+            } else if (VENUES_DATA.length > 0) {
+                openBookingDrawer(VENUES_DATA[0].id);
             }
         }
 
         // 10. BAND QILISH OYNASI & TELEGRAM MAINBUTTON INTEGRATSIYASI
         function openBookingDrawer(venueId) {
             triggerHaptic('medium');
-            const venue = VENUES_DATA.find(v => v.id === venueId) || VENUES_DATA[0];
-            selectedVenueForBooking = venue;
+            const venue = VENUES_DATA.find(v => v.id === venueId);
+            const service = SERVICES_DATA.find(s => s.id === venueId);
 
-            document.getElementById('drawer-venue-title').textContent = `${venue.title} — Band Qilish`;
-            document.getElementById('drawer-venue-sub').textContent = `Narxi: ${venue.priceStr} | Sig'imi: ${venue.capacity}`;
+            if (service) {
+                bookExclusiveMaster(venueId);
+                return;
+            }
+
+            const targetVenue = venue || VENUES_DATA[0];
+            selectedVenueForBooking = targetVenue;
+
+            document.getElementById('drawer-venue-title').textContent = `${targetVenue.title} — Band Qilish`;
+            document.getElementById('drawer-venue-sub').textContent = `Narxi: ${targetVenue.priceStr} | Sig'imi: ${targetVenue.capacity}`;
 
             document.getElementById('drawer-backdrop').classList.add('active');
             document.getElementById('drawer-container').classList.add('active');
